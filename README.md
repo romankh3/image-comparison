@@ -8,6 +8,8 @@
 * The output of the comparison is a copy of one of the images image with
   differences outlined with red rectangles as shown below.
 * No third party libraries and borrowed code are not using.
+
+
 To run project write: 
 ```
 $ git clone https://github.com/romankh3/image-comparison
