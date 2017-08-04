@@ -1,6 +1,5 @@
 package ua.comparison.image;
 
-
 import org.junit.Test;
 
 import java.awt.image.BufferedImage;
@@ -19,13 +18,8 @@ public class ImageComparisonUnitTest {
 
     @Test
     public void testCorrectWorking() throws IOException, URISyntaxException {
-
-        // get images from Resources
-        BufferedImage image1 = readImageFromResources( "image1.png" );
-        BufferedImage image2 = readImageFromResources( "image2.png" );
-
         // Draw rectangles on the image.
-        BufferedImage drawnDifferences = drawTheDifference( image1, image2 );
+        BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image2.png" );
 
         // Get the expected image.
         BufferedImage expectedResultImage = readImageFromResources( "result.png" );

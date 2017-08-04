@@ -1,6 +1,7 @@
 package ua.comparison.image;
 
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,27 +21,43 @@ public class ImageComparison {
     private static final int COUNTER = 2;
 
     public static void main( String[] args ) throws IOException, URISyntaxException {
-        // get images from Resources
-        BufferedImage image1 = readImageFromResources( "image1.png" );
-        BufferedImage image2 = readImageFromResources( "image2.png" );
-
         // Draw rectangles on the image.
-        BufferedImage drawnDifferences = drawTheDifference( image1, image2 );
+        BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image2.png" );
 
         // make dir if it's not using from Gradle.
         new File( "build" );
         ImageIO.write( drawnDifferences, "png", new File( "build/result.png" ) );
 
-        ImageResultFrame.createGUI( drawnDifferences );
+        createGUI( drawnDifferences );
+    }
+
+    /**
+     * Create GUI for represents the resulting image.
+     * @param image resulting image.
+     */
+    public static void createGUI( BufferedImage image ) {
+        JFrame frame = new JFrame("The result of the comparison");
+        frame.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
+        JLabel label = new JLabel();
+        label.setIcon(new ImageIcon(image, "Result"));
+        frame.getContentPane().add(label, BorderLayout.CENTER);
+        frame.setPreferredSize(new Dimension( (image.getWidth() ), image.getHeight() ) );
+        frame.pack();
+        frame.setLocationRelativeTo(null);
+        frame.setVisible(true);
     }
 
     /**
      * Draw rectangles which cover the regions of the difference pixels.
-     * @param image1 {@code BufferedImage} object of the first image.
-     * @param image2 {@code BufferedImage} object of the second image.
+     * @param image1Name the name of the first image.
+     * @param image2Name the name of the second image.
      * @return the result of the drawing.
      */
-    public static BufferedImage drawTheDifference( BufferedImage image1, BufferedImage image2 ) {
+    public static BufferedImage drawTheDifference( String image1Name, String image2Name ) throws IOException, URISyntaxException {
+        // get images from Resources
+        BufferedImage image1 = readImageFromResources( image1Name );
+        BufferedImage image2 = readImageFromResources( image2Name );
+
         // check images for valid
         checkCorrectImageSize( image1.getHeight(), image1.getWidth(), image2.getHeight(), image2.getWidth() );
 
