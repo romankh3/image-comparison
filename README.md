@@ -1,4 +1,4 @@
-# Image Comparison
+# Image Comparison [![Build Status](https://travis-ci.org/romankh3/image-comparison.svg?branch=master)](https://travis-ci.org/romankh3/image-comparison)
 **The program in Java that compares any 2 images and shows the differences visually by drawing rectandles.**
 
 ## Requirements
