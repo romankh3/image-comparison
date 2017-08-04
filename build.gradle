@@ -14,4 +14,7 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+defaultTasks << 'clean'
+defaultTasks << 'build'
+
 mainClassName = "ua.comparison.image.ImageComparison"

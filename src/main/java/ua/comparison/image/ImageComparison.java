@@ -42,15 +42,35 @@ public class ImageComparison {
      */
     public static BufferedImage drawTheDifference( BufferedImage image1, BufferedImage image2 ) {
         // check images for valid
-        checkingImages( image1, image2 );
+        checkCorrectImageSize( image1.getHeight(), image1.getWidth(), image2.getHeight(), image2.getWidth() );
 
         int width = image1.getWidth();
         int height = image1.getHeight();
 
-        int[][] matrix = new int[width][height];
-
         BufferedImage outImg = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
 
+        int[][] matrix = populateTheMatrixOfTheDifferences( image1, image2, outImg );
+
+        Graphics2D graphics = outImg.createGraphics();
+        graphics.setColor( Color.RED );
+
+        int lastNumberCount = groupRegions( matrix, threshold );
+        drawRectangles( matrix, graphics, COUNTER, lastNumberCount );
+        return outImg;
+    }
+
+    /**
+     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
+     * @param image1 {@code BufferedImage} object of the first image.
+     * @param image2 {@code BufferedImage} object of the second image.
+     * @param outImg {@code BufferedImage} object of the output image.
+     * @return populated binary matrix.
+     */
+    public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2, BufferedImage outImg ) {
+        int width = image1.getWidth();
+        int height = image1.getHeight();
+
+        int[][] matrix = new int[width][height];
         for ( int y = 0; y < height; y++ ) {
             for ( int x = 0; x < width; x++ ) {
                 if ( isDifferent( x, y, image1, image2 ) ) {
@@ -61,13 +81,7 @@ public class ImageComparison {
                 outImg.setRGB( x, y, image2.getRGB( x, y ) );
             }
         }
-
-        Graphics2D graphics = outImg.createGraphics();
-        graphics.setColor( Color.RED );
-
-        int lastNumberCount = groupRegions( matrix, threshold );
-        drawRectangles( matrix, graphics, COUNTER, lastNumberCount );
-        return outImg;
+        return matrix;
     }
 
     /**
@@ -164,7 +178,7 @@ public class ImageComparison {
      * @param image2 {@code BufferedImage} object of the second image.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
-    private static boolean isDifferent( int x, int y, BufferedImage image1, BufferedImage image2 ){
+    public static boolean isDifferent( int x, int y, BufferedImage image1, BufferedImage image2 ){
         boolean result = false;
         int[] im1= image1.getRaster().getPixel( x,y,new int[3] );
         int[] im2= image2.getRaster().getPixel( x,y,new int[3] );
@@ -188,17 +202,19 @@ public class ImageComparison {
      * @throws IOException
      * @throws URISyntaxException
      */
-    private static BufferedImage readImageFromResources( String path ) throws IOException, URISyntaxException {
+    public static BufferedImage readImageFromResources( String path ) throws IOException, URISyntaxException {
         return ImageIO.read( new File( ImageComparison.class.getClassLoader().getResource ( path ).toURI().getPath() ) );
     }
 
     /**
      * Checks images for equals their widths and heights.
-     * @param image1 {@code BufferedImage} object of the first image.
-     * @param image2 {@code BufferedImage} object of the second image.
+     * @param height1 the height of the first image.
+     * @param width1 the width of the first image.
+     * @param height2 the height of the second image.
+     * @param width2 the width of the second image.
      */
-    private static void checkingImages( BufferedImage image1, BufferedImage image2 ) {
-        if( image1.getWidth() != image2.getWidth() || image2.getHeight() != image2.getHeight() )
+    public static void checkCorrectImageSize(int height1, int width1, int height2, int width2) {
+        if( height1 != height2 || width1 != width2 )
             throw new IllegalArgumentException( "Images dimensions mismatch" );
     }
 }
