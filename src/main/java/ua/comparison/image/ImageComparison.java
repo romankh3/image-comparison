@@ -118,11 +118,9 @@ public class ImageComparison {
 
         if( counter > lastNumberCount ) return;
 
-        boolean find = false;
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {
                 if ( matrix[y][x] == counter ) {
-                    find = true;
 
                     if ( x < minX ) minX = x;
                     if ( x > maxX ) maxX = x;
@@ -132,10 +130,8 @@ public class ImageComparison {
                 }
             }
         }
-        if ( find ) {
-            graphics.drawRect( minY, minX, maxY - minY, maxX - minX );
-            drawRectangles( matrix, graphics, ++counter, lastNumberCount );
-        }
+        graphics.drawRect( minY, minX, maxY - minY, maxX - minX );
+        drawRectangles( matrix, graphics, ++counter, lastNumberCount );
     }
 
     /**
@@ -157,15 +153,15 @@ public class ImageComparison {
 
         for ( int i = 0; i < threshold; i++ ) {
             // goes to all directions.
-            joinToRegion(matrix, row - 1 - i, col, regionCount, threshold);
-            joinToRegion(matrix, row + 1 + i, col, regionCount, threshold);
-            joinToRegion(matrix, row, col - 1 - i, regionCount, threshold);
-            joinToRegion(matrix, row, col + 1 + i, regionCount, threshold);
+            joinToRegion( matrix, row - 1 - i, col, regionCount, threshold );
+            joinToRegion( matrix, row + 1 + i, col, regionCount, threshold );
+            joinToRegion( matrix, row, col - 1 - i, regionCount, threshold );
+            joinToRegion( matrix, row, col + 1 + i, regionCount, threshold );
 
-            joinToRegion(matrix, row - 1 - i, col - 1 - i, regionCount, threshold);
-            joinToRegion(matrix, row + 1 + i, col - 1 - i, regionCount, threshold);
-            joinToRegion(matrix, row - 1 - i, col + 1 + i, regionCount, threshold);
-            joinToRegion(matrix, row + 1 + i, col + 1 + i, regionCount, threshold);
+            joinToRegion( matrix, row - 1 - i, col - 1 - i, regionCount, threshold );
+            joinToRegion( matrix, row + 1 + i, col - 1 - i, regionCount, threshold );
+            joinToRegion( matrix, row - 1 - i, col + 1 + i, regionCount, threshold );
+            joinToRegion( matrix, row + 1 + i, col + 1 + i, regionCount, threshold );
         }
     }
 
