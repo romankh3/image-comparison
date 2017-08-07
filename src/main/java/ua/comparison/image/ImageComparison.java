@@ -44,15 +44,14 @@ public class ImageComparison {
         BufferedImage image2 = readImageFromResources( image2Name );
 
         // check images for valid
-        checkCorrectImageSize( image1.getHeight(), image1.getWidth(), image2.getHeight(), image2.getWidth() );
+        checkCorrectImageSize( image1, image2 );
 
-        BufferedImage outImg = new BufferedImage( image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_RGB );
-
-        int[][] matrix = populateTheMatrixOfTheDifferences( image1, image2, outImg );
+        BufferedImage outImg = deepCopy( image2 );
 
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor( Color.RED );
 
+        int[][] matrix = populateTheMatrixOfTheDifferences( image1, image2 );
         int lastNumberCount = groupRegions( matrix );
         drawRectangles( matrix, graphics, COUNTER, lastNumberCount );
         return outImg;
@@ -93,10 +92,9 @@ public class ImageComparison {
      * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
      * @param image1 {@code BufferedImage} object of the first image.
      * @param image2 {@code BufferedImage} object of the second image.
-     * @param outImg {@code BufferedImage} object of the output image.
      * @return populated binary matrix.
      */
-    public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2, BufferedImage outImg ) {
+    public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2 ) {
 
         int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
         for ( int y = 0; y < image1.getHeight(); y++ ) {
@@ -106,7 +104,6 @@ public class ImageComparison {
                 } else {
                     matrix[x][y] = 0;
                 }
-                outImg.setRGB( x, y, image2.getRGB( x, y ) );
             }
         }
         return matrix;
