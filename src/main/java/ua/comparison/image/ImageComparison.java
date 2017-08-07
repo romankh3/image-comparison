@@ -26,9 +26,7 @@ public class ImageComparison {
         // Draw rectangles on the image.
         BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image2.png" );
 
-        // make dir if it's not using from Gradle.
-        new File( "build" );
-        ImageIO.write( drawnDifferences, "png", new File( "build/result.png" ) );
+        saveImage( "build/result.png", drawnDifferences );
 
         createGUI( drawnDifferences );
     }
