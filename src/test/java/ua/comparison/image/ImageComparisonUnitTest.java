@@ -9,6 +9,7 @@ import java.net.URISyntaxException;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static ua.comparison.image.ImageComparison.*;
+import static ua.comparison.image.ImageComparisonTools.*;
 
 
 /**
@@ -36,10 +37,5 @@ public class ImageComparisonUnitTest {
                 assertTrue( !isDifferent( x, y, expectedResultImage, drawnDifferences ) );
             }
         }
-    }
-
-    @Test( expected = IllegalArgumentException.class )
-    public void testCheckInCorrectImageSize() {
-        checkCorrectImageSize( 10, 10, 11, 11 );
     }
 }

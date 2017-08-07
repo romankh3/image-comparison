@@ -1,12 +1,14 @@
 package ua.comparison.image;
 
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+
+import static ua.comparison.image.ImageComparisonTools.*;
+
 public class ImageComparison {
 
     /**
@@ -32,92 +34,28 @@ public class ImageComparison {
     }
 
     /**
-     * Create GUI for represents the resulting image.
-     * @param image resulting image.
-     */
-    public static void createGUI( BufferedImage image ) {
-        JFrame frame = new JFrame("The result of the comparison");
-        frame.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
-        JLabel label = new JLabel();
-        label.setIcon(new ImageIcon(image, "Result"));
-        frame.getContentPane().add(label, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension( (image.getWidth() ), image.getHeight() ) );
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-    }
-
-    /**
      * Draw rectangles which cover the regions of the difference pixels.
      * @param image1Name the name of the first image.
      * @param image2Name the name of the second image.
      * @return the result of the drawing.
      */
     public static BufferedImage drawTheDifference( String image1Name, String image2Name ) throws IOException, URISyntaxException {
-        // get images from Resources
         BufferedImage image1 = readImageFromResources( image1Name );
         BufferedImage image2 = readImageFromResources( image2Name );
 
         // check images for valid
         checkCorrectImageSize( image1.getHeight(), image1.getWidth(), image2.getHeight(), image2.getWidth() );
 
-        int width = image1.getWidth();
-        int height = image1.getHeight();
-
-        BufferedImage outImg = new BufferedImage( width, height, BufferedImage.TYPE_INT_RGB );
+        BufferedImage outImg = new BufferedImage( image1.getWidth(), image1.getHeight(), BufferedImage.TYPE_INT_RGB );
 
         int[][] matrix = populateTheMatrixOfTheDifferences( image1, image2, outImg );
 
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor( Color.RED );
 
-        int lastNumberCount = groupRegions( matrix, threshold );
+        int lastNumberCount = groupRegions( matrix );
         drawRectangles( matrix, graphics, COUNTER, lastNumberCount );
         return outImg;
-    }
-
-    /**
-     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
-     * @param image1 {@code BufferedImage} object of the first image.
-     * @param image2 {@code BufferedImage} object of the second image.
-     * @param outImg {@code BufferedImage} object of the output image.
-     * @return populated binary matrix.
-     */
-    public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2, BufferedImage outImg ) {
-        int width = image1.getWidth();
-        int height = image1.getHeight();
-
-        int[][] matrix = new int[width][height];
-        for ( int y = 0; y < height; y++ ) {
-            for ( int x = 0; x < width; x++ ) {
-                if ( isDifferent( x, y, image1, image2 ) ) {
-                    matrix[x][y] = 1;
-                } else {
-                    matrix[x][y] = 0;
-                }
-                outImg.setRGB( x, y, image2.getRGB( x, y ) );
-            }
-        }
-        return matrix;
-    }
-
-    /**
-     * Group rectangle regions in binary matrix.
-     * @param matrix The binary matrix.
-     * @param threshold The threshold which means the max distance between non-equal pixels.
-     * @return the last number which marks the lat region.
-     */
-    private static int groupRegions( int[][] matrix, int threshold ) {
-        int regionCount = 2;
-        for ( int row = 0; row < matrix.length; row++ ) {
-            for ( int col = 0; col < matrix[row].length; col++ ) {
-                if ( matrix[row][col] == 1 ) {
-                    joinToRegion( matrix, row, col, regionCount, threshold );
-                    regionCount++;
-                }
-            }
-        }
-        return regionCount;
     }
 
     /**
@@ -128,12 +66,12 @@ public class ImageComparison {
      * @param lastNumberCount the last number which marks region.
      */
     private static void drawRectangles( int[][] matrix, Graphics2D graphics, int counter, int lastNumberCount ) {
+        if( counter > lastNumberCount ) return;
+
         int minX = Integer.MAX_VALUE;
         int minY = Integer.MAX_VALUE;
         int maxX = Integer.MIN_VALUE;
         int maxY = Integer.MIN_VALUE;
-
-        if( counter > lastNumberCount ) return;
 
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {
@@ -152,6 +90,47 @@ public class ImageComparison {
     }
 
     /**
+     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
+     * @param image1 {@code BufferedImage} object of the first image.
+     * @param image2 {@code BufferedImage} object of the second image.
+     * @param outImg {@code BufferedImage} object of the output image.
+     * @return populated binary matrix.
+     */
+    public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2, BufferedImage outImg ) {
+
+        int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
+        for ( int y = 0; y < image1.getHeight(); y++ ) {
+            for ( int x = 0; x < image1.getWidth(); x++ ) {
+                if ( isDifferent( x, y, image1, image2 ) ) {
+                    matrix[x][y] = 1;
+                } else {
+                    matrix[x][y] = 0;
+                }
+                outImg.setRGB( x, y, image2.getRGB( x, y ) );
+            }
+        }
+        return matrix;
+    }
+
+    /**
+     * Group rectangle regions in binary matrix.
+     * @param matrix The binary matrix.
+     * @return the last number which marks the lat region.
+     */
+    private static int groupRegions( int[][] matrix ) {
+        int regionCount = 2;
+        for ( int row = 0; row < matrix.length; row++ ) {
+            for ( int col = 0; col < matrix[row].length; col++ ) {
+                if ( matrix[row][col] == 1 ) {
+                    joinToRegion( matrix, row, col, regionCount );
+                    regionCount++;
+                }
+            }
+        }
+        return regionCount;
+    }
+
+    /**
      * The recursive method which go to all directions and finds difference
      * in binary matrix using {@code threshold} for set max distance between values which equal "1".
      * and set the {@code groupCount} to matrix.
@@ -159,75 +138,23 @@ public class ImageComparison {
      * @param row the value of the row.
      * @param col the value of the column.
      * @param regionCount the number which marks caught values that are "1".
-     * @param threshold the max distance between two values which equal "1".
      */
-    private static void joinToRegion( int[][] matrix, int row, int col, int regionCount, int threshold ) {
-        if ( row < 0 || row >= matrix.length ) return;
-        if ( col < 0 || col >= matrix[row].length ) return;
-        if ( matrix[row][col] != 1 ) return;
+    private static void joinToRegion( int[][] matrix, int row, int col, int regionCount ) {
+        if ( row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1 ) return;
 
         matrix[row][col] = regionCount;
 
         for ( int i = 0; i < threshold; i++ ) {
             // goes to all directions.
-            joinToRegion( matrix, row - 1 - i, col, regionCount, threshold );
-            joinToRegion( matrix, row + 1 + i, col, regionCount, threshold );
-            joinToRegion( matrix, row, col - 1 - i, regionCount, threshold );
-            joinToRegion( matrix, row, col + 1 + i, regionCount, threshold );
+            joinToRegion( matrix, row - 1 - i, col, regionCount );
+            joinToRegion( matrix, row + 1 + i, col, regionCount );
+            joinToRegion( matrix, row, col - 1 - i, regionCount );
+            joinToRegion( matrix, row, col + 1 + i, regionCount );
 
-            joinToRegion( matrix, row - 1 - i, col - 1 - i, regionCount, threshold );
-            joinToRegion( matrix, row + 1 + i, col - 1 - i, regionCount, threshold );
-            joinToRegion( matrix, row - 1 - i, col + 1 + i, regionCount, threshold );
-            joinToRegion( matrix, row + 1 + i, col + 1 + i, regionCount, threshold );
+            joinToRegion( matrix, row - 1 - i, col - 1 - i, regionCount );
+            joinToRegion( matrix, row + 1 + i, col - 1 - i, regionCount );
+            joinToRegion( matrix, row - 1 - i, col + 1 + i, regionCount );
+            joinToRegion( matrix, row + 1 + i, col + 1 + i, regionCount );
         }
-    }
-
-    /**
-     * Says if the two pixels equal or not. The rule is the difference between two pixels
-     * need to be more then 10%.
-     * @param x the X value of the binary matrix.
-     * @param y the Y value of the binary matrix.
-     * @param image1 {@code BufferedImage} object of the first image.
-     * @param image2 {@code BufferedImage} object of the second image.
-     * @return {@code true} if they' are difference, {@code false} otherwise.
-     */
-    public static boolean isDifferent( int x, int y, BufferedImage image1, BufferedImage image2 ){
-        boolean result = false;
-        int[] im1= image1.getRaster().getPixel( x,y,new int[3] );
-        int[] im2= image2.getRaster().getPixel( x,y,new int[3] );
-        //gets modules of the images:
-        double mod1 = Math.sqrt( im1[0] * im1[0] + im1[1] * im1[1] + im1[2] * im1[2] );
-        double mod2 = Math.sqrt( im2[0] * im2[0] + im2[1] * im2[1] + im2[2] * im2[2] );
-        // gets module of the difference of images.
-        double mod3 = Math.sqrt( Math.abs( im1[0] - im2[0] ) * Math.abs( im1[0] - im2[0] ) +
-                Math.abs( im1[1] - im2[1] ) * Math.abs( im1[1] - im2[1] ) +
-                Math.abs( im1[2] - im2[2] ) * Math.abs( im1[2] - im2[2] ) );
-        double imageChanges1 = mod3 / mod1;
-        double imageChanges2 = mod3 / mod2;
-        if( imageChanges1 > 0.1 && imageChanges2 > 0.1 ) result = true;
-        return result;
-    }
-
-    /**
-     * Reads image from the provided path.
-     * @param path the path where contains image.
-     * @return the {@code BufferedImage} object of this specific image.
-     * @throws IOException
-     * @throws URISyntaxException
-     */
-    public static BufferedImage readImageFromResources( String path ) throws IOException, URISyntaxException {
-        return ImageIO.read( new File( ImageComparison.class.getClassLoader().getResource ( path ).toURI().getPath() ) );
-    }
-
-    /**
-     * Checks images for equals their widths and heights.
-     * @param height1 the height of the first image.
-     * @param width1 the width of the first image.
-     * @param height2 the height of the second image.
-     * @param width2 the width of the second image.
-     */
-    public static void checkCorrectImageSize(int height1, int width1, int height2, int width2) {
-        if( height1 != height2 || width1 != width2 )
-            throw new IllegalArgumentException( "Images dimensions mismatch" );
     }
 }
