@@ -4,6 +4,8 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -30,15 +32,20 @@ public class ImageComparisonTools {
         return frame;
     }
 
+    static BufferedImage deepCopy( BufferedImage iamge ) {
+        ColorModel cm = iamge.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = iamge.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+    }
+
     /**
      * Checks images for equals their widths and heights.
-     * @param height1 the height of the first image.
-     * @param width1 the width of the first image.
-     * @param height2 the height of the second image.
-     * @param width2 the width of the second image.
+     * @param image1 {@code BufferedImage} object of the first image.
+     * @param image2 {@code BufferedImage} object of the second image.
      */
-    public static void checkCorrectImageSize(int height1, int width1, int height2, int width2) {
-        if( height1 != height2 || width1 != width2 )
+    public static void checkCorrectImageSize( BufferedImage image1, BufferedImage image2 ) {
+        if( image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth() )
             throw new IllegalArgumentException( "Images dimensions mismatch" );
     }
 
