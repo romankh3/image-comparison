@@ -40,7 +40,6 @@ jobs:
 
       # run tests!
       - run: export DISPLAY=:99.0
-      - run: sh -e /etc/init.d/xvfb start
       - run: ./gradlew clean build jacocoTestReport
       - run: ./gradlew jacocoTestReport coveralls
 
