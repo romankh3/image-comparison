@@ -4,10 +4,12 @@ import static org.junit.Assert.assertEquals;
 import static ua.comparison.image.ImageComparisonTools.createGUI;
 import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
 
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -20,7 +22,23 @@ public class ImageComparisonToolsUnitTest {
     public void testFrameMethod() throws IOException, URISyntaxException {
         BufferedImage image = readImageFromResources( "result.png" );
         Frame resultFrame = createGUI( image );
-        assertEquals( resultFrame.getHeight(), image.getHeight() );
+        assertEquals( resultFrame.getHeight(), ( int ) ( image.getHeight() * 1.1 ) );
         assertEquals( resultFrame.getWidth(), image.getWidth() );
+    }
+
+    @Test( expected = IllegalArgumentException.class )
+    public void testCheckCorrectImageSize() {
+        BufferedImage image1 = new BufferedImage(10, 10, 10);
+        BufferedImage image2 = new BufferedImage(12, 12, 10);
+
+        ImageComparisonTools.checkCorrectImageSize( image1, image2 );
+    }
+
+    @Test
+    public void testSaveImage() throws IOException, URISyntaxException {
+        BufferedImage image = readImageFromResources( "result.png" );
+        String path = "build/test/correct/save/image.png";
+        ImageComparisonTools.saveImage( path, image );
+        Assert.assertTrue( new File( path ).exists() );
     }
 }

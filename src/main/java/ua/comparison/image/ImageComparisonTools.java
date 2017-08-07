@@ -20,22 +20,22 @@ public class ImageComparisonTools {
      * @param image resulting image.
      */
     public static Frame createGUI(BufferedImage image ) {
-        JFrame frame = new JFrame("The result of the comparison");
+        JFrame frame = new JFrame("The result of the comparison" );
         frame.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
         JLabel label = new JLabel();
-        label.setIcon(new ImageIcon(image, "Result"));
+        label.setIcon( new ImageIcon( image, "Result") );
         frame.getContentPane().add(label, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension( (image.getWidth() ), image.getHeight() ) );
+        frame.setPreferredSize(new Dimension( image.getWidth(), ( int )( image.getHeight() * 1.1 ) ) );
         frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
+        frame.setLocationRelativeTo( null );
+        frame.setVisible( true );
         return frame;
     }
 
-    static BufferedImage deepCopy( BufferedImage iamge ) {
-        ColorModel cm = iamge.getColorModel();
+    static BufferedImage deepCopy( BufferedImage image ) {
+        ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = iamge.copyData(null);
+        WritableRaster raster = image.copyData(null);
         return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
@@ -84,5 +84,17 @@ public class ImageComparisonTools {
      */
     public static BufferedImage readImageFromResources( String path ) throws IOException, URISyntaxException {
         return ImageIO.read( new File( ImageComparison.class.getClassLoader().getResource ( path ).toURI().getPath() ) );
+    }
+
+    /**
+     * Save image to the provided path.
+     * @param path the path to the saving image.
+     * @param image the {@code BufferedImage} object of this specific image.
+     * @throws IOException
+     */
+    public static void saveImage(String path, BufferedImage image ) throws IOException {
+        // make dir if it's not using from Gradle.
+        new File( path ).mkdirs();
+        ImageIO.write( image, "png", new File( path ) );
     }
 }
