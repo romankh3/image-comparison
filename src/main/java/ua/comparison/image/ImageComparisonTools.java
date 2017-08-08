@@ -1,5 +1,7 @@
 package ua.comparison.image;
 
+import ua.comparison.image.model.Rectangle;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -86,8 +88,8 @@ public class ImageComparisonTools {
      * @param counter the number from marks regions.
      * @return the {@code Rectangle} object.
      */
-    public static Rectangle createRectangle( int[][] matrix, int counter ) {
-        Rectangle rect = new Rectangle();
+    public static ua.comparison.image.model.Rectangle createRectangle(int[][] matrix, int counter ) {
+        ua.comparison.image.model.Rectangle rect = new Rectangle();
 
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {

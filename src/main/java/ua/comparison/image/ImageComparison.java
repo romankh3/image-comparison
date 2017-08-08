@@ -1,5 +1,7 @@
 package ua.comparison.image;
 
+import ua.comparison.image.model.Rectangle;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -75,7 +77,7 @@ public class ImageComparison {
      * @param image2 {@code BufferedImage} object of the second image.
      * @return populated binary matrix.
      */
-    public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2 ) {
+    public static int[][] populateTheMatrixOfTheDifferences( BufferedImage image1, BufferedImage image2 ) {
         int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
         for ( int y = 0; y < image1.getHeight(); y++ ) {
             for ( int x = 0; x < image1.getWidth(); x++ ) {

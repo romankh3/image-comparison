@@ -1,7 +1,7 @@
-package ua.comparison.image;
+package ua.comparison.image.model;
 
 import org.junit.Test;
-import ua.comparison.image.Rectangle;
+import ua.comparison.image.model.Rectangle;
 
 import static org.junit.Assert.assertEquals;
 
