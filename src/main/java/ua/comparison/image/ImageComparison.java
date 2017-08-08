@@ -1,5 +1,7 @@
 package ua.comparison.image;
 
+import ua.comparison.image.domain.Rectangle;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -70,7 +72,7 @@ public class ImageComparison {
     }
 
     public static Rectangle createRectangle( int[][] matrix, int counter ) {
-        Rectangle rect = Rectangle.getDefault();
+       Rectangle rect = Rectangle.createDefaultRectangle();
 
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {

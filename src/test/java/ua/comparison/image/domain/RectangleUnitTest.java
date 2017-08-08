@@ -1,6 +1,5 @@
-package ua.comparison.image;
+package ua.comparison.image.domain;
 
-import org.junit.Assert;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -32,7 +31,7 @@ public class RectangleUnitTest {
 
     @Test
     public void testDefaultRectangle() {
-        Rectangle rectangle = Rectangle.getDefault();
+        Rectangle rectangle = Rectangle.createDefaultRectangle();
 
         assertEquals( rectangle.getMinX(), Integer.MAX_VALUE );
         assertEquals( rectangle.getMinY(), Integer.MAX_VALUE );

@@ -1,4 +1,4 @@
-package ua.comparison.image;
+package ua.comparison.image.domain;
 
 /**
  * Object contained data for a rectangle.
@@ -57,7 +57,11 @@ public class Rectangle {
         return maxX - minX;
     }
 
-    public static Rectangle getDefault() {
+    /**
+     * Create a default rectangle with non-real values.
+     * @return the default {@code Rectangle} object.
+     */
+    public static Rectangle createDefaultRectangle() {
         return new Rectangle( Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE );
     }
 }
