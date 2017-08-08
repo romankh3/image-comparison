@@ -1,4 +1,4 @@
-package ua.comparison.image.domain;
+package ua.comparison.image;
 
 /**
  * Object contained data for a rectangle.

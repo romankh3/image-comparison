@@ -1,7 +1,5 @@
 package ua.comparison.image;
 
-import ua.comparison.image.domain.Rectangle;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -69,23 +67,6 @@ public class ImageComparison {
 
         graphics.drawRect( rectangle.getMinY(), rectangle.getMinX(), rectangle.getWidth(), rectangle.getHeight() );
         drawRectangles( matrix, graphics, ++counter, lastNumberCount );
-    }
-
-    public static Rectangle createRectangle( int[][] matrix, int counter ) {
-       Rectangle rect = Rectangle.createDefaultRectangle();
-
-        for ( int y = 0; y < matrix.length; y++ ) {
-            for ( int x = 0; x < matrix[0].length; x++ ) {
-                if ( matrix[y][x] == counter ) {
-                    if ( x < rect.getMinX() ) rect.setMinX( x );
-                    if ( x > rect.getMaxX() ) rect.setMaxX( x );
-
-                    if ( y < rect.getMinY() ) rect.setMinY( y );
-                    if ( y > rect.getMaxY() ) rect.setMaxY( y );
-                }
-            }
-        }
-        return rect;
     }
 
     /**
