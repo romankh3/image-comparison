@@ -5,17 +5,10 @@ package ua.comparison.image;
  */
 public class Rectangle {
 
-    private int minX;
-    private int minY;
-    private int maxX;
-    private int maxY;
-
-    public Rectangle( int minX, int minY, int maxX, int maxY ) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
-    }
+    private int minX = Integer.MAX_VALUE;
+    private int minY = Integer.MAX_VALUE;
+    private int maxX = Integer.MIN_VALUE;
+    private int maxY = Integer.MIN_VALUE;
 
     public void setMinX(int minX) {
         this.minX = minX;
@@ -37,31 +30,13 @@ public class Rectangle {
         return minX;
     }
 
-    public int getMinY() {
-        return minY;
-    }
+    public int getMinY() { return minY; }
 
-    public int getMaxX() {
-        return maxX;
-    }
+    public int getMaxX() { return maxX; }
 
-    public int getMaxY() {
-        return maxY;
-    }
+    public int getMaxY() { return maxY; }
 
-    public int getWidth() {
-        return maxY - minY;
-    }
+    public int getWidth() { return maxY - minY; }
 
-    public int getHeight() {
-        return maxX - minX;
-    }
-
-    /**
-     * Create a default rectangle with non-real values.
-     * @return the default {@code Rectangle} object.
-     */
-    public static Rectangle createDefaultRectangle() {
-        return new Rectangle( Integer.MAX_VALUE, Integer.MAX_VALUE, Integer.MIN_VALUE, Integer.MIN_VALUE );
-    }
+    public int getHeight() { return maxX - minX; }
 }

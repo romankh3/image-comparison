@@ -12,12 +12,12 @@ public class RectangleUnitTest {
 
     @Test
     public void testGetterSetter() {
-        Rectangle rectangle = new Rectangle(1, 2, 3, 4 );
+        Rectangle rectangle = new Rectangle();
 
-        assertEquals( rectangle.getMinX(), 1 );
-        assertEquals( rectangle.getMinY(), 2 );
-        assertEquals( rectangle.getMaxX(), 3 );
-        assertEquals( rectangle.getMaxY(), 4 );
+        assertEquals( rectangle.getMinX(), Integer.MAX_VALUE );
+        assertEquals( rectangle.getMinY(), Integer.MAX_VALUE );
+        assertEquals( rectangle.getMaxX(), Integer.MIN_VALUE );
+        assertEquals( rectangle.getMaxY(), Integer.MIN_VALUE );
 
         rectangle.setMinX( 10 );
         rectangle.setMinY( 20 );
@@ -29,15 +29,4 @@ public class RectangleUnitTest {
         assertEquals( rectangle.getMaxX(), 30 );
         assertEquals( rectangle.getMaxY(), 40 );
     }
-
-    @Test
-    public void testDefaultRectangle() {
-        Rectangle rectangle = Rectangle.createDefaultRectangle();
-
-        assertEquals( rectangle.getMinX(), Integer.MAX_VALUE );
-        assertEquals( rectangle.getMinY(), Integer.MAX_VALUE );
-        assertEquals( rectangle.getMaxX(), Integer.MIN_VALUE );
-        assertEquals( rectangle.getMaxY(), Integer.MIN_VALUE );
-    }
-
 }

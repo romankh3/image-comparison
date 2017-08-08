@@ -87,7 +87,7 @@ public class ImageComparisonTools {
      * @return the {@code Rectangle} object.
      */
     public static Rectangle createRectangle( int[][] matrix, int counter ) {
-        Rectangle rect = Rectangle.createDefaultRectangle();
+        Rectangle rect = new Rectangle();
 
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {
