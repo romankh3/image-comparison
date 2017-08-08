@@ -32,6 +32,11 @@ public class ImageComparisonTools {
         return frame;
     }
 
+    /**
+     * Make a copy of the {@code BufferedImage} object.
+     * @param image the provided image.
+     * @return copy of the provided image.
+     */
     static BufferedImage deepCopy( BufferedImage image ) {
         ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();

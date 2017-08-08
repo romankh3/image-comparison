@@ -1,9 +1,7 @@
 package ua.comparison.image;
 
-import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
@@ -65,25 +63,27 @@ public class ImageComparison {
     private static void drawRectangles( int[][] matrix, Graphics2D graphics, int counter, int lastNumberCount ) {
         if( counter > lastNumberCount ) return;
 
-        int minX = Integer.MAX_VALUE;
-        int minY = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE;
-        int maxY = Integer.MIN_VALUE;
+        Rectangle rectangle = createRectangle( matrix, counter );
+
+        graphics.drawRect( rectangle.getMinY(), rectangle.getMinX(), rectangle.getWidth(), rectangle.getHeight() );
+        drawRectangles( matrix, graphics, ++counter, lastNumberCount );
+    }
+
+    public static Rectangle createRectangle( int[][] matrix, int counter ) {
+        Rectangle rect = Rectangle.getDefault();
 
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {
                 if ( matrix[y][x] == counter ) {
+                    if ( x < rect.getMinX() ) rect.setMinX( x );
+                    if ( x > rect.getMaxX() ) rect.setMaxX( x );
 
-                    if ( x < minX ) minX = x;
-                    if ( x > maxX ) maxX = x;
-
-                    if ( y < minY ) minY = y;
-                    if ( y > maxY ) maxY = y;
+                    if ( y < rect.getMinY() ) rect.setMinY( y );
+                    if ( y > rect.getMaxY() ) rect.setMaxY( y );
                 }
             }
         }
-        graphics.drawRect( minY, minX, maxY - minY, maxX - minX );
-        drawRectangles( matrix, graphics, ++counter, lastNumberCount );
+        return rect;
     }
 
     /**
@@ -93,15 +93,10 @@ public class ImageComparison {
      * @return populated binary matrix.
      */
     public static int[][] populateTheMatrixOfTheDifferences(BufferedImage image1, BufferedImage image2 ) {
-
         int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
         for ( int y = 0; y < image1.getHeight(); y++ ) {
             for ( int x = 0; x < image1.getWidth(); x++ ) {
-                if ( isDifferent( x, y, image1, image2 ) ) {
-                    matrix[x][y] = 1;
-                } else {
-                    matrix[x][y] = 0;
-                }
+                matrix[x][y] = isDifferent( x, y, image1, image2 ) ? 1 : 0;
             }
         }
         return matrix;
@@ -110,7 +105,7 @@ public class ImageComparison {
     /**
      * Group rectangle regions in binary matrix.
      * @param matrix The binary matrix.
-     * @return the last number which marks the lat region.
+     * @return the last number which marks the last region.
      */
     private static int groupRegions( int[][] matrix ) {
         int regionCount = 2;
