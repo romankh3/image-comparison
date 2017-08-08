@@ -32,6 +32,11 @@ public class ImageComparisonTools {
         return frame;
     }
 
+    /**
+     * Make a copy of the {@code BufferedImage} object.
+     * @param image the provided image.
+     * @return copy of the provided image.
+     */
     static BufferedImage deepCopy( BufferedImage image ) {
         ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
@@ -73,6 +78,29 @@ public class ImageComparisonTools {
         double imageChanges2 = mod3 / mod2;
         if( imageChanges1 > 0.1 && imageChanges2 > 0.1 ) result = true;
         return result;
+    }
+
+    /**
+     * Create a {@code Rectangle} object.
+     * @param matrix the matrix of the Conformity pixels.
+     * @param counter the number from marks regions.
+     * @return the {@code Rectangle} object.
+     */
+    public static Rectangle createRectangle( int[][] matrix, int counter ) {
+        Rectangle rect = new Rectangle();
+
+        for ( int y = 0; y < matrix.length; y++ ) {
+            for ( int x = 0; x < matrix[0].length; x++ ) {
+                if ( matrix[y][x] == counter ) {
+                    if ( x < rect.getMinX() ) rect.setMinX( x );
+                    if ( x > rect.getMaxX() ) rect.setMaxX( x );
+
+                    if ( y < rect.getMinY() ) rect.setMinY( y );
+                    if ( y > rect.getMaxY() ) rect.setMaxY( y );
+                }
+            }
+        }
+        return rect;
     }
 
     /**
