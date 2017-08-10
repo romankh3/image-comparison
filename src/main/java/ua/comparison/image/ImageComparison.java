@@ -24,9 +24,9 @@ public class ImageComparison {
 
     public static void main( String[] args ) throws IOException, URISyntaxException {
         // Draw rectangles on the image.
-        BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image2.png" );
+        BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image3.png" );
 
-        saveImage( "build/result.png", drawnDifferences );
+        saveImage( "build/result2.png", drawnDifferences );
 
         createGUI( drawnDifferences );
     }

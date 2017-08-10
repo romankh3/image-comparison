@@ -66,9 +66,8 @@ public class ImageComparisonTools {
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     public static boolean isDifferent( int x, int y, BufferedImage image1, BufferedImage image2 ){
-        boolean result = false;
-        int[] im1= image1.getRaster().getPixel( x,y,new int[3] );
-        int[] im2= image2.getRaster().getPixel( x,y,new int[3] );
+        int[] im1= image1.getRaster().getPixel( x,y,new int[4] );
+        int[] im2= image2.getRaster().getPixel( x,y,new int[4] );
         //gets modules of the images:
         double mod1 = Math.sqrt( im1[0] * im1[0] + im1[1] * im1[1] + im1[2] * im1[2] );
         double mod2 = Math.sqrt( im2[0] * im2[0] + im2[1] * im2[1] + im2[2] * im2[2] );
@@ -78,8 +77,7 @@ public class ImageComparisonTools {
                 Math.abs( im1[2] - im2[2] ) * Math.abs( im1[2] - im2[2] ) );
         double imageChanges1 = mod3 / mod1;
         double imageChanges2 = mod3 / mod2;
-        if( imageChanges1 > 0.1 && imageChanges2 > 0.1 ) result = true;
-        return result;
+        return imageChanges1 > 0.1 && imageChanges2 > 0.1;
     }
 
     /**

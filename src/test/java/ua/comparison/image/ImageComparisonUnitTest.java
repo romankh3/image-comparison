@@ -23,7 +23,7 @@ public class ImageComparisonUnitTest {
         BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image2.png" );
 
         // Get the expected image.
-        BufferedImage expectedResultImage = readImageFromResources( "result.png" );
+        BufferedImage expectedResultImage = readImageFromResources( "result1.png" );
 
         // assert height of the images.
         assertEquals( drawnDifferences.getHeight(), expectedResultImage.getHeight() );
