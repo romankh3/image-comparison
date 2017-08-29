@@ -86,7 +86,7 @@ public class ImageComparisonTools {
      * @param counter the number from marks regions.
      * @return the {@code Rectangle} object.
      */
-    public static ua.comparison.image.model.Rectangle createRectangle(int[][] matrix, int counter ) {
+    public static Rectangle createRectangle(int[][] matrix, int counter ) {
         ua.comparison.image.model.Rectangle rect = new Rectangle();
 
         for ( int y = 0; y < matrix.length; y++ ) {
@@ -101,6 +101,22 @@ public class ImageComparisonTools {
             }
         }
         return rect;
+    }
+
+    /**
+     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
+     * @param image1 {@code BufferedImage} object of the first image.
+     * @param image2 {@code BufferedImage} object of the second image.
+     * @return populated binary matrix.
+     */
+    static int[][] populateTheMatrixOfTheDifferences( BufferedImage image1, BufferedImage image2 ) {
+        int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
+        for ( int y = 0; y < image1.getHeight(); y++ ) {
+            for ( int x = 0; x < image1.getWidth(); x++ ) {
+                matrix[x][y] = isDifferent( x, y, image1, image2 ) ? 1 : 0;
+            }
+        }
+        return matrix;
     }
 
     /**

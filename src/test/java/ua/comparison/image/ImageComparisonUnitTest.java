@@ -8,7 +8,6 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static ua.comparison.image.ImageComparison.*;
 import static ua.comparison.image.ImageComparisonTools.*;
 
 
@@ -20,7 +19,7 @@ public class ImageComparisonUnitTest {
     @Test
     public void testCorrectWorking() throws IOException, URISyntaxException {
         // Draw rectangles on the image.
-        BufferedImage drawnDifferences = drawTheDifference( "image1.png", "image2.png" );
+        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image2.png" ).compareImages();
 
         // Get the expected image.
         BufferedImage expectedResultImage = readImageFromResources( "result1.png" );
