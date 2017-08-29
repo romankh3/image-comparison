@@ -1,4 +1,4 @@
-package ua.comparison.image;
+package ua.comparison.image.model;
 
 /**
  * Object contained data for a rectangle.
