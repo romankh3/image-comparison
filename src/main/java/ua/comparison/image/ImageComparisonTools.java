@@ -81,13 +81,13 @@ public class ImageComparisonTools {
     }
 
     /**
-     * Create a {@code Rectangle} object.
+     * Create a {@link Rectangle} object.
      * @param matrix the matrix of the Conformity pixels.
      * @param counter the number from marks regions.
-     * @return the {@code Rectangle} object.
+     * @return the {@link Rectangle} object.
      */
     public static Rectangle createRectangle(int[][] matrix, int counter ) {
-        ua.comparison.image.model.Rectangle rect = new Rectangle();
+        Rectangle rect = new Rectangle();
 
         for ( int y = 0; y < matrix.length; y++ ) {
             for ( int x = 0; x < matrix[0].length; x++ ) {
