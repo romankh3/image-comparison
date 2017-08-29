@@ -23,6 +23,11 @@ public class ImageComparison {
      */
     private int counter = 2;
 
+    /**
+     * The number of the marking specific rectangle.
+     */
+    private int regionCount = counter;
+
     private final BufferedImage image1;
     private final BufferedImage image2;
     private int[][] matrix;
@@ -51,8 +56,8 @@ public class ImageComparison {
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor( RED );
 
-        int lastNumberCount = groupRegions();
-        drawRectangles( graphics, lastNumberCount );
+        groupRegions();
+        drawRectangles( graphics );
 
         //save the image:
         saveImage( "build/result2.png", outImg );
@@ -63,33 +68,29 @@ public class ImageComparison {
     /**
      * Draw rectangles with the differences pixels.
      * @param graphics the Graphics2D object for drawing rectangles.
-     * @param lastNumberCount the last number which marks region.
      */
-    private void drawRectangles( Graphics2D graphics, int lastNumberCount ) {
-        if( counter > lastNumberCount ) return;
+    private void drawRectangles( Graphics2D graphics ) {
+        if( counter > regionCount ) return;
 
         Rectangle rectangle = createRectangle( matrix, counter );
 
         graphics.drawRect( rectangle.getMinY(), rectangle.getMinX(), rectangle.getWidth(), rectangle.getHeight() );
         counter++;
-        drawRectangles( graphics, lastNumberCount );
+        drawRectangles( graphics );
     }
 
     /**
      * Group rectangle regions in binary matrix.
-     * @return the last number which marks the last region.
      */
-    private int groupRegions() {
-        int regionCount = counter;
+    private void groupRegions() {
         for ( int row = 0; row < matrix.length; row++ ) {
             for ( int col = 0; col < matrix[row].length; col++ ) {
                 if ( matrix[row][col] == 1 ) {
-                    joinToRegion( row, col, regionCount );
+                    joinToRegion( row, col );
                     regionCount++;
                 }
             }
         }
-        return regionCount;
     }
 
     /**
@@ -98,24 +99,23 @@ public class ImageComparison {
      * and set the {@code groupCount} to matrix.
      * @param row the value of the row.
      * @param col the value of the column.
-     * @param regionCount the number which marks caught values that are "1".
      */
-    private void joinToRegion( int row, int col, int regionCount ) {
+    private void joinToRegion( int row, int col ) {
         if ( row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1 ) return;
 
         matrix[row][col] = regionCount;
 
         for ( int i = 0; i < threshold; i++ ) {
             // goes to all directions.
-            joinToRegion( row - 1 - i, col, regionCount );
-            joinToRegion( row + 1 + i, col, regionCount );
-            joinToRegion( row, col - 1 - i, regionCount );
-            joinToRegion( row, col + 1 + i, regionCount );
+            joinToRegion( row - 1 - i, col );
+            joinToRegion( row + 1 + i, col );
+            joinToRegion( row, col - 1 - i );
+            joinToRegion( row, col + 1 + i );
 
-            joinToRegion( row - 1 - i, col - 1 - i, regionCount );
-            joinToRegion( row + 1 + i, col - 1 - i, regionCount );
-            joinToRegion( row - 1 - i, col + 1 + i, regionCount );
-            joinToRegion( row + 1 + i, col + 1 + i, regionCount );
+            joinToRegion( row - 1 - i, col - 1 - i );
+            joinToRegion( row + 1 + i, col - 1 - i );
+            joinToRegion( row - 1 - i, col + 1 + i );
+            joinToRegion( row + 1 + i, col + 1 + i );
         }
     }
 }

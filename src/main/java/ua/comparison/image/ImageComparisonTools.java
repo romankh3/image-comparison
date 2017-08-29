@@ -21,12 +21,12 @@ public class ImageComparisonTools {
      * Create GUI for represents the resulting image.
      * @param image resulting image.
      */
-    public static Frame createGUI(BufferedImage image ) {
-        JFrame frame = new JFrame("The result of the comparison" );
+    public static Frame createGUI( BufferedImage image ) {
+        JFrame frame = new JFrame( "The result of the comparison" );
         frame.setDefaultCloseOperation( WindowConstants.EXIT_ON_CLOSE );
         JLabel label = new JLabel();
         label.setIcon( new ImageIcon( image, "Result") );
-        frame.getContentPane().add(label, BorderLayout.CENTER);
+        frame.getContentPane().add( label, BorderLayout.CENTER);
         frame.setPreferredSize(new Dimension( image.getWidth(), ( int )( image.getHeight() * 1.1 ) ) );
         frame.pack();
         frame.setLocationRelativeTo( null );
@@ -42,8 +42,8 @@ public class ImageComparisonTools {
     static BufferedImage deepCopy( BufferedImage image ) {
         ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
-        WritableRaster raster = image.copyData(null);
-        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
+        WritableRaster raster = image.copyData( null);
+        return new BufferedImage( cm, raster, isAlphaPremultiplied, null);
     }
 
     /**
@@ -86,7 +86,7 @@ public class ImageComparisonTools {
      * @param counter the number from marks regions.
      * @return the {@link Rectangle} object.
      */
-    public static Rectangle createRectangle(int[][] matrix, int counter ) {
+    public static Rectangle createRectangle( int[][] matrix, int counter ) {
         Rectangle rect = new Rectangle();
 
         for ( int y = 0; y < matrix.length; y++ ) {
