@@ -16,7 +16,10 @@ To run project write:
 $ git clone https://github.com/romankh3/image-comparison
 $ cd image-comparison
 $ ./gradlew run
+Or run executable file:
+$ ./run.sh
 ```
+
 
 You will get the result of comparing two images.
 The images, which are using:
