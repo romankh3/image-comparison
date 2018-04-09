@@ -33,8 +33,16 @@ public class ImageComparisonUnitTest {
         // assert each pixel.
         for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
             for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
-                assertTrue( !isDifferent( x, y, expectedResultImage, drawnDifferences ) );
+                assertTrue( !isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
             }
         }
+    }
+
+    /**
+     * Test issue #17. It was StackOverFlowError.
+     */
+    @Test
+    public void testIssue17() throws IOException, URISyntaxException {
+        new ImageComparison( "b1#17.png", "b2#17.png" ).compareImages();
     }
 }

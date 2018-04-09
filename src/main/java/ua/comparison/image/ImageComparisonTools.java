@@ -59,25 +59,23 @@ public class ImageComparisonTools {
     /**
      * Says if the two pixels equal or not. The rule is the difference between two pixels
      * need to be more then 10%.
-     * @param x the X value of the binary matrix.
-     * @param y the Y value of the binary matrix.
-     * @param image1 {@code BufferedImage} object of the first image.
-     * @param image2 {@code BufferedImage} object of the second image.
+     * @param rgb1 the RGB value of the Pixel of the Image1.
+     * @param rgb2 the RGB value of the Pixel of the Image2.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
-    public static boolean isDifferent( int x, int y, BufferedImage image1, BufferedImage image2 ){
-        int[] im1= image1.getRaster().getPixel( x,y,new int[4] );
-        int[] im2= image2.getRaster().getPixel( x,y,new int[4] );
-        //gets modules of the images:
-        double mod1 = Math.sqrt( im1[0] * im1[0] + im1[1] * im1[1] + im1[2] * im1[2] );
-        double mod2 = Math.sqrt( im2[0] * im2[0] + im2[1] * im2[1] + im2[2] * im2[2] );
-        // gets module of the difference of images.
-        double mod3 = Math.sqrt( Math.abs( im1[0] - im2[0] ) * Math.abs( im1[0] - im2[0] ) +
-                Math.abs( im1[1] - im2[1] ) * Math.abs( im1[1] - im2[1] ) +
-                Math.abs( im1[2] - im2[2] ) * Math.abs( im1[2] - im2[2] ) );
-        double imageChanges1 = mod3 / mod1;
-        double imageChanges2 = mod3 / mod2;
-        return imageChanges1 > 0.1 && imageChanges2 > 0.1;
+    public static boolean isDifferent( int rgb1, int rgb2){
+        int red1 = ( rgb1 >> 16 ) & 0xff;
+        int green1 = ( rgb1 >> 8 ) & 0xff;
+        int blue1 = ( rgb1 ) & 0xff;
+        int red2 = ( rgb2 >> 16 ) & 0xff;
+        int green2 = ( rgb2 >> 8 ) & 0xff;
+        int blue2 = ( rgb2 ) & 0xff;
+        double result = Math.sqrt( Math.pow( red2 - red1, 2 ) +
+                                   Math.pow( green2 - green1, 2) +
+                                   Math.pow( blue2 - blue1, 2 ) )
+                                   /
+                                   Math.sqrt( Math.pow( 255, 2 ) * 3 );
+        return result > 0.1;
     }
 
     /**
@@ -113,7 +111,7 @@ public class ImageComparisonTools {
         int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
         for ( int y = 0; y < image1.getHeight(); y++ ) {
             for ( int x = 0; x < image1.getWidth(); x++ ) {
-                matrix[x][y] = isDifferent( x, y, image1, image2 ) ? 1 : 0;
+                matrix[x][y] = isDifferent( image1.getRGB( x, y ), image2.getRGB( x, y ) ) ? 1 : 0;
             }
         }
         return matrix;

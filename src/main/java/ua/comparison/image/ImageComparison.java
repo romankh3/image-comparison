@@ -39,7 +39,7 @@ public class ImageComparison {
     }
 
     public static void main( String[] args ) throws IOException, URISyntaxException {
-        ImageComparison comparison = new ImageComparison( "image1.png", "image2.png" );
+        ImageComparison comparison = new ImageComparison("image1.png", "image2.png");
         createGUI( comparison.compareImages() );
     }
 
