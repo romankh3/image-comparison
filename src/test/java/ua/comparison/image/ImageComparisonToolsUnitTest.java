@@ -22,7 +22,7 @@ public class ImageComparisonToolsUnitTest {
     public void testFrameMethod() throws IOException, URISyntaxException {
         BufferedImage image = readImageFromResources( "result1.png" );
         Frame resultFrame = createGUI( image );
-        assertEquals( resultFrame.getHeight(), 714 );
+        assertEquals( resultFrame.getHeight(), 716 );
         assertEquals( resultFrame.getWidth(), image.getWidth() );
     }
 
