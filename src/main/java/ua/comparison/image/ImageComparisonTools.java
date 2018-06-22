@@ -27,7 +27,7 @@ public class ImageComparisonTools {
         JLabel label = new JLabel();
         label.setIcon( new ImageIcon( image, "Result") );
         frame.getContentPane().add( label, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension( image.getWidth(), ( int )( image.getHeight() * 1.1 ) ) );
+        frame.setPreferredSize(new Dimension( image.getWidth(), ( int )( image.getHeight() ) ) );
         frame.pack();
         frame.setLocationRelativeTo( null );
         frame.setVisible( true );
