@@ -1,8 +1,10 @@
-### The program in Java that compares any 2 images and shows the differences visually by drawing rectangles.
 ![logo-trans](https://user-images.githubusercontent.com/16310793/42029324-df117c42-7ad7-11e8-8d3e-9c6cd8822d6c.png)
-#### logo designed by @dee-y!
+**logo designed by @dee-y!**
 
 [![Build Status](https://travis-ci.org/romankh3/image-comparison.svg?branch=master)](https://travis-ci.org/romankh3/image-comparison) [![Coverage Status](https://coveralls.io/repos/github/romankh3/image-comparison/badge.svg?branch=master)](https://coveralls.io/github/romankh3/image-comparison?branch=master) [![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
+
+## About
+The program in Java that compares any 2 images and shows the differences visually by drawing rectangles.
 
 ## Requirements
 * Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
@@ -11,12 +13,10 @@
 * No third party libraries or borrowed code are in usage.
 
 ## Getting Started
-To run project write: 
+To run project open `Terminal` and write: 
 ```
 $ git clone https://github.com/romankh3/image-comparison
 $ cd image-comparison
-$ ./gradlew run
-Or run executable file:
 $ ./run.sh
 ```
 
