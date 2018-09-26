@@ -50,3 +50,7 @@ ${projectDir}/build/result.png
 This project is unlicense - see the [LICENSE](LICENSE) file for details
 
 ### Thanks [@dee-y](https://github.com/dee-y) for designing this logo!
+
+### Also if you're interesting - see my other repositories: 
+* [Movie Tracking](https://github.com/romankh3/movietracking) Simple API for tracking movies with favorite actors for the specific time.
+* [Tic Tac Toe NxM](https://github.com/romankh3/tictactoe)- Own implementation. For any rectangle and any winner line count. 
