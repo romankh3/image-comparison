@@ -35,6 +35,10 @@ public class ImageComparison {
     private final BufferedImage image2;
     private int[][] matrix;
 
+    ImageComparison( String image1, String image2 ) throws IOException, URISyntaxException {
+        this( readImageFromResources(image1), readImageFromResources(image2) );
+    }
+
     ImageComparison( BufferedImage image1, BufferedImage image2 ) {
         this.image1 = image1;
         this.image2 = image2;
