@@ -5,7 +5,19 @@ import java.util.Optional;
 
 final class ArgsParser {
 
-    public Optional<Arguments> parseArgs(String... args) {
+    private final Runnable successExit;
+    private final Runnable errorExit;
+
+    ArgsParser() {
+        this(() -> System.exit(0), () -> System.exit(1));
+    }
+
+    ArgsParser(Runnable successExit, Runnable errorExit) {
+        this.successExit = successExit;
+        this.errorExit = errorExit;
+    }
+
+    Optional<Arguments> parseArgs(String... args) {
         if (args.length == 0) {
             return Optional.empty();
         }
@@ -18,28 +30,17 @@ final class ArgsParser {
         } else if (args.length == 2 || args.length == 3) {
             File image1 = new File(args[0]);
             File image2 = new File(args[1]);
-            String errorMessage = "";
-            if (!image1.isFile()) {
-                errorMessage += image1 + " is not a file!";
+            File result = null;
+            if (args.length == 3) {
+                result = new File(args[2]);
             }
-            if (!image2.isFile()) {
-                errorMessage += (errorMessage.isEmpty() ? "" : "\n") + image2 + " is not a file!";
-            }
-            if (errorMessage.isEmpty()) {
-                File result = null;
-                if (args.length == 3) {
-                    result = new File(args[2]);
-                }
-                return Optional.of(new Arguments(image1, image2, result));
-            } else {
-                return error(errorMessage);
-            }
+            return Optional.of(new Arguments(image1, image2, result));
         } else {
             return error("Too many arguments. To see usage, use the '-h' option");
         }
     }
 
-    private static Optional<Arguments> help() {
+    private Optional<Arguments> help() {
         System.out.println("Java ImageComparison Tool\n" +
                 "\n" +
                 "Usage:\n" +
@@ -52,13 +53,13 @@ final class ArgsParser {
                 "Options:\n" +
                 "    -h --help  print this help message\n\n" +
                 "If no arguments are provided, two demo images are compared and the difference displayed in the UI.\n");
-        System.exit(0);
+        successExit.run();
         return Optional.empty();
     }
 
-    private static Optional<Arguments> error(String errorMessage) {
+    private Optional<Arguments> error(String errorMessage) {
         System.err.println(errorMessage);
-        System.exit(1);
+        errorExit.run();
         return Optional.empty();
     }
 
@@ -67,21 +68,21 @@ final class ArgsParser {
         private final File image2;
         private final File destinationImage;
 
-        public Arguments(File image1, File image2, File destinationImage) {
+        Arguments(File image1, File image2, File destinationImage) {
             this.image1 = image1;
             this.image2 = image2;
             this.destinationImage = destinationImage;
         }
 
-        public File getImage1() {
+        File getImage1() {
             return image1;
         }
 
-        public File getImage2() {
+        File getImage2() {
             return image2;
         }
 
-        public Optional<File> getDestinationImage() {
+        Optional<File> getDestinationImage() {
             return Optional.ofNullable(destinationImage);
         }
     }
