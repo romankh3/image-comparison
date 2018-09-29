@@ -39,7 +39,13 @@ public class ImageComparison {
         this( readImageFromResources(image1), readImageFromResources(image2) );
     }
 
-    ImageComparison( BufferedImage image1, BufferedImage image2 ) {
+    /**
+     * Create a new instance of {@link ImageComparison} that can compare the given images.
+     *
+     * @param image1 first image to be compared
+     * @param image2 second image to be compared
+     */
+    public ImageComparison( BufferedImage image1, BufferedImage image2 ) {
         this.image1 = image1;
         this.image2 = image2;
         matrix = populateTheMatrixOfTheDifferences( image1, image2 );
@@ -50,7 +56,9 @@ public class ImageComparison {
         Optional<ArgsParser.Arguments> arguments = parser.parseArgs(args);
         ImageComparison imgCmp;
         if (arguments.isPresent()) {
-            imgCmp = createImageComparison(arguments.get());
+            imgCmp = new ImageComparison(
+                    readImageFromFile(arguments.get().getImage1()),
+                    readImageFromFile(arguments.get().getImage2()));
             Optional<File> destination = arguments.get().getDestinationImage();
             if (destination.isPresent()) {
                 BufferedImage result = imgCmp.compareImages();
@@ -59,21 +67,11 @@ public class ImageComparison {
                 createGUI( imgCmp.compareImages() );
             }
         } else {
-            imgCmp = createDefaultImageComparison();
+            imgCmp = new ImageComparison(
+                    readImageFromResources("image1.png" ),
+                    readImageFromResources("image2.png" ));
             createGUI( imgCmp.compareImages() );
         }
-    }
-
-    private static ImageComparison createImageComparison(ArgsParser.Arguments arguments) throws IOException {
-        return new ImageComparison(
-                readImageFromFile(arguments.getImage1()),
-                readImageFromFile(arguments.getImage2()));
-    }
-
-    private static ImageComparison createDefaultImageComparison() throws IOException, URISyntaxException {
-        return new ImageComparison(
-                readImageFromResources("image1.png"),
-                readImageFromResources("image2.png"));
     }
 
     /**
