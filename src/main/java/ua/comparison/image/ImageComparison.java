@@ -4,8 +4,11 @@ import ua.comparison.image.model.Rectangle;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.util.Optional;
 
 import static java.awt.Color.RED;
 import static ua.comparison.image.ImageComparisonTools.*;
@@ -32,22 +35,48 @@ public class ImageComparison {
     private final BufferedImage image2;
     private int[][] matrix;
 
-    ImageComparison( String image1Name, String image2Name ) throws IOException, URISyntaxException {
-        image1 = readImageFromResources( image1Name );
-        image2 = readImageFromResources( image2Name );
+    ImageComparison( BufferedImage image1, BufferedImage image2 ) {
+        this.image1 = image1;
+        this.image2 = image2;
         matrix = populateTheMatrixOfTheDifferences( image1, image2 );
     }
 
     public static void main( String[] args ) throws IOException, URISyntaxException {
-        ImageComparison comparison = new ImageComparison("image1.png", "image2.png");
-        createGUI( comparison.compareImages() );
+        ArgsParser parser = new ArgsParser();
+        Optional<ArgsParser.Arguments> arguments = parser.parseArgs(args);
+        ImageComparison imgCmp;
+        if (arguments.isPresent()) {
+            imgCmp = createImageComparison(arguments.get());
+            Optional<File> destination = arguments.get().getDestinationImage();
+            if (destination.isPresent()) {
+                BufferedImage result = imgCmp.compareImages();
+                saveImage(destination.get(), result);
+            } else {
+                createGUI( imgCmp.compareImages() );
+            }
+        } else {
+            imgCmp = createDefaultImageComparison();
+            createGUI( imgCmp.compareImages() );
+        }
+    }
+
+    private static ImageComparison createImageComparison(ArgsParser.Arguments arguments) throws IOException {
+        return new ImageComparison(
+                readImageFromFile(arguments.getImage1()),
+                readImageFromFile(arguments.getImage2()));
+    }
+
+    private static ImageComparison createDefaultImageComparison() throws IOException, URISyntaxException {
+        return new ImageComparison(
+                readImageFromResources("image1.png"),
+                readImageFromResources("image2.png"));
     }
 
     /**
      * Draw rectangles which cover the regions of the difference pixels.
      * @return the result of the drawing.
      */
-    BufferedImage compareImages() throws IOException, URISyntaxException {
+    BufferedImage compareImages() throws IOException {
         // check images for valid
         checkCorrectImageSize( image1, image2 );
 
@@ -60,7 +89,7 @@ public class ImageComparison {
         drawRectangles( graphics );
 
         //save the image:
-        saveImage( "build/result2.png", outImg );
+        saveImage(Files.createTempFile("image-comparison", ".png").toFile(), outImg );
 
         return outImg;
     }

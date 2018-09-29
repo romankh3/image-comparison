@@ -129,14 +129,28 @@ public class ImageComparisonTools {
     }
 
     /**
+     * Reads image from the provided file path.
+     * @param path the path where contains image.
+     * @return the {@code BufferedImage} object of this specific image.
+     * @throws IOException
+     */
+    public static BufferedImage readImageFromFile( File path ) throws IOException {
+        return ImageIO.read( path  );
+    }
+
+    /**
      * Save image to the provided path.
      * @param path the path to the saving image.
      * @param image the {@code BufferedImage} object of this specific image.
      * @throws IOException
      */
-    public static void saveImage(String path, BufferedImage image ) throws IOException {
+    public static void saveImage( File path, BufferedImage image ) throws IOException {
+        File dir = path.getParentFile();
         // make dir if it's not using from Gradle.
-        new File( path ).mkdirs();
-        ImageIO.write( image, "png", new File( path ) );
+        boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
+        if (!dirExists) {
+            throw new RuntimeException("Unable to create directory " + dir);
+        }
+        ImageIO.write( image, "png", path );
     }
 }
