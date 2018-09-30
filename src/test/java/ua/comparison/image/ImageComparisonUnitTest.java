@@ -60,6 +60,17 @@ public class ImageComparisonUnitTest {
     }
 
     @Test
+    public void testCreateWithTwoArgs() throws IOException, URISyntaxException {
+        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( "image1.png" ).toURI().getPath() );
+        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( "image2.png" ).toURI().getPath() );
+        ImageComparison comparison = ImageComparison.create(image1.getAbsolutePath(), image2.getAbsolutePath());
+
+        assertImagesEqual(readImageFromResources("image1.png" ), comparison.getImage1());
+        assertImagesEqual(readImageFromResources("image2.png" ), comparison.getImage2());
+        assertFalse(comparison.getDestination().isPresent());
+    }
+
+    @Test
     public void testCreateWithTwoImagesAsArgs() throws IOException, URISyntaxException {
         File image1 = new File( ImageComparison.class.getClassLoader().getResource ( "image1.png" ).toURI().getPath() );
         File image2 = new File( ImageComparison.class.getClassLoader().getResource ( "image2.png" ).toURI().getPath() );

@@ -65,16 +65,15 @@ public class ImageComparison {
         return Optional.ofNullable( destination );
     }
 
-    public static void main(String[] args ) throws IOException, URISyntaxException {
-        Optional<ArgsParser.Arguments> arguments = new ArgsParser().parseArgs(args);
-        ImageComparison imgCmp;
-        if ( arguments.isPresent() ) {
-            imgCmp = create( arguments.get() );
-        } else {
-            imgCmp = createDefault();
-        }
+    public static void main( String[] args ) throws IOException, URISyntaxException {
+        ImageComparison imgCmp = create( args );
         BufferedImage result = imgCmp.compareImages();
         handleResult( imgCmp, ( file ) -> saveImage( file, result ), () -> createGUI( result ) );
+    }
+
+    static ImageComparison create( String... args ) throws IOException, URISyntaxException {
+        Optional<ArgsParser.Arguments> arguments = new ArgsParser().parseArgs(args);
+        return arguments.isPresent() ? create( arguments.get() ) : createDefault();
     }
 
     static ImageComparison createDefault() throws IOException, URISyntaxException {
