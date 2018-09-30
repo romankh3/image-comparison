@@ -3,10 +3,13 @@ plugins {
     id 'java'
     id 'application'
     id 'com.github.kt3k.coveralls' version '2.6.3'
+    id 'maven'
+    id "com.jfrog.bintray" version "1.8.4"
 }
 
-group 'image-comparison'
-version '1.0-SNAPSHOT'
+group 'com.github.romankh3'
+version '1.0'
+description 'A library and utility to compare different images.'
 sourceCompatibility = 1.8
 
 mainClassName = "ua.comparison.image.ImageComparison"
@@ -21,7 +24,10 @@ dependencies {
 
 jar {
     manifest {
-        attributes 'Main-Class': mainClassName
+        attributes 'Main-Class': mainClassName,
+                "Implementation-Title": "image-comparison",
+                "Implementation-Version": version,
+                "Automatic-Module-Name": 'com.github.romankh3.image.comparison'
     }
 }
 
@@ -34,3 +40,87 @@ jacocoTestReport {
 
 defaultTasks << 'clean'
 defaultTasks << 'build'
+
+/* Publishing config */
+
+task javadocJar( type: Jar ) {
+    classifier = 'javadoc'
+    from javadoc
+}
+
+task sourcesJar( type: Jar ) {
+    classifier = 'sources'
+    from sourceSets.main.allSource
+}
+
+artifacts {
+    archives javadocJar, sourcesJar
+}
+
+// add all the info required by Maven Central to the pom
+configure( install.repositories.mavenInstaller ) {
+    pom.project {
+        inceptionYear '2018'
+        name project.name
+        packaging 'jar'
+        description project.description
+
+        url 'https://github.com/romankh3/image-comparison'
+
+        scm {
+            connection 'git@github.com:romankh3/image-comparison.git'
+            developerConnection 'git@github.com:romankh3/image-comparison.git'
+            url 'https://github.com/romankh3/image-comparison'
+        }
+
+        licenses {
+            license {
+                name 'The Unlicense'
+                url 'http://unlicense.org/'
+            }
+        }
+
+        developers {
+            developer {
+                id 'romankh3'
+                name 'Roman Beskrovnyi'
+                email 'roman.beskrovnyy@gmail.com'
+            }
+        }
+    }
+}
+
+def getProjectProperty = { String propertyName ->
+    project.properties[ propertyName ]
+}
+
+bintray {
+    user = getProjectProperty "bintrayUserName"
+    key = getProjectProperty "bintrayApiKey"
+    configurations = [ 'archives' ]
+    publish = true
+    pkg {
+        repo = 'maven'
+        name = 'image-comparison'
+        licenses = [ 'Apache-2.0' ]
+        labels = [ 'java', 'image', 'image-comparison' ]
+        publicDownloadNumbers = true
+
+        //noinspection GroovyAssignabilityCheck
+        version {
+            name = project.version
+            vcsTag = project.version
+            gpg {
+                sign = true
+            }
+            mavenCentralSync {
+                sync = true
+                user = getProjectProperty 'ossrhUsername'
+                password = getProjectProperty 'ossrhPassword'
+                close = '1' // '0' to NOT close
+            }
+        }
+    }
+}
+
+bintrayUpload.dependsOn build, sourcesJar
