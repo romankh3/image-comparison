@@ -33,10 +33,11 @@ public class ImageComparison {
 
     private final BufferedImage image1;
     private final BufferedImage image2;
+    private final /* @Nullable */ File destination;
     private int[][] matrix;
 
     ImageComparison( String image1, String image2 ) throws IOException, URISyntaxException {
-        this( readImageFromResources(image1), readImageFromResources(image2) );
+        this( readImageFromResources(image1), readImageFromResources(image2), null );
     }
 
     /**
@@ -44,33 +45,57 @@ public class ImageComparison {
      *
      * @param image1 first image to be compared
      * @param image2 second image to be compared
+     * @param destination destination to save the result. If null, the result is shown in the UI.
      */
-    public ImageComparison( BufferedImage image1, BufferedImage image2 ) {
+    public ImageComparison( BufferedImage image1, BufferedImage image2, File destination ) {
         this.image1 = image1;
         this.image2 = image2;
-        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
+        this.destination = destination;
     }
 
-    public static void main( String[] args ) throws IOException, URISyntaxException {
-        ArgsParser parser = new ArgsParser();
-        Optional<ArgsParser.Arguments> arguments = parser.parseArgs(args);
+    public BufferedImage getImage1() {
+        return image1;
+    }
+
+    public BufferedImage getImage2() {
+        return image2;
+    }
+
+    public Optional<File> getDestination() {
+        return Optional.ofNullable( destination );
+    }
+
+    public static void main(String[] args ) throws IOException, URISyntaxException {
+        Optional<ArgsParser.Arguments> arguments = new ArgsParser().parseArgs(args);
         ImageComparison imgCmp;
-        if (arguments.isPresent()) {
-            imgCmp = new ImageComparison(
-                    readImageFromFile(arguments.get().getImage1()),
-                    readImageFromFile(arguments.get().getImage2()));
-            Optional<File> destination = arguments.get().getDestinationImage();
-            if (destination.isPresent()) {
-                BufferedImage result = imgCmp.compareImages();
-                saveImage(destination.get(), result);
-            } else {
-                createGUI( imgCmp.compareImages() );
-            }
+        if ( arguments.isPresent() ) {
+            imgCmp = create( arguments.get() );
         } else {
-            imgCmp = new ImageComparison(
-                    readImageFromResources("image1.png" ),
-                    readImageFromResources("image2.png" ));
-            createGUI( imgCmp.compareImages() );
+            imgCmp = createDefault();
+        }
+        BufferedImage result = imgCmp.compareImages();
+        handleResult( imgCmp, ( file ) -> saveImage( file, result ), () -> createGUI( result ) );
+    }
+
+    static ImageComparison createDefault() throws IOException, URISyntaxException {
+        return new ImageComparison(
+                readImageFromResources("image1.png" ),
+                readImageFromResources("image2.png" ),
+                null );
+    }
+
+    static ImageComparison create( ArgsParser.Arguments args ) throws IOException {
+        return new ImageComparison(
+                readImageFromFile( args.getImage1() ),
+                readImageFromFile( args.getImage2() ),
+                args.getDestinationImage().orElse( null ) );
+    }
+
+    static void handleResult(ImageComparison instance, IOConsumer<File> saveToFile, Runnable showUI ) throws IOException {
+        if ( instance.getDestination().isPresent() ) {
+            saveToFile.accept( instance.getDestination().get() );
+        } else {
+            showUI.run();
         }
     }
 
@@ -79,6 +104,8 @@ public class ImageComparison {
      * @return the result of the drawing.
      */
     BufferedImage compareImages() throws IOException {
+        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
+
         // check images for valid
         checkCorrectImageSize( image1, image2 );
 
@@ -91,7 +118,7 @@ public class ImageComparison {
         drawRectangles( graphics );
 
         //save the image:
-        saveImage(Files.createTempFile("image-comparison", ".png").toFile(), outImg );
+        saveImage(Files.createTempFile("image-comparison", ".png" ).toFile(), outImg );
 
         return outImg;
     }
