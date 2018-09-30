@@ -38,7 +38,7 @@ public class ImageComparisonToolsUnitTest {
     public void testSaveImage() throws IOException, URISyntaxException {
         BufferedImage image = readImageFromResources( "result1.png" );
         String path = "build/test/correct/save/image.png";
-        ImageComparisonTools.saveImage( path, image );
+        ImageComparisonTools.saveImage( new File( path ), image );
         Assert.assertTrue( new File( path ).exists() );
     }
 }

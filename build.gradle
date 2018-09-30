@@ -9,6 +9,8 @@ group 'image-comparison'
 version '1.0-SNAPSHOT'
 sourceCompatibility = 1.8
 
+mainClassName = "ua.comparison.image.ImageComparison"
+
 repositories {
     mavenCentral()
 }
@@ -17,6 +19,11 @@ dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 }
 
+jar {
+    manifest {
+        attributes 'Main-Class': mainClassName
+    }
+}
 
 jacocoTestReport {
     reports {
@@ -27,5 +34,3 @@ jacocoTestReport {
 
 defaultTasks << 'clean'
 defaultTasks << 'build'
-
-mainClassName = "ua.comparison.image.ImageComparison"

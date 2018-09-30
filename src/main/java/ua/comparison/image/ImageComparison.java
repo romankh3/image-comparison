@@ -4,8 +4,11 @@ import ua.comparison.image.model.Rectangle;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.util.Optional;
 
 import static java.awt.Color.RED;
 import static ua.comparison.image.ImageComparisonTools.*;
@@ -30,24 +33,78 @@ public class ImageComparison {
 
     private final BufferedImage image1;
     private final BufferedImage image2;
+    private final /* @Nullable */ File destination;
     private int[][] matrix;
 
-    ImageComparison( String image1Name, String image2Name ) throws IOException, URISyntaxException {
-        image1 = readImageFromResources( image1Name );
-        image2 = readImageFromResources( image2Name );
-        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
+    ImageComparison( String image1, String image2 ) throws IOException, URISyntaxException {
+        this( readImageFromResources(image1), readImageFromResources(image2), null );
+    }
+
+    /**
+     * Create a new instance of {@link ImageComparison} that can compare the given images.
+     *
+     * @param image1 first image to be compared
+     * @param image2 second image to be compared
+     * @param destination destination to save the result. If null, the result is shown in the UI.
+     */
+    public ImageComparison( BufferedImage image1, BufferedImage image2, File destination ) {
+        this.image1 = image1;
+        this.image2 = image2;
+        this.destination = destination;
+    }
+
+    public BufferedImage getImage1() {
+        return image1;
+    }
+
+    public BufferedImage getImage2() {
+        return image2;
+    }
+
+    public Optional<File> getDestination() {
+        return Optional.ofNullable( destination );
     }
 
     public static void main( String[] args ) throws IOException, URISyntaxException {
-        ImageComparison comparison = new ImageComparison("image1.png", "image2.png");
-        createGUI( comparison.compareImages() );
+        ImageComparison imgCmp = create( args );
+        BufferedImage result = imgCmp.compareImages();
+        handleResult( imgCmp, ( file ) -> saveImage( file, result ), () -> createGUI( result ) );
+    }
+
+    static ImageComparison create( String... args ) throws IOException, URISyntaxException {
+        Optional<ArgsParser.Arguments> arguments = new ArgsParser().parseArgs(args);
+        return arguments.isPresent() ? create( arguments.get() ) : createDefault();
+    }
+
+    static ImageComparison createDefault() throws IOException, URISyntaxException {
+        return new ImageComparison(
+                readImageFromResources("image1.png" ),
+                readImageFromResources("image2.png" ),
+                null );
+    }
+
+    static ImageComparison create( ArgsParser.Arguments args ) throws IOException {
+        return new ImageComparison(
+                readImageFromFile( args.getImage1() ),
+                readImageFromFile( args.getImage2() ),
+                args.getDestinationImage().orElse( null ) );
+    }
+
+    static void handleResult(ImageComparison instance, IOConsumer<File> saveToFile, Runnable showUI ) throws IOException {
+        if ( instance.getDestination().isPresent() ) {
+            saveToFile.accept( instance.getDestination().get() );
+        } else {
+            showUI.run();
+        }
     }
 
     /**
      * Draw rectangles which cover the regions of the difference pixels.
      * @return the result of the drawing.
      */
-    BufferedImage compareImages() throws IOException, URISyntaxException {
+    BufferedImage compareImages() throws IOException {
+        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
+
         // check images for valid
         checkCorrectImageSize( image1, image2 );
 
@@ -60,7 +117,7 @@ public class ImageComparison {
         drawRectangles( graphics );
 
         //save the image:
-        saveImage( "build/result2.png", outImg );
+        saveImage(Files.createTempFile("image-comparison", ".png" ).toFile(), outImg );
 
         return outImg;
     }
