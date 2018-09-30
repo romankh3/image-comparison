@@ -102,7 +102,7 @@ bintray {
     pkg {
         repo = 'maven'
         name = 'image-comparison'
-        licenses = [ 'Apache-2.0' ]
+        licenses = [ 'unlicense' ]
         labels = [ 'java', 'image', 'image-comparison' ]
         publicDownloadNumbers = true
 
