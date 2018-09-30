@@ -87,8 +87,12 @@ class Example {
         // load the images to be compared
         BufferedImage image1 = ImageIO.read( new File( "image1.png" )  );
         BufferedImage image2 = ImageIO.read( new File( "image2.png" )  );
+        
+        // where to save the result (leave null if you want to see the result in the UI)
+        File result = new File( "result.png" );
+        
         // compare them
-        BufferedImage drawnDifferences = new ImageComparison( image1, image2 ).compareImages();
+        BufferedImage drawnDifferences = new ImageComparison( image1, image2, result ).compareImages();
     }
 }
 ```
