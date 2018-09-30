@@ -10,14 +10,21 @@ The program in Java that compares any 2 images and shows the differences visuall
 * The output of the comparison is a copy of one of the images The differences are outlined with red rectangles as shown below.
 * No third party libraries or borrowed code are in usage.
 
-## Getting Started
-To run project open `Terminal` and write: 
+## Building
+
+To clone and build this project, run the following commands:
+ 
 ```
 $ git clone https://github.com/romankh3/image-comparison
 $ cd image-comparison
-$ ./run.sh
+$ ./gradlew check jar
 ```
 
+This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
+
+## Running the demo
+
+Run the `./run.sh` script to run the demo.
 
 You will get the result of comparing two images.
 The images, which are using:
@@ -44,6 +51,46 @@ ${projectDir}/src/main/resources/image2.png
 ```
 ```
 ${projectDir}/build/result.png
+```
+
+## Using the command-line
+
+This library can be used as a command-line utility to compare two images.
+
+After building with `./gradlew jar`, you will find the runnable jar at `${projectDir}/build/libs`.
+
+To compare two images in files `a.png` and `b.png`, for example, run:
+
+```
+java -jar image-comparison.jar a.png b.png
+```
+
+To save the result image in a third file, say `comparison.png`, just give that file as a third argument:
+
+```
+java -jar image-comparison.jar a.png b.png comparison.png
+```
+
+To show more usage details, run:
+
+```
+java -jar image-comparison.jar -h
+```
+
+## Using as a Java library
+
+To compare two images programmatically, basic usage is as follows:
+
+```java
+class Example {
+    public static void main( String[] args ) {
+        // load the images to be compared
+        BufferedImage image1 = ImageIO.read( new File( "image1.png" )  );
+        BufferedImage image2 = ImageIO.read( new File( "image2.png" )  );
+        // compare them
+        BufferedImage drawnDifferences = new ImageComparison( image1, image2 ).compareImages();
+    }
+}
 ```
 
 ## License:
