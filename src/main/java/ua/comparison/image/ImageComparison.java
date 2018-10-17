@@ -117,8 +117,7 @@ public class ImageComparison {
         drawRectangles( graphics );
 
         //save the image:
-        saveImage(Files.createTempFile("image-comparison", ".png" ).toFile(), outImg );
-
+        saveImage(this.getDestination().orElse(Files.createTempFile("image-comparison", ".png" ).toFile()), outImg );
         return outImg;
     }
 
