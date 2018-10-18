@@ -163,14 +163,14 @@ public class ImageComparison {
 
         for ( int i = 0; i < threshold; i++ ) {
             // goes to all directions.
-            joinToRegion( row - 1 - i, col );
+            //joinToRegion( row - 1 - i, col );
             joinToRegion( row + 1 + i, col );
-            joinToRegion( row, col - 1 - i );
+            //joinToRegion( row, col - 1 - i );
             joinToRegion( row, col + 1 + i );
 
-            joinToRegion( row - 1 - i, col - 1 - i );
-            joinToRegion( row + 1 + i, col - 1 - i );
-            joinToRegion( row - 1 - i, col + 1 + i );
+            //joinToRegion( row - 1 - i, col - 1 - i );
+            //joinToRegion( row + 1 + i, col - 1 - i );
+            //joinToRegion( row - 1 - i, col + 1 + i );
             joinToRegion( row + 1 + i, col + 1 + i );
         }
     }
