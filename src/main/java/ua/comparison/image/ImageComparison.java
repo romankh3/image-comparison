@@ -61,7 +61,7 @@ public class ImageComparison {
         return image2;
     }
 
-    public Optional<File> getDestination() {
+    Optional<File> getDestination() {
         return Optional.ofNullable( destination );
     }
 
@@ -103,10 +103,10 @@ public class ImageComparison {
      * @return the result of the drawing.
      */
     BufferedImage compareImages() throws IOException {
-        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
-
         // check images for valid
         checkCorrectImageSize( image1, image2 );
+
+        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
 
         BufferedImage outImg = deepCopy( image2 );
 
