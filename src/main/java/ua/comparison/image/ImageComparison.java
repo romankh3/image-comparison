@@ -102,7 +102,7 @@ public class ImageComparison {
      * Draw rectangles which cover the regions of the difference pixels.
      * @return the result of the drawing.
      */
-    BufferedImage compareImages() throws IOException {
+    public BufferedImage compareImages() throws IOException {
         // check images for valid
         checkCorrectImageSize( image1, image2 );
 
