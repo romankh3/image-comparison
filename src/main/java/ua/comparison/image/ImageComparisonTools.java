@@ -95,28 +95,29 @@ public class ImageComparisonTools {
      * @return the {@link Rectangle} object.
      */
     public static Rectangle createRectangle(int[][] matrix, int counter) {
-        Rectangle rect = new Rectangle();
+        Rectangle rectangle = new Rectangle();
 
+        //todo refactor it to make it faster.
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[0].length; x++) {
                 if (matrix[y][x] == counter) {
-                    if (x < rect.getMinX()) {
-                        rect.setMinX(x);
+                    if (x < rectangle.getMinX()) {
+                        rectangle.setMinX(x);
                     }
-                    if (x > rect.getMaxX()) {
-                        rect.setMaxX(x);
+                    if (x > rectangle.getMaxX()) {
+                        rectangle.setMaxX(x);
                     }
 
-                    if (y < rect.getMinY()) {
-                        rect.setMinY(y);
+                    if (y < rectangle.getMinY()) {
+                        rectangle.setMinY(y);
                     }
-                    if (y > rect.getMaxY()) {
-                        rect.setMaxY(y);
+                    if (y > rectangle.getMaxY()) {
+                        rectangle.setMaxY(y);
                     }
                 }
             }
         }
-        return rect;
+        return rectangle;
     }
 
     /**
