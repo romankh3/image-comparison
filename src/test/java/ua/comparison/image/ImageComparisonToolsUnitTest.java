@@ -4,14 +4,13 @@ import static org.junit.Assert.assertEquals;
 import static ua.comparison.image.ImageComparisonTools.createGUI;
 import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
 
-import org.junit.Assert;
-import org.junit.Test;
-
-import java.awt.*;
+import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Unit-level testing for {@link ImageComparisonTools} object.

@@ -1,6 +1,11 @@
 package ua.comparison.image;
 
-import org.junit.Test;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
+import static ua.comparison.image.ImageComparisonTools.isDifferent;
+import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -8,12 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-import static ua.comparison.image.ImageComparisonTools.*;
+import org.junit.Test;
 
 
 /**

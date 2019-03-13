@@ -3,6 +3,9 @@ package ua.comparison.image;
 import java.io.File;
 import java.util.Optional;
 
+/**
+ * Argument parser for commandline usage.
+ */
 final class ArgsParser {
 
     private final Runnable successExit;
@@ -64,6 +67,7 @@ final class ArgsParser {
     }
 
     static final class Arguments {
+
         private final File image1;
         private final File image2;
         private final File destinationImage;
