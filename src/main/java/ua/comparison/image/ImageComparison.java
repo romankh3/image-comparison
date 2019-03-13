@@ -1,17 +1,23 @@
 package ua.comparison.image;
 
-import ua.comparison.image.model.Rectangle;
+import static java.awt.Color.RED;
+import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
+import static ua.comparison.image.ImageComparisonTools.createGUI;
+import static ua.comparison.image.ImageComparisonTools.createRectangle;
+import static ua.comparison.image.ImageComparisonTools.deepCopy;
+import static ua.comparison.image.ImageComparisonTools.populateTheMatrixOfTheDifferences;
+import static ua.comparison.image.ImageComparisonTools.readImageFromFile;
+import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
+import static ua.comparison.image.ImageComparisonTools.saveImage;
 
-import java.awt.*;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.Optional;
-
-import static java.awt.Color.RED;
-import static ua.comparison.image.ImageComparisonTools.*;
+import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
 
@@ -36,8 +42,8 @@ public class ImageComparison {
     private final /* @Nullable */ File destination;
     private int[][] matrix;
 
-    ImageComparison( String image1, String image2 ) throws IOException, URISyntaxException {
-        this( readImageFromResources(image1), readImageFromResources(image2), null );
+    ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
+        this(readImageFromResources(image1), readImageFromResources(image2), null);
     }
 
     /**
@@ -47,7 +53,7 @@ public class ImageComparison {
      * @param image2 second image to be compared
      * @param destination destination to save the result. If null, the result is shown in the UI.
      */
-    public ImageComparison( BufferedImage image1, BufferedImage image2, File destination ) {
+    public ImageComparison(BufferedImage image1, BufferedImage image2, File destination) {
         this.image1 = image1;
         this.image2 = image2;
         this.destination = destination;
@@ -62,37 +68,38 @@ public class ImageComparison {
     }
 
     Optional<File> getDestination() {
-        return Optional.ofNullable( destination );
+        return Optional.ofNullable(destination);
     }
 
-    public static void main( String[] args ) throws IOException, URISyntaxException {
-        ImageComparison imgCmp = create( args );
+    public static void main(String[] args) throws IOException, URISyntaxException {
+        ImageComparison imgCmp = create(args);
         BufferedImage result = imgCmp.compareImages();
-        handleResult( imgCmp, ( file ) -> saveImage( file, result ), () -> createGUI( result ) );
+        handleResult(imgCmp, (file) -> saveImage(file, result), () -> createGUI(result));
     }
 
-    static ImageComparison create( String... args ) throws IOException, URISyntaxException {
+    static ImageComparison create(String... args) throws IOException, URISyntaxException {
         Optional<ArgsParser.Arguments> arguments = new ArgsParser().parseArgs(args);
-        return arguments.isPresent() ? create( arguments.get() ) : createDefault();
+        return arguments.isPresent() ? create(arguments.get()) : createDefault();
     }
 
     static ImageComparison createDefault() throws IOException, URISyntaxException {
         return new ImageComparison(
-                readImageFromResources("image1.png" ),
-                readImageFromResources("image2.png" ),
-                null );
+                readImageFromResources("image1.png"),
+                readImageFromResources("image2.png"),
+                null);
     }
 
-    static ImageComparison create( ArgsParser.Arguments args ) throws IOException {
+    static ImageComparison create(ArgsParser.Arguments args) throws IOException {
         return new ImageComparison(
-                readImageFromFile( args.getImage1() ),
-                readImageFromFile( args.getImage2() ),
-                args.getDestinationImage().orElse( null ) );
+                readImageFromFile(args.getImage1()),
+                readImageFromFile(args.getImage2()),
+                args.getDestinationImage().orElse(null));
     }
 
-    static void handleResult(ImageComparison instance, IOConsumer<File> saveToFile, Runnable showUI ) throws IOException {
-        if ( instance.getDestination().isPresent() ) {
-            saveToFile.accept( instance.getDestination().get() );
+    static void handleResult(ImageComparison instance, IOConsumer<File> saveToFile, Runnable showUI)
+            throws IOException {
+        if (instance.getDestination().isPresent()) {
+            saveToFile.accept(instance.getDestination().get());
         } else {
             showUI.run();
         }
@@ -100,49 +107,53 @@ public class ImageComparison {
 
     /**
      * Draw rectangles which cover the regions of the difference pixels.
+     *
      * @return the result of the drawing.
      */
     public BufferedImage compareImages() throws IOException {
         // check images for valid
-        checkCorrectImageSize( image1, image2 );
+        checkCorrectImageSize(image1, image2);
 
-        matrix = populateTheMatrixOfTheDifferences( image1, image2 );
+        matrix = populateTheMatrixOfTheDifferences(image1, image2);
 
-        BufferedImage outImg = deepCopy( image2 );
+        BufferedImage outImg = deepCopy(image2);
 
         Graphics2D graphics = outImg.createGraphics();
-        graphics.setColor( RED );
+        graphics.setColor(RED);
 
         groupRegions();
-        drawRectangles( graphics );
+        drawRectangles(graphics);
 
         //save the image:
-        saveImage(this.getDestination().orElse(Files.createTempFile("image-comparison", ".png" ).toFile()), outImg );
+        saveImage(this.getDestination().orElse(Files.createTempFile("image-comparison", ".png").toFile()), outImg);
         return outImg;
     }
 
     /**
      * Draw rectangles with the differences pixels.
+     *
      * @param graphics the Graphics2D object for drawing rectangles.
      */
-    private void drawRectangles( Graphics2D graphics ) {
-        if( counter > regionCount ) return;
+    private void drawRectangles(Graphics2D graphics) {
+        if (counter > regionCount) {
+            return;
+        }
 
-        Rectangle rectangle = createRectangle( matrix, counter );
+        Rectangle rectangle = createRectangle(matrix, counter);
 
-        graphics.drawRect( rectangle.getMinY(), rectangle.getMinX(), rectangle.getWidth(), rectangle.getHeight() );
+        graphics.drawRect(rectangle.getMinY(), rectangle.getMinX(), rectangle.getWidth(), rectangle.getHeight());
         counter++;
-        drawRectangles( graphics );
+        drawRectangles(graphics);
     }
 
     /**
      * Group rectangle regions in binary matrix.
      */
     private void groupRegions() {
-        for ( int row = 0; row < matrix.length; row++ ) {
-            for ( int col = 0; col < matrix[row].length; col++ ) {
-                if ( matrix[row][col] == 1 ) {
-                    joinToRegion( row, col );
+        for (int row = 0; row < matrix.length; row++) {
+            for (int col = 0; col < matrix[row].length; col++) {
+                if (matrix[row][col] == 1) {
+                    joinToRegion(row, col);
                     regionCount++;
                 }
             }
@@ -153,25 +164,28 @@ public class ImageComparison {
      * The recursive method which go to all directions and finds difference
      * in binary matrix using {@code threshold} for setting max distance between values which equal "1".
      * and set the {@code groupCount} to matrix.
+     *
      * @param row the value of the row.
      * @param col the value of the column.
      */
-    private void joinToRegion( int row, int col ) {
-        if ( row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1 ) return;
+    private void joinToRegion(int row, int col) {
+        if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1) {
+            return;
+        }
 
         matrix[row][col] = regionCount;
 
-        for ( int i = 0; i < threshold; i++ ) {
+        for (int i = 0; i < threshold; i++) {
             // goes to all directions.
-            joinToRegion( row - 1 - i, col );
-            joinToRegion( row + 1 + i, col );
-            joinToRegion( row, col - 1 - i );
-            joinToRegion( row, col + 1 + i );
+            joinToRegion(row - 1 - i, col);
+            joinToRegion(row + 1 + i, col);
+            joinToRegion(row, col - 1 - i);
+            joinToRegion(row, col + 1 + i);
 
-            joinToRegion( row - 1 - i, col - 1 - i );
-            joinToRegion( row + 1 + i, col - 1 - i );
-            joinToRegion( row - 1 - i, col + 1 + i );
-            joinToRegion( row + 1 + i, col + 1 + i );
+            joinToRegion(row - 1 - i, col - 1 - i);
+            joinToRegion(row + 1 + i, col - 1 - i);
+            joinToRegion(row - 1 - i, col + 1 + i);
+            joinToRegion(row + 1 + i, col + 1 + i);
         }
     }
 }
