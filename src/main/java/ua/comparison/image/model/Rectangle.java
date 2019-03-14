@@ -10,6 +10,14 @@ public class Rectangle {
     private int maxX = Integer.MIN_VALUE;
     private int maxY = Integer.MIN_VALUE;
 
+    /**
+     * Modul of the vector from the start of the matrix to point of the
+     * beginning {@link Rectangle} object.
+     */
+    public int calculateVectorModule() {
+        return minX*minX + minY*minY;
+    }
+
     public void setMinX(int minX) {
         this.minX = minX;
     }
@@ -39,4 +47,36 @@ public class Rectangle {
     public int getWidth() { return maxY - minY; }
 
     public int getHeight() { return maxX - minX; }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Rectangle rectangle = (Rectangle) o;
+
+        if (minX != rectangle.minX) {
+            return false;
+        }
+        if (minY != rectangle.minY) {
+            return false;
+        }
+        if (maxX != rectangle.maxX) {
+            return false;
+        }
+        return maxY == rectangle.maxY;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = minX;
+        result = 31 * result + minY;
+        result = 31 * result + maxX;
+        result = 31 * result + maxY;
+        return result;
+    }
 }
