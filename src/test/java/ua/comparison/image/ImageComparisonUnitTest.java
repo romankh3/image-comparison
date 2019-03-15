@@ -2,6 +2,7 @@ package ua.comparison.image;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static ua.comparison.image.ImageComparisonTools.isDifferent;
@@ -38,7 +39,7 @@ public class ImageComparisonUnitTest {
         // assert each pixel.
         for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
             for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
-                assertTrue( !isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
+                assertFalse( isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
             }
         }
     }
@@ -48,7 +49,17 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testIssue17() throws IOException, URISyntaxException {
-        new ImageComparison( "b1#17.png", "b2#17.png" ).compareImages();
+        BufferedImage bufferedImage = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
+        assertNotNull(bufferedImage);
+    }
+
+    /**
+     * Test issue #21. It was StackOverFlowError.
+     */
+    @Test
+    public void testIssue21() throws IOException, URISyntaxException {
+        BufferedImage bufferedImage = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
+        assertNotNull(bufferedImage);
     }
 
     @Test
