@@ -14,6 +14,24 @@ public class Rectangle {
     private Point bottomLeft = new Point(maxX, maxY);
     private Point topRight = new Point(minX, minY);
 
+    public void merge(Rectangle other) {
+        if(isInnerRectangle(this, other)) {
+            //todo To be Implemented
+        } else if (isFirstUpper(this, other)) {
+            //todo To Be implemented
+        } else {
+            //todo to be implemented
+        }
+    }
+
+    private boolean isInnerRectangle(Rectangle one, Rectangle two) {
+        return false;
+    }
+
+    private boolean isFirstUpper(Rectangle one, Rectangle two) {
+        return false;
+    }
+
     public boolean isOverlapping(Rectangle other) {
         if (this.topRight.getY() < other.bottomLeft.getY() || this.bottomLeft.getY() > other.topRight.getY()) {
             return false;
