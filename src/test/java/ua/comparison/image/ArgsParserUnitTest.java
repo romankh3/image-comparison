@@ -19,24 +19,24 @@ public class ArgsParserUnitTest {
     public void noOptions() {
         Optional<ArgsParser.Arguments> result = parser.parseArgs();
         assertFalse(result.isPresent());
-        assertFalse(successExitMock.hasRun);
-        assertFalse(errorExitMock.hasRun);
+        assertFalse(successExitMock.isHasRun());
+        assertFalse(errorExitMock.isHasRun());
     }
 
     @Test
     public void shortHelpOption() {
         Optional<ArgsParser.Arguments> result = parser.parseArgs("-h");
         assertFalse(result.isPresent());
-        assertTrue(successExitMock.hasRun);
-        assertFalse(errorExitMock.hasRun);
+        assertTrue(successExitMock.isHasRun());
+        assertFalse(errorExitMock.isHasRun());
     }
 
     @Test
     public void longHelpOption() {
         Optional<ArgsParser.Arguments> result = parser.parseArgs("--help");
         assertFalse(result.isPresent());
-        assertTrue(successExitMock.hasRun);
-        assertFalse(errorExitMock.hasRun);
+        assertTrue(successExitMock.isHasRun());
+        assertFalse(errorExitMock.isHasRun());
     }
 
     @Test
@@ -49,8 +49,8 @@ public class ArgsParserUnitTest {
         assertEquals("img2", args.getImage2().getPath());
         assertFalse(args.getDestinationImage().isPresent());
 
-        assertFalse(successExitMock.hasRun);
-        assertFalse(errorExitMock.hasRun);
+        assertFalse(successExitMock.isHasRun());
+        assertFalse(errorExitMock.isHasRun());
     }
 
     @Test
@@ -66,32 +66,37 @@ public class ArgsParserUnitTest {
         File destinationImage = args.getDestinationImage().get();
         assertEquals("res", destinationImage.getPath());
 
-        assertFalse(successExitMock.hasRun);
-        assertFalse(errorExitMock.hasRun);
+        assertFalse(successExitMock.isHasRun());
+        assertFalse(errorExitMock.isHasRun());
     }
 
     @Test
     public void unrecognizedOption() {
         Optional<ArgsParser.Arguments> result = parser.parseArgs("wrong");
         assertFalse(result.isPresent());
-        assertFalse(successExitMock.hasRun);
-        assertTrue(errorExitMock.hasRun);
+        assertFalse(successExitMock.isHasRun());
+        assertTrue(errorExitMock.isHasRun());
     }
 
     @Test
     public void tooManyArguments() {
         Optional<ArgsParser.Arguments> result = parser.parseArgs("a", "b", "c", "d");
         assertFalse(result.isPresent());
-        assertFalse(successExitMock.hasRun);
-        assertTrue(errorExitMock.hasRun);
+        assertFalse(successExitMock.isHasRun());
+        assertTrue(errorExitMock.isHasRun());
     }
 
     private static class KnowsIfRan implements Runnable {
-        boolean hasRun = false;
+
+        private boolean hasRun = false;
 
         @Override
         public void run() {
             hasRun = true;
+        }
+
+        public boolean isHasRun() {
+            return hasRun;
         }
     }
 
