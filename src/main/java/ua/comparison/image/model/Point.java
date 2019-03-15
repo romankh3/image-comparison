@@ -1,5 +1,6 @@
 package ua.comparison.image.model;
 
+//todo add unit tests.
 /**
  * Object contained data of the (x,y) point.
  */
