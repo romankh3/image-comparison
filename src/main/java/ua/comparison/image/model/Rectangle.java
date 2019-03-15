@@ -14,6 +14,7 @@ public class Rectangle {
     private Point bottomLeft = new Point(maxX, maxY);
     private Point topRight = new Point(minX, minY);
 
+    //todo write unit test for this logic.
     public void merge(Rectangle other) {
         if(isInnerRectangle(this, other)) {
             //todo To be Implemented
@@ -32,6 +33,7 @@ public class Rectangle {
         return false;
     }
 
+    //todo write unit test for this logic.
     public boolean isOverlapping(Rectangle other) {
         if (this.topRight.getY() < other.bottomLeft.getY() || this.bottomLeft.getY() > other.topRight.getY()) {
             return false;
