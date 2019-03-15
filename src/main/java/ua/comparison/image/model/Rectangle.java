@@ -10,6 +10,20 @@ public class Rectangle {
     private int maxX = Integer.MIN_VALUE;
     private int maxY = Integer.MIN_VALUE;
 
+    //todo Move all code to use {@link Point}.
+    private Point bottomLeft = new Point(maxX, maxY);
+    private Point topRight = new Point(minX, minY);
+
+    public boolean isOverlapping(Rectangle other) {
+        if (this.topRight.getY() < other.bottomLeft.getY() || this.bottomLeft.getY() > other.topRight.getY()) {
+            return false;
+        }
+        if (this.topRight.getX() < other.bottomLeft.getX() || this.bottomLeft.getX() > other.topRight.getX()) {
+            return false;
+        }
+        return true;
+    }
+
     /**
      * Module of the vector from the start of the matrix to point of the
      * beginning {@link Rectangle} object.
