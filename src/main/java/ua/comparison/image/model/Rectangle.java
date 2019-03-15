@@ -11,10 +11,10 @@ public class Rectangle {
     private int maxY = Integer.MIN_VALUE;
 
     /**
-     * Modul of the vector from the start of the matrix to point of the
+     * Module of the vector from the start of the matrix to point of the
      * beginning {@link Rectangle} object.
      */
-    public int calculateVectorModule() {
+    public int calculateMinVectorModule() {
         return minX*minX + minY*minY;
     }
 

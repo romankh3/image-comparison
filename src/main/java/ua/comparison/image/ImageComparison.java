@@ -56,6 +56,16 @@ public class ImageComparison {
 
     private int[][] matrix;
 
+    /**
+     * Prefix of the name of the result image.
+     */
+    private static final String NAME_PREFIX = "image-comparison";
+
+    /**
+     * Suffix of the name of of the result image.
+     */
+    private static final String NAME_SUFFIX = ".png";
+
     ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(readImageFromResources(image1), readImageFromResources(image2), null);
     }
@@ -110,13 +120,13 @@ public class ImageComparison {
                                                                             rectangle.getHeight()));
 
         //save the image:
-        saveImage(this.getDestination().orElse(Files.createTempFile("image-comparison", ".png").toFile()), outImg);
+        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
         return outImg;
     }
 
     //todo implement logic for overlapping.
     private List<Rectangle> avoidOverlapping(List<Rectangle> rectangles) {
-        rectangles.sort(Comparator.comparing(Rectangle::calculateVectorModule));
+        rectangles.sort(Comparator.comparing(Rectangle::calculateMinVectorModule));
         //todo removed this hotfix and investigate it in #32 issue.
         return rectangles.stream().filter(it -> !it.equals(new Rectangle())).collect(Collectors.toList());
     }
