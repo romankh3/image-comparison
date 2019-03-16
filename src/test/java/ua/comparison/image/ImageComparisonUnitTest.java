@@ -71,6 +71,15 @@ public class ImageComparisonUnitTest {
         new ImageComparison("image1.png", "image3.png").compareImages();
     }
 
+    /**
+     * Test issue #11.
+     */
+    @Test
+    public void testIssue11() throws IOException, URISyntaxException {
+        // TODO: 3/13/2019 Implemented logic
+        new ImageComparison("image1.png", "image3.png").compareImages();
+    }
+
     @Test
     public void testCreateDefault() throws IOException, URISyntaxException {
         ImageComparison comparison = CommandLineUtil.createDefault();

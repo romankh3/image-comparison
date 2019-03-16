@@ -160,7 +160,6 @@ public class ImageComparison {
 
         matrix[row][col] = regionCount;
 
-        //todo refactor it to make it faster.
         for (int i = 0; i < threshold; i++) {
             joinToRegion(row + 1 + i, col);
             joinToRegion(row, col + 1 + i);
