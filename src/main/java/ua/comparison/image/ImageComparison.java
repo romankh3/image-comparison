@@ -126,7 +126,7 @@ public class ImageComparison {
 
     //todo implement logic for overlapping.
     private List<Rectangle> avoidOverlapping(List<Rectangle> rectangles) {
-        rectangles.sort(Comparator.comparing(Rectangle::calculateMinVectorModule));
+        rectangles.sort(Comparator.comparing(it -> it.getTopLeft().calculateModule()));
         //todo removed this hotfix and investigate it in #32 issue.
         return rectangles.stream().filter(it -> !it.equals(new Rectangle())).collect(Collectors.toList());
     }

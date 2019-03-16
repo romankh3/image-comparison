@@ -11,8 +11,8 @@ public class Rectangle {
     private int maxY = Integer.MIN_VALUE;
 
     //todo Move all code to use {@link Point}.
-    private Point bottomLeft = new Point(maxX, maxY);
-    private Point topRight = new Point(minX, minY);
+    private Point topLeft = new Point(maxX, maxY);
+    private Point bottomRight = new Point(minX, minY);
 
     //todo write unit test for this logic.
     public void merge(Rectangle other) {
@@ -25,31 +25,41 @@ public class Rectangle {
         }
     }
 
+    // TODO: 2019-03-15 to be implemented
     private boolean isInnerRectangle(Rectangle one, Rectangle two) {
         return false;
     }
 
+    // TODO: 2019-03-15 to be implemented
     private boolean isFirstUpper(Rectangle one, Rectangle two) {
         return false;
     }
 
     //todo write unit test for this logic.
     public boolean isOverlapping(Rectangle other) {
-        if (this.topRight.getY() < other.bottomLeft.getY() || this.bottomLeft.getY() > other.topRight.getY()) {
+        if (this.topLeft.getY() < other.bottomRight.getY() || this.bottomRight.getY() > other.topLeft.getY()) {
             return false;
         }
-        if (this.topRight.getX() < other.bottomLeft.getX() || this.bottomLeft.getX() > other.topRight.getX()) {
+        if (this.topLeft.getX() < other.bottomRight.getX() || this.bottomRight.getX() > other.topLeft.getX()) {
             return false;
         }
         return true;
     }
 
-    /**
-     * Module of the vector from the start of the matrix to point of the
-     * beginning {@link Rectangle} object.
-     */
-    public int calculateMinVectorModule() {
-        return minX*minX + minY*minY;
+    public Point getTopLeft() {
+        return topLeft;
+    }
+
+    public void setTopLeft(Point topLeft) {
+        this.topLeft = topLeft;
+    }
+
+    public Point getBottomRight() {
+        return bottomRight;
+    }
+
+    public void setBottomRight(Point bottomRight) {
+        this.bottomRight = bottomRight;
     }
 
     public void setMinX(int minX) {

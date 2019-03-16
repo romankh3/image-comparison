@@ -21,6 +21,11 @@ public class Point {
         this.y = y;
     }
 
+    //todo add test for it.
+    public int calculateModule() {
+        return x*x + y*y;
+    }
+
     public int getX() {
         return x;
     }
