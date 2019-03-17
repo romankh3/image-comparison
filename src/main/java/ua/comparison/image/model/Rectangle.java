@@ -5,14 +5,24 @@ package ua.comparison.image.model;
  */
 public class Rectangle {
 
-    private int minX = Integer.MAX_VALUE;
-    private int minY = Integer.MAX_VALUE;
-    private int maxX = Integer.MIN_VALUE;
-    private int maxY = Integer.MIN_VALUE;
+    private int minX;
+    private int minY;
+    private int maxX;
+    private int maxY;
 
-    //todo Move all code to use {@link Point}.
-    private Point topLeft = new Point(maxX, maxY);
-    private Point bottomRight = new Point(minX, minY);
+    /**
+     * Create default {@link Rectangle} object.
+     */
+    public static Rectangle createDefault() {
+        Rectangle defaultRectangle = new Rectangle();
+
+        defaultRectangle.setMaxX(Integer.MIN_VALUE);
+        defaultRectangle.setMaxY(Integer.MIN_VALUE);
+        defaultRectangle.setMinX(Integer.MAX_VALUE);
+        defaultRectangle.setMinY(Integer.MAX_VALUE);
+
+        return defaultRectangle;
+    }
 
     //todo write unit test for this logic.
     public void merge(Rectangle other) {
@@ -37,29 +47,13 @@ public class Rectangle {
 
     //todo write unit test for this logic.
     public boolean isOverlapping(Rectangle other) {
-        if (this.topLeft.getY() < other.bottomRight.getY() || this.bottomRight.getY() > other.topLeft.getY()) {
+        if (this.minY < other.maxY || this.maxY > other.minY) {
             return false;
         }
-        if (this.topLeft.getX() < other.bottomRight.getX() || this.bottomRight.getX() > other.topLeft.getX()) {
+        if (this.minX < other.maxX || this.maxX > other.minY) {
             return false;
         }
         return true;
-    }
-
-    public Point getTopLeft() {
-        return topLeft;
-    }
-
-    public void setTopLeft(Point topLeft) {
-        this.topLeft = topLeft;
-    }
-
-    public Point getBottomRight() {
-        return bottomRight;
-    }
-
-    public void setBottomRight(Point bottomRight) {
-        this.bottomRight = bottomRight;
     }
 
     public void setMinX(int minX) {
@@ -88,9 +82,13 @@ public class Rectangle {
 
     public int getMaxY() { return maxY; }
 
-    public int getWidth() { return maxY - minY; }
+    public int getWidth() {
+        return maxY - minY;
+    }
 
-    public int getHeight() { return maxX - minX; }
+    public int getHeight() {
+        return maxX - minX;
+    }
 
     @Override
     public boolean equals(Object o) {

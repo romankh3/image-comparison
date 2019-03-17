@@ -22,26 +22,32 @@ import org.junit.Test;
  */
 public class ImageComparisonUnitTest {
 
+    /**
+     * The most important test. Shown, that the changes in algorithm,
+     * don't break the main behaviour and result as expected.
+     */
     @Test
-    public void testCorrectWorking() throws IOException, URISyntaxException {
-        // Draw rectangles on the image.
-        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image2.png" ).compareImages();
-
-        // Get the expected image.
+    public void testCorrectWorkingImage1Image2() throws IOException, URISyntaxException {
+        //given
         BufferedImage expectedResultImage = readImageFromResources( "result1.png" );
 
-        // assert height of the images.
-        assertEquals( drawnDifferences.getHeight(), expectedResultImage.getHeight() );
+        //when
+        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image2.png" ).compareImages();
 
-        // assert width of the images.
-        assertEquals( drawnDifferences.getWidth(), expectedResultImage.getWidth() );
+        //then
+        assertImagesEqual(expectedResultImage, drawnDifferences);
+    }
 
-        // assert each pixel.
-        for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
-            for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
-                assertFalse( isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
-            }
-        }
+    @Test
+    public void testCorrectWorkingImage1Image() throws IOException, URISyntaxException {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources( "result2.png" );
+
+        //when
+        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image3.png" ).compareImages();
+
+        //then
+        assertImagesEqual(expectedResultImage, drawnDifferences);
     }
 
     /**
@@ -68,16 +74,7 @@ public class ImageComparisonUnitTest {
     @Test
     public void testIssue11() throws IOException, URISyntaxException {
         // TODO: 3/13/2019 Implemented logic
-        new ImageComparison("image1.png", "image3.png").compareImages();
-    }
-
-    /**
-     * Test issue #11.
-     */
-    @Test
-    public void testIssue11() throws IOException, URISyntaxException {
-        // TODO: 3/13/2019 Implemented logic
-        new ImageComparison("image1.png", "image3.png").compareImages();
+        BufferedImage bufferedImage = new ImageComparison("image1.png", "image3.png").compareImages();
     }
 
     @Test

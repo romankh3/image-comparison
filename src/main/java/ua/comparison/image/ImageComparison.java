@@ -18,10 +18,8 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
@@ -109,7 +107,10 @@ public class ImageComparison {
 
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
-            rectangles.add(createRectangle(matrix, counter));
+            Rectangle rectangle = createRectangle(matrix, counter);
+            if(!rectangle.equals(Rectangle.createDefault())) {
+                rectangles.add(createRectangle(matrix, counter));
+            }
             counter++;
         }
 
@@ -126,9 +127,8 @@ public class ImageComparison {
 
     //todo implement logic for overlapping.
     private List<Rectangle> avoidOverlapping(List<Rectangle> rectangles) {
-        rectangles.sort(Comparator.comparing(it -> it.getTopLeft().calculateModule()));
         //todo removed this hotfix and investigate it in #32 issue.
-        return rectangles.stream().filter(it -> !it.equals(new Rectangle())).collect(Collectors.toList());
+        return rectangles;
     }
 
     /**
