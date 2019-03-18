@@ -1,6 +1,7 @@
 package ua.comparison.image;
 
 import static java.awt.Color.RED;
+import static java.awt.Color.white;
 import static ua.comparison.image.CommandLineUtil.create;
 import static ua.comparison.image.CommandLineUtil.handleResult;
 import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
@@ -20,6 +21,8 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
+
 import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
@@ -127,8 +130,18 @@ public class ImageComparison {
 
     //todo implement logic for overlapping.
     private List<Rectangle> avoidOverlapping(List<Rectangle> rectangles) {
-        //todo removed this hotfix and investigate it in #32 issue.
-        return rectangles;
+        int rectCount = 0;
+        while(rectCount < rectangles.size() - 1) {
+            for(int i = rectCount; i < rectangles.size(); i++) {
+                if(rectangles.get(rectCount).isOverlapping(rectangles.get(i))) {
+                    rectangles.get(rectCount).merge(rectangles.get(i));
+                }
+            }
+            rectCount++;
+        }
+        return rectangles.stream()
+                .filter(rectangle -> rectangle.getMaxX() != Integer.MIN_VALUE)
+                .collect(Collectors.toList());
     }
 
     /**

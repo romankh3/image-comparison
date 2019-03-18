@@ -24,37 +24,38 @@ public class Rectangle {
         return defaultRectangle;
     }
 
-    //todo write unit test for this logic.
-    public void merge(Rectangle other) {
-        if(isInnerRectangle(this, other)) {
-            //todo To be Implemented
-        } else if (isFirstUpper(this, other)) {
-            //todo To Be implemented
-        } else {
-            //todo to be implemented
+    public void merge(Rectangle that) {
+        if(this.minX <= that.minX && this.minY <= that.minY && this.maxY >= that.maxY && this.maxX >= that.maxX) {
+            that.setDefaultValues();
+        }
+        if(that.minX <= this.minX && that.minY <= this.minY && that.maxY >= this.maxY && that.maxX >= this.maxX) {
+            this.setDefaultValues();
         }
     }
 
     // TODO: 2019-03-15 to be implemented
-    private boolean isInnerRectangle(Rectangle one, Rectangle two) {
+    private boolean isFirstUpper(Rectangle that) {
         return false;
     }
 
-    // TODO: 2019-03-15 to be implemented
-    private boolean isFirstUpper(Rectangle one, Rectangle two) {
-        return false;
-    }
-
-    //todo write unit test for this logic.
-    public boolean isOverlapping(Rectangle other) {
-        if (this.minY < other.maxY || this.maxY > other.minY) {
+    public boolean isOverlapping(Rectangle that) {
+        if (this.maxY < that.minY || that.maxY < this.minY) {
             return false;
         }
-        if (this.minX < other.maxX || this.maxX > other.minY) {
+        if (this.maxX < that.minX || that.maxX < this.minX) {
             return false;
         }
         return true;
     }
+
+    public void setDefaultValues() {
+        this.maxX = Integer.MIN_VALUE;
+        this.maxY = Integer.MIN_VALUE;
+
+        this.minY = Integer.MAX_VALUE;
+        this.minX = Integer.MAX_VALUE;
+    }
+
 
     public void setMinX(int minX) {
         this.minX = minX;
