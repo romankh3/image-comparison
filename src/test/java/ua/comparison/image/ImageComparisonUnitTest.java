@@ -21,40 +21,26 @@ import org.junit.Test;
  * Unit-level testing for {@link ImageComparison} object.
  */
 public class ImageComparisonUnitTest {
+    
+    private static final String IMAGE_1_NAME = "image1.png";
+    private static final String IMAGE_2_NAME = "image2.png";
+    private static final String RESULT_1_NAME = "result1.png";
+    
+    private static final String BUG_17_1_NAME = "b1#17.png";
+    private static final String BUG_17_2_NAME = "b2#17.png";
+    private static final String BUG_21_1_NAME = "b1#21.png";
+    private static final String BUG_21_2_NAME = "b2#21.png";
 
     @Test
     public void shouldCorrectWorkingCommonCase() throws IOException, URISyntaxException {
         //given
-        BufferedImage expectedResultImage = readImageFromResources( "result1.png" );
+        BufferedImage expectedResultImage = readImageFromResources( RESULT_1_NAME );
 
         //when
-        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image2.png" ).compareImages();
+        BufferedImage drawnDifferences = new ImageComparison( IMAGE_1_NAME, IMAGE_2_NAME ).compareImages();
 
 
         //then
-        for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
-            for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
-                assertFalse( isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
-            }
-        }
-        assertImagesEqual(expectedResultImage, drawnDifferences);
-    }
-
-    @Test
-    public void testCorrectWorkingWithOverlapping() throws IOException, URISyntaxException {
-        //given
-        BufferedImage expectedResultImage = readImageFromResources( "result2.png" );
-
-        //when
-        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image3.png" ).compareImages();
-
-
-        //then
-        for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
-            for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
-                assertFalse( isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
-            }
-        }
         assertImagesEqual(expectedResultImage, drawnDifferences);
     }
 
@@ -63,7 +49,7 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testIssue17() throws IOException, URISyntaxException {
-        BufferedImage bufferedImage = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
+        BufferedImage bufferedImage = new ImageComparison(BUG_17_1_NAME, BUG_17_2_NAME).compareImages();
         assertNotNull(bufferedImage);
     }
 
@@ -72,56 +58,56 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testIssue21() throws IOException, URISyntaxException {
-        BufferedImage bufferedImage = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
+        BufferedImage bufferedImage = new ImageComparison(BUG_21_1_NAME, BUG_21_2_NAME).compareImages();
         assertNotNull(bufferedImage);
     }
 
     @Test
     public void testCreateDefault() throws IOException, URISyntaxException {
         ImageComparison comparison = ImageComparison.createDefault();
-        assertImagesEqual(readImageFromResources("image1.png" ), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png" ), comparison.getImage2());
+        assertImagesEqual(readImageFromResources(IMAGE_1_NAME ), comparison.getImage1());
+        assertImagesEqual(readImageFromResources(IMAGE_2_NAME ), comparison.getImage2());
         assertFalse(comparison.getDestination().isPresent());
     }
 
     @Test
     public void testCreateWithTwoArgs() throws IOException, URISyntaxException {
-        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( "image1.png" ).toURI().getPath() );
-        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( "image2.png" ).toURI().getPath() );
+        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_1_NAME ).toURI().getPath() );
+        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_2_NAME ).toURI().getPath() );
         ImageComparison comparison = ImageComparison.create(image1.getAbsolutePath(), image2.getAbsolutePath());
 
-        assertImagesEqual(readImageFromResources("image1.png" ), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png" ), comparison.getImage2());
+        assertImagesEqual(readImageFromResources(IMAGE_1_NAME ), comparison.getImage1());
+        assertImagesEqual(readImageFromResources(IMAGE_2_NAME ), comparison.getImage2());
         assertFalse(comparison.getDestination().isPresent());
     }
 
     @Test
     public void testCreateWithTwoImagesAsArgs() throws IOException, URISyntaxException {
-        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( "image1.png" ).toURI().getPath() );
-        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( "image2.png" ).toURI().getPath() );
+        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_1_NAME ).toURI().getPath() );
+        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_2_NAME ).toURI().getPath() );
         ImageComparison comparison = ImageComparison.create(new ArgsParser.Arguments(image1, image2, null));
 
-        assertImagesEqual(readImageFromResources("image1.png" ), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png" ), comparison.getImage2());
+        assertImagesEqual(readImageFromResources(IMAGE_1_NAME ), comparison.getImage1());
+        assertImagesEqual(readImageFromResources(IMAGE_2_NAME ), comparison.getImage2());
         assertFalse(comparison.getDestination().isPresent());
     }
 
     @Test
     public void testCreateWithTwoImagesAndDestinationFileAsArgs() throws IOException, URISyntaxException {
-        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( "image1.png" ).toURI().getPath() );
-        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( "image2.png" ).toURI().getPath() );
+        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_1_NAME ).toURI().getPath() );
+        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_2_NAME ).toURI().getPath() );
         File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
         ImageComparison comparison = ImageComparison.create(new ArgsParser.Arguments(image1, image2, destination));
 
-        assertImagesEqual(readImageFromResources("image1.png" ), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png" ), comparison.getImage2());
+        assertImagesEqual(readImageFromResources(IMAGE_1_NAME ), comparison.getImage1());
+        assertImagesEqual(readImageFromResources(IMAGE_2_NAME ), comparison.getImage2());
         assertTrue(comparison.getDestination().isPresent());
         assertEquals(destination, comparison.getDestination().get());
     }
 
     @Test
     public void resultIsHandledCorrectlyWhenItShouldShowUI() throws IOException, URISyntaxException {
-        ImageComparison comparison = new ImageComparison("image1.png", "image2.png");
+        ImageComparison comparison = new ImageComparison(IMAGE_1_NAME, IMAGE_2_NAME);
         AtomicBoolean savedToFile = new AtomicBoolean(false);
         AtomicBoolean showUI = new AtomicBoolean(false);
 
@@ -133,8 +119,8 @@ public class ImageComparisonUnitTest {
 
     @Test
     public void resultIsHandledCorrectlyWhenItShouldSaveToFile() throws IOException, URISyntaxException {
-        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( "image1.png" ).toURI().getPath() );
-        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( "image2.png" ).toURI().getPath() );
+        File image1 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_1_NAME ).toURI().getPath() );
+        File image2 = new File( ImageComparison.class.getClassLoader().getResource ( IMAGE_2_NAME ).toURI().getPath() );
         File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
         ImageComparison comparison = ImageComparison.create(new ArgsParser.Arguments(image1, image2, destination));
 
@@ -147,19 +133,13 @@ public class ImageComparisonUnitTest {
         assertFalse(showUI.get());
     }
 
-    private static void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {
-        if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
+    private static void assertImagesEqual(BufferedImage expectedImage, BufferedImage drawnImage) {
+        if (expectedImage.getWidth() != drawnImage.getWidth() || expectedImage.getHeight() != drawnImage.getHeight()) {
             fail("Images have different dimensions");
         }
-
-        int width  = imgA.getWidth();
-        int height = imgA.getHeight();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
-                    fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
-                }
+        for ( int y = 0; y < drawnImage.getHeight(); y++ ) {
+            for ( int x = 0; x < drawnImage.getWidth(); x++ ) {
+                assertFalse( isDifferent( expectedImage.getRGB( x, y ), drawnImage.getRGB( x, y ) ) );
             }
         }
     }
