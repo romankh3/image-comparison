@@ -23,25 +23,39 @@ import org.junit.Test;
 public class ImageComparisonUnitTest {
 
     @Test
-    public void testCorrectWorking() throws IOException, URISyntaxException {
-        // Draw rectangles on the image.
-        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image2.png" ).compareImages();
-
-        // Get the expected image.
+    public void shouldCorrectWorkingCommonCase() throws IOException, URISyntaxException {
+        //given
         BufferedImage expectedResultImage = readImageFromResources( "result1.png" );
 
-        // assert height of the images.
-        assertEquals( drawnDifferences.getHeight(), expectedResultImage.getHeight() );
+        //when
+        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image2.png" ).compareImages();
 
-        // assert width of the images.
-        assertEquals( drawnDifferences.getWidth(), expectedResultImage.getWidth() );
 
-        // assert each pixel.
+        //then
         for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
             for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
                 assertFalse( isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
             }
         }
+        assertImagesEqual(expectedResultImage, drawnDifferences);
+    }
+
+    @Test
+    public void testCorrectWorkingWithOverlapping() throws IOException, URISyntaxException {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources( "result2.png" );
+
+        //when
+        BufferedImage drawnDifferences = new ImageComparison( "image1.png", "image3.png" ).compareImages();
+
+
+        //then
+        for ( int y = 0; y < drawnDifferences.getHeight(); y++ ) {
+            for ( int x = 0; x < drawnDifferences.getWidth(); x++ ) {
+                assertFalse( isDifferent( expectedResultImage.getRGB( x, y ), drawnDifferences.getRGB( x, y ) ) );
+            }
+        }
+        assertImagesEqual(expectedResultImage, drawnDifferences);
     }
 
     /**
