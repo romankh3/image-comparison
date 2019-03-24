@@ -118,29 +118,14 @@ public class ImageComparison {
         }
 
 
-        avoidOverlapping(rectangles).forEach(rectangle -> graphics.drawRect(rectangle.getMinY(),
-                                                                            rectangle.getMinX(),
-                                                                            rectangle.getWidth(),
-                                                                            rectangle.getHeight()));
+        rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinY(),
+                                                          rectangle.getMinX(),
+                                                          rectangle.getWidth(),
+                                                          rectangle.getHeight()));
 
         //save the image:
         saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
         return outImg;
-    }
-
-    private List<Rectangle> avoidOverlapping(List<Rectangle> rectangles) {
-        int rectCount = 0;
-        while(rectCount <= rectangles.size() - 1) {
-            for(int i = rectCount +1; i < rectangles.size(); i++) {
-                if(rectangles.get(rectCount).isOverlapping(rectangles.get(i))) {
-                    rectangles.get(rectCount).merge(rectangles.get(i));
-                }
-            }
-            rectCount++;
-        }
-        return rectangles.stream()
-                .filter(rectangle -> rectangle.getMaxX() != Integer.MIN_VALUE)
-                .collect(Collectors.toList());
     }
 
     /**
