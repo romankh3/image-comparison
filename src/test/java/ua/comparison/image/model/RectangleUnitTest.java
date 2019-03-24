@@ -11,7 +11,7 @@ public class RectangleUnitTest {
 
     @Test
     public void testGetterSetter() {
-        Rectangle rectangle = new Rectangle();
+        Rectangle rectangle = Rectangle.createDefault();
 
         assertEquals( rectangle.getMinX(), Integer.MAX_VALUE );
         assertEquals( rectangle.getMinY(), Integer.MAX_VALUE );
