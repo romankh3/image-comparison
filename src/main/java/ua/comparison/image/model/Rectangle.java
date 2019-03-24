@@ -33,7 +33,6 @@ public class Rectangle {
         }
     }
 
-    // TODO: 2019-03-15 to be implemented
     private boolean isFirstUpper(Rectangle that) {
         return false;
     }

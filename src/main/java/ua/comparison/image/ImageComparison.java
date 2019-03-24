@@ -128,11 +128,10 @@ public class ImageComparison {
         return outImg;
     }
 
-    //todo implement logic for overlapping.
     private List<Rectangle> avoidOverlapping(List<Rectangle> rectangles) {
         int rectCount = 0;
-        while(rectCount < rectangles.size() - 1) {
-            for(int i = rectCount; i < rectangles.size(); i++) {
+        while(rectCount <= rectangles.size() - 1) {
+            for(int i = rectCount +1; i < rectangles.size(); i++) {
                 if(rectangles.get(rectCount).isOverlapping(rectangles.get(i))) {
                     rectangles.get(rectCount).merge(rectangles.get(i));
                 }
