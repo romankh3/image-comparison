@@ -1,7 +1,6 @@
 package ua.comparison.image;
 
 import static java.awt.Color.RED;
-import static java.awt.Color.white;
 import static ua.comparison.image.CommandLineUtil.create;
 import static ua.comparison.image.CommandLineUtil.handleResult;
 import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
@@ -21,8 +20,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
@@ -31,7 +28,7 @@ public class ImageComparison {
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
-    public static int threshold = 5;
+    public static int threshold = 3;
 
     /**
      * The number which marks how many rectangles. Beginning from 2.
@@ -108,24 +105,33 @@ public class ImageComparison {
 
         groupRegions();
 
+        List<Rectangle> rectangles = populateRectangles();
+
+        drawRectangles(rectangles, graphics);
+
+        //save the image:
+        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
+        return outImg;
+    }
+
+    private List<Rectangle> populateRectangles() {
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
             Rectangle rectangle = createRectangle(matrix, counter);
-            if(!rectangle.equals(Rectangle.createDefault())) {
+            if (!rectangle.equals(Rectangle.createDefault())) {
                 rectangles.add(createRectangle(matrix, counter));
             }
             counter++;
         }
 
+        return rectangles;
+    }
 
+    private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinY(),
-                                                          rectangle.getMinX(),
-                                                          rectangle.getWidth(),
-                                                          rectangle.getHeight()));
-
-        //save the image:
-        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
-        return outImg;
+                rectangle.getMinX(),
+                rectangle.getWidth(),
+                rectangle.getHeight()));
     }
 
     /**
@@ -135,7 +141,7 @@ public class ImageComparison {
         for (int row = 0; row < matrix.length; row++) {
             for (int col = 0; col < matrix[row].length; col++) {
                 if (matrix[row][col] == 1) {
-                    joinToRegion(row, col);
+                    joinToRegion(row, col, threshold);
                     regionCount++;
                 }
             }
@@ -150,20 +156,23 @@ public class ImageComparison {
      * @param row the value of the row.
      * @param col the value of the column.
      */
-    private void joinToRegion(int row, int col) {
+    private void joinToRegion(int row, int col, int localThreshold) {
         if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1) {
             return;
         }
 
         matrix[row][col] = regionCount;
 
-        for (int i = 0; i < threshold; i++) {
-            joinToRegion(row + 1 + i, col);
-            joinToRegion(row, col + 1 + i);
+        for (int i = 0; i < localThreshold; i++) {
+//            joinToRegion(row - 1 - i, col, 1);
+            joinToRegion(row + 1 + i, col, threshold);
+//            joinToRegion(row, col - 1 - i, 1);
+            joinToRegion(row, col + 1 + i, threshold);
 
-            joinToRegion(row + 1 + i, col - 1 - i);
-            joinToRegion(row - 1 - i, col + 1 + i);
-            joinToRegion(row + 1 + i, col + 1 + i);
+//            joinToRegion(row - 1 - i, col - 1 - i, 1);
+            joinToRegion(row + 1 + i, col - 1 - i, threshold);
+            joinToRegion(row - 1 - i, col + 1 + i, threshold);
+            joinToRegion(row + 1 + i, col + 1 + i, threshold);
         }
     }
 

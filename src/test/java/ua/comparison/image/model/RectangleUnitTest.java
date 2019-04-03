@@ -10,13 +10,18 @@ import org.junit.Test;
 public class RectangleUnitTest {
 
     @Test
-    public void testGetterSetter() {
+    public void testDefaultRectangle() {
         Rectangle rectangle = Rectangle.createDefault();
 
         assertEquals( rectangle.getMinX(), Integer.MAX_VALUE );
         assertEquals( rectangle.getMinY(), Integer.MAX_VALUE );
         assertEquals( rectangle.getMaxX(), Integer.MIN_VALUE );
         assertEquals( rectangle.getMaxY(), Integer.MIN_VALUE );
+    }
+
+    @Test
+    public void testGetterSetter() {
+        Rectangle rectangle = Rectangle.createDefault();
 
         rectangle.setMinX( 10 );
         rectangle.setMinY( 20 );
