@@ -10,16 +10,23 @@ public class Rectangle {
     private int maxX;
     private int maxY;
 
+    public Rectangle() {
+    }
+
+    public Rectangle(int minX, int minY, int maxX, int maxY) {
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+    }
+
     /**
      * Create default {@link Rectangle} object.
      */
     public static Rectangle createDefault() {
         Rectangle defaultRectangle = new Rectangle();
 
-        defaultRectangle.setMaxX(Integer.MIN_VALUE);
-        defaultRectangle.setMaxY(Integer.MIN_VALUE);
-        defaultRectangle.setMinX(Integer.MAX_VALUE);
-        defaultRectangle.setMinY(Integer.MAX_VALUE);
+        defaultRectangle.setDefaultValues();
 
         return defaultRectangle;
     }
