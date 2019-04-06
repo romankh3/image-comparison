@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.Ignore;
 import org.junit.Test;
 
 
@@ -21,6 +20,23 @@ import org.junit.Test;
  * Unit-level testing for {@link ImageComparison} object.
  */
 public class ImageComparisonUnitTest {
+
+    private static void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {
+        if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
+            fail("Images have different dimensions");
+        }
+
+        int width = imgA.getWidth();
+        int height = imgA.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
+                    fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
+                }
+            }
+        }
+    }
 
     /**
      * The most important test. Shown, that the changes in algorithm,
@@ -134,23 +150,6 @@ public class ImageComparisonUnitTest {
 
         assertTrue(savedToFile.get());
         assertFalse(showUI.get());
-    }
-
-    private static void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {
-        if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
-            fail("Images have different dimensions");
-        }
-
-        int width = imgA.getWidth();
-        int height = imgA.getHeight();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
-                    fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
-                }
-            }
-        }
     }
 
 }

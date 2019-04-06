@@ -25,10 +25,10 @@ public class Rectangle {
     }
 
     public void merge(Rectangle that) {
-        if(this.minX <= that.minX && this.minY <= that.minY && this.maxY >= that.maxY && this.maxX >= that.maxX) {
+        if (this.minX <= that.minX && this.minY <= that.minY && this.maxY >= that.maxY && this.maxX >= that.maxX) {
             that.setDefaultValues();
         }
-        if(that.minX <= this.minX && that.minY <= this.minY && that.maxY >= this.maxY && that.maxX >= this.maxX) {
+        if (that.minX <= this.minX && that.minY <= this.minY && that.maxY >= this.maxY && that.maxX >= this.maxX) {
             this.setDefaultValues();
         }
     }
@@ -55,32 +55,37 @@ public class Rectangle {
         this.minX = Integer.MAX_VALUE;
     }
 
+    public int getMinX() {
+        return minX;
+    }
 
     public void setMinX(int minX) {
         this.minX = minX;
+    }
+
+    public int getMinY() {
+        return minY;
     }
 
     public void setMinY(int minY) {
         this.minY = minY;
     }
 
+    public int getMaxX() {
+        return maxX;
+    }
+
     public void setMaxX(int maxX) {
         this.maxX = maxX;
+    }
+
+    public int getMaxY() {
+        return maxY;
     }
 
     public void setMaxY(int maxY) {
         this.maxY = maxY;
     }
-
-    public int getMinX() {
-        return minX;
-    }
-
-    public int getMinY() { return minY; }
-
-    public int getMaxX() { return maxX; }
-
-    public int getMaxY() { return maxY; }
 
     public int getWidth() {
         return maxY - minY;

@@ -25,21 +25,18 @@ import ua.comparison.image.model.Rectangle;
 public class ImageComparison {
 
     /**
+     * Prefix of the name of the result image.
+     */
+    private static final String NAME_PREFIX = "image-comparison";
+    /**
+     * Suffix of the name of of the result image.
+     */
+    private static final String NAME_SUFFIX = ".png";
+    /**
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
-    public static int threshold = 3;
-
-    /**
-     * The number which marks how many rectangles. Beginning from 2.
-     */
-    private int counter = 2;
-
-    /**
-     * The number of the marking specific rectangle.
-     */
-    private int regionCount = counter;
-
+    public static int threshold = 5;
     /**
      * First image for comparing
      */
@@ -51,18 +48,15 @@ public class ImageComparison {
     private final BufferedImage image2;
 
     private final /* @Nullable */ File destination;
-
+    /**
+     * The number which marks how many rectangles. Beginning from 2.
+     */
+    private int counter = 2;
+    /**
+     * The number of the marking specific rectangle.
+     */
+    private int regionCount = counter;
     private int[][] matrix;
-
-    /**
-     * Prefix of the name of the result image.
-     */
-    private static final String NAME_PREFIX = "image-comparison";
-
-    /**
-     * Suffix of the name of of the result image.
-     */
-    private static final String NAME_SUFFIX = ".png";
 
     ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(readImageFromResources(image1), readImageFromResources(image2), null);
@@ -141,7 +135,7 @@ public class ImageComparison {
         for (int row = 0; row < matrix.length; row++) {
             for (int col = 0; col < matrix[row].length; col++) {
                 if (matrix[row][col] == 1) {
-                    joinToRegion(row, col, threshold);
+                    joinToRegion(row, col);
                     regionCount++;
                 }
             }
@@ -156,23 +150,20 @@ public class ImageComparison {
      * @param row the value of the row.
      * @param col the value of the column.
      */
-    private void joinToRegion(int row, int col, int localThreshold) {
+    private void joinToRegion(int row, int col) {
         if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1) {
             return;
         }
 
         matrix[row][col] = regionCount;
 
-        for (int i = 0; i < localThreshold; i++) {
-//            joinToRegion(row - 1 - i, col, 1);
-            joinToRegion(row + 1 + i, col, threshold);
-//            joinToRegion(row, col - 1 - i, 1);
-            joinToRegion(row, col + 1 + i, threshold);
+        for (int i = 0; i < threshold; i++) {
+            joinToRegion(row + 1 + i, col);
+            joinToRegion(row, col + 1 + i);
 
-//            joinToRegion(row - 1 - i, col - 1 - i, 1);
-            joinToRegion(row + 1 + i, col - 1 - i, threshold);
-            joinToRegion(row - 1 - i, col + 1 + i, threshold);
-            joinToRegion(row + 1 + i, col + 1 + i, threshold);
+            joinToRegion(row + 1 + i, col - 1 - i);
+            joinToRegion(row - 1 - i, col + 1 + i);
+            joinToRegion(row + 1 + i, col + 1 + i);
         }
     }
 
