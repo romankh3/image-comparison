@@ -57,15 +57,16 @@ public class RectangleUnitTest {
     }
 
     /**
-     * Cover non overlapping case:
-     * .............
-     * . R1        .
-     * .           .
-     * .............
-     *     ..............
-     *     . R2         .
-     *     .            .
-     *     ..............
+     * Cover non overlapping case, drawing below:
+     *    .............
+     *    . R1        .
+     *    .           .
+     *    .............
+     * ------------------------
+     *      ..............
+     *      . R2         .
+     *      .            .
+     *      ..............
      */
     @Test
     public void testNonOverlappingUpDown() {
@@ -78,13 +79,14 @@ public class RectangleUnitTest {
     }
 
     /**
-     * Cover non overlapping case:
-     * ...........
-     * . R1      .  ...........
-     * .         .  . R2      .
-     * ...........  .         .
-     *              .         .
-     *              ...........
+     * Cover non overlapping case, drawing below:
+     * ........... |
+     * . R1      . |  ...........
+     * .         . |  . R2      .
+     * ........... |  .         .
+     *             |  .         .
+     *             |  ...........
+     *             |
      */
     @Test
     public void testNonOverlappingLeftRight() {
