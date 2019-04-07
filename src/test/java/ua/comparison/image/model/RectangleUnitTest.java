@@ -5,7 +5,6 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -98,24 +97,6 @@ public class RectangleUnitTest {
 
         //when-then
         assertFalse(rectangleOne.isOverlapping(rectangleTwo));
-    }
-
-    @Test
-    @Ignore
-    //todo should be written 3 tests for it.
-    public void testMergeRectangles() {
-        //given
-        Rectangle rectangleOne = new Rectangle(2, 2, 8, 6);
-
-        Rectangle rectangleTwo = new Rectangle(4, 4, 10, 10);
-
-        Rectangle expected = new Rectangle(2, 2, 10, 10);
-
-        //when
-//        Rectangle mergedRectangle = rectangleOne.merge(rectangleTwo);
-
-        //then
-//        Assert.assertEquals(expected, mergedRectangle);
     }
 
     @Test
