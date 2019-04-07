@@ -10,7 +10,7 @@ public class Rectangle {
     private int maxX;
     private int maxY;
 
-    public Rectangle() {
+    private Rectangle() {
     }
 
     public Rectangle(int minX, int minY, int maxX, int maxY) {
@@ -29,19 +29,6 @@ public class Rectangle {
         defaultRectangle.setDefaultValues();
 
         return defaultRectangle;
-    }
-
-    public void merge(Rectangle that) {
-        if (this.minX <= that.minX && this.minY <= that.minY && this.maxY >= that.maxY && this.maxX >= that.maxX) {
-            that.setDefaultValues();
-        }
-        if (that.minX <= this.minX && that.minY <= this.minY && that.maxY >= this.maxY && that.maxX >= this.maxX) {
-            this.setDefaultValues();
-        }
-    }
-
-    private boolean isFirstUpper(Rectangle that) {
-        return false;
     }
 
     public boolean isOverlapping(Rectangle that) {

@@ -92,7 +92,7 @@ public class RectangleUnitTest {
     public void testNonOverlappingLeftRight() {
         //given
         Rectangle rectangleOne = new Rectangle(2, 2, 4, 4);
-        Rectangle rectangleTwo = new Rectangle(6, 8, 10, 12);
+        Rectangle rectangleTwo = new Rectangle(6, 2, 10, 4);
 
         //when-then
         Assert.assertFalse(rectangleOne.isOverlapping(rectangleTwo));
@@ -110,9 +110,55 @@ public class RectangleUnitTest {
         Rectangle expected = new Rectangle(2, 2, 10, 10);
 
         //when
-        rectangleOne.merge(rectangleTwo);
+//        Rectangle mergedRectangle = rectangleOne.merge(rectangleTwo);
 
         //then
-        Assert.assertEquals(expected, rectangleOne);
+//        Assert.assertEquals(expected, mergedRectangle);
     }
+
+    @Test
+    public void testEqual() {
+        //given
+        Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
+        Rectangle rectangleTwo = new Rectangle(1, 1, 2, 2);
+
+        //when-then
+        Assert.assertEquals(rectangleOne, rectangleTwo);
+    }
+
+    @Test
+    public void testEqualTheSame() {
+        //given
+        Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
+
+        //when-then
+        Assert.assertEquals(rectangleOne, rectangleOne);
+    }
+
+    @Test
+    public void testEqualNull() {
+        //given
+        Rectangle rectangle = new Rectangle(1, 1, 2, 2);
+
+        //when-then
+        Assert.assertNotEquals(rectangle, null);
+    }
+
+    @Test
+    public void testNonEqual() {
+        //given
+        Rectangle rectangle = new Rectangle(1, 1, 2, 2);
+        Rectangle rectangleMinX = new Rectangle(2, 1, 2, 2);
+        Rectangle rectangleMinY = new Rectangle(1, 2, 2, 2);
+        Rectangle rectangleMaxX = new Rectangle(1, 1, 4, 2);
+        Rectangle rectangleMaxY = new Rectangle(1, 1, 2, 5);
+
+        //when-then
+        Assert.assertNotEquals(rectangle, rectangleMinX);
+        Assert.assertNotEquals(rectangle, rectangleMinY);
+        Assert.assertNotEquals(rectangle, rectangleMaxX);
+        Assert.assertNotEquals(rectangle, rectangleMaxY);
+
+    }
+
 }
