@@ -20,6 +20,7 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile group: 'org.mockito', name: 'mockito-core', version: '2.26.0'
 }
 
 jar {
@@ -43,12 +44,12 @@ defaultTasks << 'build'
 
 /* Publishing config */
 
-task javadocJar( type: Jar ) {
+task javadocJar(type: Jar) {
     classifier = 'javadoc'
     from javadoc
 }
 
-task sourcesJar( type: Jar ) {
+task sourcesJar(type: Jar) {
     classifier = 'sources'
     from sourceSets.main.allSource
 }
@@ -58,7 +59,7 @@ artifacts {
 }
 
 // add all the info required by Maven Central to the pom
-configure( install.repositories.mavenInstaller ) {
+configure(install.repositories.mavenInstaller) {
     pom.project {
         inceptionYear '2019'
         name project.name
@@ -91,19 +92,19 @@ configure( install.repositories.mavenInstaller ) {
 }
 
 def getProjectProperty = { String propertyName ->
-    project.properties[ propertyName ]
+    project.properties[propertyName]
 }
 
 bintray {
     user = getProjectProperty "bintrayUserName"
     key = getProjectProperty "bintrayApiKey"
-    configurations = [ 'archives' ]
+    configurations = ['archives']
     publish = true
     pkg {
         repo = 'maven'
         name = 'image-comparison'
-        licenses = [ 'unlicense' ]
-        labels = [ 'java', 'image', 'image-comparison' ]
+        licenses = ['unlicense']
+        labels = ['java', 'image', 'image-comparison']
         publicDownloadNumbers = true
 
         //noinspection GroovyAssignabilityCheck

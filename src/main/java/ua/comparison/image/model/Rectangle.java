@@ -10,31 +10,25 @@ public class Rectangle {
     private int maxX;
     private int maxY;
 
+    private Rectangle() {
+    }
+
+    public Rectangle(int minX, int minY, int maxX, int maxY) {
+        this.minX = minX;
+        this.minY = minY;
+        this.maxX = maxX;
+        this.maxY = maxY;
+    }
+
     /**
      * Create default {@link Rectangle} object.
      */
     public static Rectangle createDefault() {
         Rectangle defaultRectangle = new Rectangle();
 
-        defaultRectangle.setMaxX(Integer.MIN_VALUE);
-        defaultRectangle.setMaxY(Integer.MIN_VALUE);
-        defaultRectangle.setMinX(Integer.MAX_VALUE);
-        defaultRectangle.setMinY(Integer.MAX_VALUE);
+        defaultRectangle.setDefaultValues();
 
         return defaultRectangle;
-    }
-
-    public void merge(Rectangle that) {
-        if(this.minX <= that.minX && this.minY <= that.minY && this.maxY >= that.maxY && this.maxX >= that.maxX) {
-            that.setDefaultValues();
-        }
-        if(that.minX <= this.minX && that.minY <= this.minY && that.maxY >= this.maxY && that.maxX >= this.maxX) {
-            this.setDefaultValues();
-        }
-    }
-
-    private boolean isFirstUpper(Rectangle that) {
-        return false;
     }
 
     public boolean isOverlapping(Rectangle that) {
@@ -55,32 +49,37 @@ public class Rectangle {
         this.minX = Integer.MAX_VALUE;
     }
 
+    public int getMinX() {
+        return minX;
+    }
 
     public void setMinX(int minX) {
         this.minX = minX;
+    }
+
+    public int getMinY() {
+        return minY;
     }
 
     public void setMinY(int minY) {
         this.minY = minY;
     }
 
+    public int getMaxX() {
+        return maxX;
+    }
+
     public void setMaxX(int maxX) {
         this.maxX = maxX;
+    }
+
+    public int getMaxY() {
+        return maxY;
     }
 
     public void setMaxY(int maxY) {
         this.maxY = maxY;
     }
-
-    public int getMinX() {
-        return minX;
-    }
-
-    public int getMinY() { return minY; }
-
-    public int getMaxX() { return maxX; }
-
-    public int getMaxY() { return maxY; }
 
     public int getWidth() {
         return maxY - minY;

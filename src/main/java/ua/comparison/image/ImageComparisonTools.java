@@ -165,7 +165,6 @@ public class ImageComparisonTools {
      */
     public static void saveImage(File path, BufferedImage image) throws IOException {
         File dir = path.getParentFile();
-        // make dir if it's not using from Gradle.
         boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
         if (!dirExists) {
             throw new RuntimeException("Unable to create directory " + dir);

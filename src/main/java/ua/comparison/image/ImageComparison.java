@@ -1,7 +1,6 @@
 package ua.comparison.image;
 
 import static java.awt.Color.RED;
-import static java.awt.Color.white;
 import static ua.comparison.image.CommandLineUtil.create;
 import static ua.comparison.image.CommandLineUtil.handleResult;
 import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
@@ -21,28 +20,23 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
 
     /**
+     * Prefix of the name of the result image.
+     */
+    private static final String NAME_PREFIX = "image-comparison";
+    /**
+     * Suffix of the name of of the result image.
+     */
+    private static final String NAME_SUFFIX = ".png";
+    /**
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
     public static int threshold = 5;
-
-    /**
-     * The number which marks how many rectangles. Beginning from 2.
-     */
-    private int counter = 2;
-
-    /**
-     * The number of the marking specific rectangle.
-     */
-    private int regionCount = counter;
-
     /**
      * First image for comparing
      */
@@ -54,18 +48,15 @@ public class ImageComparison {
     private final BufferedImage image2;
 
     private final /* @Nullable */ File destination;
-
+    /**
+     * The number which marks how many rectangles. Beginning from 2.
+     */
+    private int counter = 2;
+    /**
+     * The number of the marking specific rectangle.
+     */
+    private int regionCount = counter;
     private int[][] matrix;
-
-    /**
-     * Prefix of the name of the result image.
-     */
-    private static final String NAME_PREFIX = "image-comparison";
-
-    /**
-     * Suffix of the name of of the result image.
-     */
-    private static final String NAME_SUFFIX = ".png";
 
     ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(readImageFromResources(image1), readImageFromResources(image2), null);
@@ -108,24 +99,33 @@ public class ImageComparison {
 
         groupRegions();
 
+        List<Rectangle> rectangles = populateRectangles();
+
+        drawRectangles(rectangles, graphics);
+
+        //save the image:
+        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
+        return outImg;
+    }
+
+    private List<Rectangle> populateRectangles() {
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
             Rectangle rectangle = createRectangle(matrix, counter);
-            if(!rectangle.equals(Rectangle.createDefault())) {
+            if (!rectangle.equals(Rectangle.createDefault())) {
                 rectangles.add(createRectangle(matrix, counter));
             }
             counter++;
         }
 
+        return rectangles;
+    }
 
+    private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinY(),
-                                                          rectangle.getMinX(),
-                                                          rectangle.getWidth(),
-                                                          rectangle.getHeight()));
-
-        //save the image:
-        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
-        return outImg;
+                rectangle.getMinX(),
+                rectangle.getWidth(),
+                rectangle.getHeight()));
     }
 
     /**
