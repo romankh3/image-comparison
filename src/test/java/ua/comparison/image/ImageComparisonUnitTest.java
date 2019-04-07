@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.junit.Assert;
 import org.junit.Test;
 
 
@@ -36,6 +37,23 @@ public class ImageComparisonUnitTest {
                 }
             }
         }
+    }
+
+    @Test
+    public void testMainClass() throws IOException, URISyntaxException {
+        //given
+        String[] args = new String[2];
+        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
+        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        args[0] = image1.getAbsolutePath();
+        args[1] = image2.getAbsolutePath();
+
+        //when
+        ImageComparison.main(args);
+
+        //then
+        Assert.assertNotNull(image1);
+        Assert.assertNotNull(image2);
     }
 
     /**
