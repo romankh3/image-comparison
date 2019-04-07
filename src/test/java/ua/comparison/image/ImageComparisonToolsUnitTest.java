@@ -1,6 +1,9 @@
 package ua.comparison.image;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 import static ua.comparison.image.ImageComparisonTools.createGUI;
 import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
 
@@ -39,5 +42,27 @@ public class ImageComparisonToolsUnitTest {
         String path = "build/test/correct/save/image.png";
         ImageComparisonTools.saveImage(new File(path), image);
         Assert.assertTrue(new File(path).exists());
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testNullParent() throws IOException {
+        //given
+        File path = mock(File.class);
+        File parent = mock(File.class);
+        when(path.isDirectory()).thenReturn(false);
+        when(path.mkdirs()).thenReturn(false);
+        when(path.getParentFile()).thenReturn(parent);
+
+        //when-then
+        ImageComparisonTools.saveImage(path, null);
+    }
+
+    @Test
+    public void testCreation() {
+        //when
+        ImageComparisonTools imageComparisonTools = new ImageComparisonTools();
+
+        //then
+        assertNotNull(imageComparisonTools);
     }
 }

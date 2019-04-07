@@ -1,8 +1,10 @@
 package ua.comparison.image.model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
-import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -53,7 +55,7 @@ public class RectangleUnitTest {
         Rectangle rectangleTwo = new Rectangle(4, 4, 10, 10);
 
         //when-then
-        Assert.assertTrue(rectangleOne.isOverlapping(rectangleTwo));
+        assertTrue(rectangleOne.isOverlapping(rectangleTwo));
     }
 
     /**
@@ -75,7 +77,7 @@ public class RectangleUnitTest {
         Rectangle rectangleTwo = new Rectangle(4, 6, 6, 8);
 
         //when-then
-        Assert.assertFalse(rectangleOne.isOverlapping(rectangleTwo));
+        assertFalse(rectangleOne.isOverlapping(rectangleTwo));
     }
 
     /**
@@ -95,7 +97,7 @@ public class RectangleUnitTest {
         Rectangle rectangleTwo = new Rectangle(6, 2, 10, 4);
 
         //when-then
-        Assert.assertFalse(rectangleOne.isOverlapping(rectangleTwo));
+        assertFalse(rectangleOne.isOverlapping(rectangleTwo));
     }
 
     @Test
@@ -123,7 +125,7 @@ public class RectangleUnitTest {
         Rectangle rectangleTwo = new Rectangle(1, 1, 2, 2);
 
         //when-then
-        Assert.assertEquals(rectangleOne, rectangleTwo);
+        assertEquals(rectangleOne, rectangleTwo);
     }
 
     @Test
@@ -132,7 +134,7 @@ public class RectangleUnitTest {
         Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
 
         //when-then
-        Assert.assertEquals(rectangleOne, rectangleOne);
+        assertEquals(rectangleOne, rectangleOne);
     }
 
     @Test
@@ -141,7 +143,7 @@ public class RectangleUnitTest {
         Rectangle rectangle = new Rectangle(1, 1, 2, 2);
 
         //when-then
-        Assert.assertNotEquals(rectangle, null);
+        assertNotEquals(rectangle, null);
     }
 
     @Test
@@ -154,11 +156,40 @@ public class RectangleUnitTest {
         Rectangle rectangleMaxY = new Rectangle(1, 1, 2, 5);
 
         //when-then
-        Assert.assertNotEquals(rectangle, rectangleMinX);
-        Assert.assertNotEquals(rectangle, rectangleMinY);
-        Assert.assertNotEquals(rectangle, rectangleMaxX);
-        Assert.assertNotEquals(rectangle, rectangleMaxY);
+        assertNotEquals(rectangle, rectangleMinX);
+        assertNotEquals(rectangle, rectangleMinY);
+        assertNotEquals(rectangle, rectangleMaxX);
+        assertNotEquals(rectangle, rectangleMaxY);
 
+    }
+
+
+    @Test
+    public void testTheSameHashCode() {
+        //given
+        Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
+        Rectangle rectangleTwo = new Rectangle(1, 1, 2, 2);
+
+        //when
+        int hashCodeOne = rectangleOne.hashCode();
+        int hashCodeTwo = rectangleTwo.hashCode();
+
+        //then
+        assertEquals(hashCodeOne, hashCodeTwo);
+    }
+
+    @Test
+    public void testNonTheSameHashCode() {
+        //given
+        Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
+        Rectangle rectangleTwo = new Rectangle(1, 3, 2, 2);
+
+        //when
+        int hashCodeOne = rectangleOne.hashCode();
+        int hashCodeTwo = rectangleTwo.hashCode();
+
+        //then
+        assertNotEquals(hashCodeOne, hashCodeTwo);
     }
 
 }
