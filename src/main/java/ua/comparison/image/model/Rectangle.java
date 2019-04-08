@@ -35,10 +35,7 @@ public class Rectangle {
         if (this.maxY < that.minY || that.maxY < this.minY) {
             return false;
         }
-        if (this.maxX < that.minX || that.maxX < this.minX) {
-            return false;
-        }
-        return true;
+        return this.maxX >= that.minX && that.maxX >= this.minX;
     }
 
     public void setDefaultValues() {

@@ -30,17 +30,15 @@ Run the `./run.sh` script to run the demo.
 You will get the result of comparing two images.
 The images, which are using:
 
-### Image1
+**Image 1**
 
 ![image1](https://user-images.githubusercontent.com/16310793/28955567-52edeabe-78f0-11e7-8bb2-d435c8df23ff.png)
 
-### Image2
+**Image 2**
 
 ![image2](https://user-images.githubusercontent.com/16310793/28955566-52ead892-78f0-11e7-993c-847350da0bf8.png)
 
-##### Do you see the difference?
-
-### Result
+**Result**
 
 ![result](https://user-images.githubusercontent.com/16310793/28955568-52f23e02-78f0-11e7-92c5-07602b6a0887.png)
 
@@ -98,11 +96,12 @@ class Example {
 }
 ```
 
-## License:
+## License
 This project is unlicense - see the [LICENSE](LICENSE) file for details
 
-### Thanks [@dee-y](https://github.com/dee-y) for designing this logo!
+### Thanks [@dee-y](https://github.com/dee-y) for designing this logo
 
-### Also if you're interesting - see my other repositories: 
+### Also if you're interesting - see my other repositories
+* [Raspberry home ecosystem](https://github.com/romankh3/raspberrypi-home-ecosystem) - home ecosystem based on raspberry pi.
 * [Movie Tracking](https://github.com/romankh3/movietracking) Simple API for tracking movies with favorite actors for the specific time.
 * [Tic Tac Toe NxM](https://github.com/romankh3/tictactoe)- Own implementation. For any rectangle and any winner line count. 

@@ -20,7 +20,7 @@ final class ArgsParser {
         this.errorExit = errorExit;
     }
 
-    Optional<Arguments> parseArgs(String... args) {
+    public Optional<Arguments> parseArgs(String... args) {
         if (args.length == 0) {
             return Optional.empty();
         }
@@ -66,7 +66,7 @@ final class ArgsParser {
         return Optional.empty();
     }
 
-    static final class Arguments {
+    public static final class Arguments {
 
         private final File image1;
         private final File image2;
@@ -78,15 +78,15 @@ final class ArgsParser {
             this.destinationImage = destinationImage;
         }
 
-        File getImage1() {
+        public File getImage1() {
             return image1;
         }
 
-        File getImage2() {
+        public File getImage2() {
             return image2;
         }
 
-        Optional<File> getDestinationImage() {
+        public Optional<File> getDestinationImage() {
             return Optional.ofNullable(destinationImage);
         }
     }

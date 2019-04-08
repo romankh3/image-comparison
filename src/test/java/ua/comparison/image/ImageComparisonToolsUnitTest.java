@@ -65,4 +65,13 @@ public class ImageComparisonToolsUnitTest {
         //then
         assertNotNull(imageComparisonTools);
     }
+
+    @Test
+    public void testCommanlineUtilCreation() {
+        //when
+        CommandLineUtil commandLineUtil = new CommandLineUtil();
+
+        //then
+        assertNotNull(commandLineUtil);
+    }
 }
