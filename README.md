@@ -77,7 +77,7 @@ class Example {
 }
 ```
 
-## Running the demo
+## Demo
 
 Run the `./run.sh` script to run the demo.
 
