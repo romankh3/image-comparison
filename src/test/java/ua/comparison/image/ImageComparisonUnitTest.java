@@ -13,9 +13,7 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.Assert;
 import org.junit.Test;
-
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -52,8 +50,8 @@ public class ImageComparisonUnitTest {
         ImageComparison.main(args);
 
         //then
-        Assert.assertNotNull(image1);
-        Assert.assertNotNull(image2);
+        assertNotNull(image1);
+        assertNotNull(image2);
     }
 
     /**
