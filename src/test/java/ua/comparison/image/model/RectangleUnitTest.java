@@ -3,6 +3,7 @@ package ua.comparison.image.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -171,6 +172,47 @@ public class RectangleUnitTest {
 
         //then
         assertNotEquals(hashCodeOne, hashCodeTwo);
+    }
+
+    @Test
+    public void testCloneRectangleByConstructor() {
+        //given
+        Rectangle rectangle = new Rectangle(1, 1, 4, 4);
+
+        //when
+        Rectangle clonedRectangle = new Rectangle(rectangle);
+
+        //then
+        assertNotSame(rectangle, clonedRectangle);
+        assertEquals(rectangle, clonedRectangle);
+    }
+
+    /**
+     * Coven test with merging rectagles one into other.
+     *
+     * ................................................
+     * . R1                                           .
+     * .     ..............................           .
+     * .     . R2                         .           .
+     * .     .                            .           .
+     * .     .                            .           .
+     * .     ..............................           .
+     * .                                              .
+     * ................................................
+     */
+    @Test
+    public void testMergeR1InsideR2() {
+        //given
+        Rectangle r1 = new Rectangle(3, 3, 9, 5);
+        Rectangle r2 = new Rectangle(1, 1, 14, 7);
+
+        //when
+        Rectangle mergedRectangleR1intoR2 = r1.merge(r2);
+        Rectangle mergedRectangleR2intoR1 = r2.merge(r1);
+
+        //then
+        assertEquals(r2, mergedRectangleR1intoR2);
+        assertEquals(r2, mergedRectangleR2intoR1);
     }
 
 }

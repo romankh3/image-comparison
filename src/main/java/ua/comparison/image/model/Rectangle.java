@@ -13,6 +13,13 @@ public class Rectangle {
     private Rectangle() {
     }
 
+    public Rectangle(Rectangle rectangle) {
+        this.minX = rectangle.getMinX();
+        this.minY = rectangle.getMinY();
+        this.maxX = rectangle.getMaxX();
+        this.maxY = rectangle.getMaxY();
+    }
+
     public Rectangle(int minX, int minY, int maxX, int maxY) {
         this.minX = minX;
         this.minY = minY;
@@ -29,6 +36,37 @@ public class Rectangle {
         defaultRectangle.setDefaultValues();
 
         return defaultRectangle;
+    }
+
+    /**
+     * Create new {@link Rectangle} via merging this and that.
+     *
+     * @param that {@link Rectangle} for merging with this.
+     *
+     * @return new merged {@link Rectangle}.
+     */
+    public Rectangle merge(Rectangle that) {
+        Rectangle mergedRectangle = null;
+        if (isR2InsideR1(this, that)) {
+            mergedRectangle = new Rectangle(this);
+        } else if (isR2InsideR1(that, this)) {
+            mergedRectangle = new Rectangle(that);
+        }
+        return mergedRectangle;
+    }
+
+    /**
+     * Tell if r2 inside r1.
+     *
+     * @param r1 first rectangle
+     * @param r2 second rectangle
+     * @return true if r2 inside r1, otherwise false.
+     */
+    private boolean isR2InsideR1(Rectangle r1, Rectangle r2) {
+        return r1.getMinX() <= r2.getMinX() &&
+                r1.getMinY() <= r2.getMinY() &&
+                r1.getMaxX() >= r2.getMaxX() &&
+                r1.getMaxY() >= r2.getMaxY();
     }
 
     public boolean isOverlapping(Rectangle that) {
