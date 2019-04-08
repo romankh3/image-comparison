@@ -167,7 +167,7 @@ public class ImageComparison {
         }
     }
 
-    Optional<File> getDestination() {
+    public Optional<File> getDestination() {
         return Optional.ofNullable(destination);
     }
 

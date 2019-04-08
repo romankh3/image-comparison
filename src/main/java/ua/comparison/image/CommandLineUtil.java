@@ -14,26 +14,26 @@ import ua.comparison.image.ArgsParser.Arguments;
  */
 public class CommandLineUtil {
 
-    static ImageComparison create(String... args) throws IOException, URISyntaxException {
+    public static ImageComparison create(String... args) throws IOException, URISyntaxException {
         Optional<Arguments> arguments = new ArgsParser().parseArgs(args);
         return arguments.isPresent() ? create(arguments.get()) : createDefault();
     }
 
-    static ImageComparison createDefault() throws IOException, URISyntaxException {
+    public static ImageComparison createDefault() throws IOException, URISyntaxException {
         return new ImageComparison(
                 readImageFromResources("image1.png"),
                 readImageFromResources("image2.png"),
                 null);
     }
 
-    static ImageComparison create(ArgsParser.Arguments args) throws IOException {
+    public static ImageComparison create(ArgsParser.Arguments args) throws IOException {
         return new ImageComparison(
                 readImageFromFile(args.getImage1()),
                 readImageFromFile(args.getImage2()),
                 args.getDestinationImage().orElse(null));
     }
 
-    static void handleResult(ImageComparison instance, IOConsumer<File> saveToFile, Runnable showUI)
+    public static void handleResult(ImageComparison instance, IOConsumer<File> saveToFile, Runnable showUI)
             throws IOException {
         if (instance.getDestination().isPresent()) {
             saveToFile.accept(instance.getDestination().get());
