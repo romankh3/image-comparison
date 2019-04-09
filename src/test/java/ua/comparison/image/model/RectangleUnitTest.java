@@ -215,4 +215,34 @@ public class RectangleUnitTest {
         assertEquals(r2, mergedRectangleR2intoR1);
     }
 
+    /**
+     * Cover test case with merging rectangles when R2 under R1.
+     *
+     * ....................
+     * . R1               .
+     * .      ....................
+     * .      . R2        .      .
+     * .      .           .      .
+     * .      .           .      .
+     * ....................      .
+     *        .                  .
+     *        ....................
+     */
+    @Test
+    public void testMergeR2UnderR1() {
+        //given
+        Rectangle r1 = new Rectangle(4, 3, 8, 7);
+        Rectangle r2 = new Rectangle(6, 5, 11, 10);
+
+        Rectangle expectedMergedRectangle = new Rectangle(4, 3, 11, 10);
+
+        //when
+        Rectangle mergedRectangle1 = r1.merge(r2);
+        Rectangle mergedRectangle2 = r2.merge(r1);
+
+        //then
+        assertEquals(expectedMergedRectangle, mergedRectangle1);
+        assertEquals(expectedMergedRectangle, mergedRectangle2);
+    }
+
 }

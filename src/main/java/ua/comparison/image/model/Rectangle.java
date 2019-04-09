@@ -51,8 +51,17 @@ public class Rectangle {
             mergedRectangle = new Rectangle(this);
         } else if (isR2InsideR1(that, this)) {
             mergedRectangle = new Rectangle(that);
+        } else if(isR2UnderR1(that, this)) {
+            mergedRectangle = new Rectangle(that.getMinX(), that.getMinY(), this.getMaxX(), this.getMaxY());
+        } else if(isR2UnderR1(this, that)) {
+            mergedRectangle = new Rectangle(this.getMinX(), this.getMinY(), that.getMaxX(), that.getMaxY());
         }
         return mergedRectangle;
+    }
+
+    private boolean isR2UnderR1(Rectangle r1, Rectangle r2) {
+        return r1.getMinX() <= r2.getMinX() && r1.getMinY() <= r2.getMinY() &&
+                r1.getMaxX() <= r2.getMaxX() && r1.getMaxY() <= r2.getMaxY();
     }
 
     /**
@@ -63,10 +72,8 @@ public class Rectangle {
      * @return true if r2 inside r1, otherwise false.
      */
     private boolean isR2InsideR1(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() &&
-                r1.getMinY() <= r2.getMinY() &&
-                r1.getMaxX() >= r2.getMaxX() &&
-                r1.getMaxY() >= r2.getMaxY();
+        return r1.getMinX() <= r2.getMinX() && r1.getMinY() <= r2.getMinY() &&
+                r1.getMaxX() >= r2.getMaxX() && r1.getMaxY() >= r2.getMaxY();
     }
 
     public boolean isOverlapping(Rectangle that) {
