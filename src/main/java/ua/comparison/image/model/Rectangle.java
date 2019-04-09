@@ -55,8 +55,17 @@ public class Rectangle {
             mergedRectangle = new Rectangle(that.getMinX(), that.getMinY(), this.getMaxX(), this.getMaxY());
         } else if(isR2UnderR1(this, that)) {
             mergedRectangle = new Rectangle(this.getMinX(), this.getMinY(), that.getMaxX(), that.getMaxY());
+        } else if(isR1LeftwardR2(this, that)) {
+            mergedRectangle = new Rectangle(this.getMinX(), that.getMinY(), that.getMaxX(), this.getMaxY());
+        } else if(isR1LeftwardR2(that, this)) {
+            mergedRectangle = new Rectangle(that.getMinX(), this.getMinY(), this.getMaxX(), that.getMaxY());
         }
         return mergedRectangle;
+    }
+
+    private boolean isR1LeftwardR2(Rectangle r1, Rectangle r2) {
+        return r1.getMinX() <= r2.getMinX() && r1.getMaxY() >= r2.getMaxY() &&
+                r1.getMaxX() <= r2.getMaxX() && r1.getMinY() >= r1.getMinY();
     }
 
     private boolean isR2UnderR1(Rectangle r1, Rectangle r2) {

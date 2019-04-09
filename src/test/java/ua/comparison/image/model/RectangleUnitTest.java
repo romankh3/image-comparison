@@ -245,4 +245,37 @@ public class RectangleUnitTest {
         assertEquals(expectedMergedRectangle, mergedRectangle2);
     }
 
+    /**
+     * Cover test case with merging rectangles when R1 leftward R1.
+     *
+     *         ..........................
+     *         . R2                     .
+     *         .                        .
+     * .........................        .
+     * . R1    .               .        .
+     * .       .               .        .
+     * .       ..........................
+     * .                       .
+     * .                       .
+     * .                       .
+     * .                       .
+     * .........................
+     */
+    @Test
+    public void testMergeR1leftwardR2() {
+        //given
+        Rectangle r1 = new Rectangle(2, 4, 6, 7);
+        Rectangle r2 = new Rectangle( 4, 2, 10, 6);
+
+        Rectangle expectedMergedRectangle = new Rectangle(2, 2, 10, 7);
+
+        //when
+        Rectangle mergedRectangle1 = r1.merge(r2);
+        Rectangle mergedRectangle2 = r2.merge(r1);
+
+        //then
+        assertEquals(expectedMergedRectangle, mergedRectangle1);
+        assertEquals(expectedMergedRectangle, mergedRectangle2);
+    }
+
 }
