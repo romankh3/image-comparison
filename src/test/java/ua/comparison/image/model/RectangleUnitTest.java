@@ -3,6 +3,7 @@ package ua.comparison.image.model;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -171,6 +172,110 @@ public class RectangleUnitTest {
 
         //then
         assertNotEquals(hashCodeOne, hashCodeTwo);
+    }
+
+    @Test
+    public void testCloneRectangleByConstructor() {
+        //given
+        Rectangle rectangle = new Rectangle(1, 1, 4, 4);
+
+        //when
+        Rectangle clonedRectangle = new Rectangle(rectangle);
+
+        //then
+        assertNotSame(rectangle, clonedRectangle);
+        assertEquals(rectangle, clonedRectangle);
+    }
+
+    /**
+     * Coven test with merging rectagles one into other.
+     *
+     * ................................................
+     * . R1                                           .
+     * .     ..............................           .
+     * .     . R2                         .           .
+     * .     .                            .           .
+     * .     .                            .           .
+     * .     ..............................           .
+     * .                                              .
+     * ................................................
+     */
+    @Test
+    public void testMergeR1InsideR2() {
+        //given
+        Rectangle r1 = new Rectangle(3, 3, 9, 5);
+        Rectangle r2 = new Rectangle(1, 1, 14, 7);
+
+        //when
+        Rectangle mergedRectangleR1intoR2 = r1.merge(r2);
+        Rectangle mergedRectangleR2intoR1 = r2.merge(r1);
+
+        //then
+        assertEquals(r2, mergedRectangleR1intoR2);
+        assertEquals(r2, mergedRectangleR2intoR1);
+    }
+
+    /**
+     * Cover test case with merging rectangles when R2 under R1.
+     *
+     * ....................
+     * . R1               .
+     * .      ....................
+     * .      . R2        .      .
+     * .      .           .      .
+     * .      .           .      .
+     * ....................      .
+     *        .                  .
+     *        ....................
+     */
+    @Test
+    public void testMergeR2UnderR1() {
+        //given
+        Rectangle r1 = new Rectangle(4, 3, 8, 7);
+        Rectangle r2 = new Rectangle(6, 5, 11, 10);
+
+        Rectangle expectedMergedRectangle = new Rectangle(4, 3, 11, 10);
+
+        //when
+        Rectangle mergedRectangle1 = r1.merge(r2);
+        Rectangle mergedRectangle2 = r2.merge(r1);
+
+        //then
+        assertEquals(expectedMergedRectangle, mergedRectangle1);
+        assertEquals(expectedMergedRectangle, mergedRectangle2);
+    }
+
+    /**
+     * Cover test case with merging rectangles when R1 leftward R1.
+     *
+     *         ..........................
+     *         . R2                     .
+     *         .                        .
+     * .........................        .
+     * . R1    .               .        .
+     * .       .               .        .
+     * .       ..........................
+     * .                       .
+     * .                       .
+     * .                       .
+     * .                       .
+     * .........................
+     */
+    @Test
+    public void testMergeR1leftwardR2() {
+        //given
+        Rectangle r1 = new Rectangle(2, 4, 6, 7);
+        Rectangle r2 = new Rectangle( 4, 2, 10, 6);
+
+        Rectangle expectedMergedRectangle = new Rectangle(2, 2, 10, 7);
+
+        //when
+        Rectangle mergedRectangle1 = r1.merge(r2);
+        Rectangle mergedRectangle2 = r2.merge(r1);
+
+        //then
+        assertEquals(expectedMergedRectangle, mergedRectangle1);
+        assertEquals(expectedMergedRectangle, mergedRectangle2);
     }
 
 }
