@@ -278,4 +278,17 @@ public class RectangleUnitTest {
         assertEquals(expectedMergedRectangle, mergedRectangle2);
     }
 
+    @Test
+    public void testSetZeroRectangle() {
+        //given
+        Rectangle rectangle = new Rectangle(1, 2, 4, 5);
+
+        Rectangle expectedZero = new Rectangle(0, 0, 0, 0);
+
+        //when
+        rectangle.makeZeroRectangle();
+
+        //then
+        assertEquals(expectedZero, rectangle);
+    }
 }

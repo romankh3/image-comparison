@@ -100,6 +100,13 @@ public class Rectangle {
         this.minX = Integer.MAX_VALUE;
     }
 
+    public void makeZeroRectangle() {
+        this.minX = 0;
+        this.minY = 0;
+        this.maxX = 0;
+        this.maxY = 0;
+    }
+
     public int getMinX() {
         return minX;
     }
