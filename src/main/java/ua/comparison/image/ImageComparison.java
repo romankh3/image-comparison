@@ -142,10 +142,7 @@ public class ImageComparison {
             position++;
         }
 
-        Rectangle zero = Rectangle.createDefault();
-        zero.makeZeroRectangle();
-
-        return rectangles.stream().filter(it -> !it.equals(zero)).collect(Collectors.toList());
+        return rectangles.stream().filter(it -> !it.equals(Rectangle.createZero())).collect(Collectors.toList());
     }
 
     private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
