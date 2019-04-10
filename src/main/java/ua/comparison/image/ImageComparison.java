@@ -1,7 +1,6 @@
 package ua.comparison.image;
 
 import static java.awt.Color.RED;
-import static java.awt.Color.white;
 import static ua.comparison.image.CommandLineUtil.create;
 import static ua.comparison.image.CommandLineUtil.handleResult;
 import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
@@ -125,13 +124,17 @@ public class ImageComparison {
 
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
         int position = 0;
-        while(position < rectangles.size()) {
-            for(int i = 1 + position; i < rectangles.size(); i ++) {
+        while (position < rectangles.size()) {
+            for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if(r1.isOverlapping(r2)) {
-                    r1 = r1.merge(r2);
+                if (r1.equals(Rectangle.createZero())) {
+                    continue;
+                }
+                if (r1.isOverlapping(r2)) {
+                    rectangles.set(position, r1.merge(r2));
                     r2.makeZeroRectangle();
+                    position--;
                 }
             }
             position++;

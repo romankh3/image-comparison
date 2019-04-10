@@ -1,5 +1,8 @@
 package ua.comparison.image.model;
 
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Object contained data for a rectangle.
  */
@@ -38,29 +41,28 @@ public class Rectangle {
         return defaultRectangle;
     }
 
+    public static Rectangle createZero() {
+        Rectangle rectangle = new Rectangle();
+        rectangle.makeZeroRectangle();
+        return rectangle;
+    }
+
     /**
      * Create new {@link Rectangle} via merging this and that.
      *
      * @param that {@link Rectangle} for merging with this.
-     *
      * @return new merged {@link Rectangle}.
      */
     public Rectangle merge(Rectangle that) {
-        Rectangle mergedRectangle = null;
-        if (isR2InsideR1(this, that)) {
-            mergedRectangle = new Rectangle(this);
-        } else if (isR2InsideR1(that, this)) {
-            mergedRectangle = new Rectangle(that);
-        } else if(isR2UnderR1(that, this)) {
-            mergedRectangle = new Rectangle(that.getMinX(), that.getMinY(), this.getMaxX(), this.getMaxY());
-        } else if(isR2UnderR1(this, that)) {
-            mergedRectangle = new Rectangle(this.getMinX(), this.getMinY(), that.getMaxX(), that.getMaxY());
-        } else if(isR1LeftwardR2(this, that)) {
-            mergedRectangle = new Rectangle(this.getMinX(), that.getMinY(), that.getMaxX(), this.getMaxY());
-        } else if(isR1LeftwardR2(that, this)) {
-            mergedRectangle = new Rectangle(that.getMinX(), this.getMinY(), this.getMaxX(), that.getMaxY());
-        }
-        return mergedRectangle;
+        List<Integer> xValues = Arrays.asList(this.getMinX(), this.getMaxX(), that.getMinX(), that.getMaxX());
+        List<Integer> yValues = Arrays.asList(this.getMinY(), this.getMaxY(), that.getMinY(), that.getMaxY());
+
+        int minX = xValues.stream().reduce(Integer::min).get();
+        int maxX = xValues.stream().reduce(Integer::max).get();
+        int minY = yValues.stream().reduce(Integer::min).get();
+        int maxY = yValues.stream().reduce(Integer::max).get();
+
+        return new Rectangle(minX, minY, maxX, maxY);
     }
 
     private boolean isR1LeftwardR2(Rectangle r1, Rectangle r2) {
