@@ -1,7 +1,7 @@
 package ua.comparison.image.model;
 
-import java.util.Arrays;
-import java.util.List;
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
 
 /**
  * Object contained data for a rectangle.
@@ -54,37 +54,10 @@ public class Rectangle {
      * @return new merged {@link Rectangle}.
      */
     public Rectangle merge(Rectangle that) {
-        List<Integer> xValues = Arrays.asList(this.getMinX(), this.getMaxX(), that.getMinX(), that.getMaxX());
-        List<Integer> yValues = Arrays.asList(this.getMinY(), this.getMaxY(), that.getMinY(), that.getMaxY());
-
-        int minX = xValues.stream().reduce(Integer::min).get();
-        int maxX = xValues.stream().reduce(Integer::max).get();
-        int minY = yValues.stream().reduce(Integer::min).get();
-        int maxY = yValues.stream().reduce(Integer::max).get();
-
-        return new Rectangle(minX, minY, maxX, maxY);
-    }
-
-    private boolean isR1LeftwardR2(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() && r1.getMaxY() >= r2.getMaxY() &&
-                r1.getMaxX() <= r2.getMaxX() && r1.getMinY() >= r1.getMinY();
-    }
-
-    private boolean isR2UnderR1(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() && r1.getMinY() <= r2.getMinY() &&
-                r1.getMaxX() <= r2.getMaxX() && r1.getMaxY() <= r2.getMaxY();
-    }
-
-    /**
-     * Tell if r2 inside r1.
-     *
-     * @param r1 first rectangle
-     * @param r2 second rectangle
-     * @return true if r2 inside r1, otherwise false.
-     */
-    private boolean isR2InsideR1(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() && r1.getMinY() <= r2.getMinY() &&
-                r1.getMaxX() >= r2.getMaxX() && r1.getMaxY() >= r2.getMaxY();
+        return new Rectangle(min(this.getMinX(), that.getMinX()),
+                min(this.getMinY(), that.getMinY()),
+                max(this.getMaxX(), that.getMaxX()),
+                max(this.getMaxY(), that.getMaxY()));
     }
 
     public boolean isOverlapping(Rectangle that) {

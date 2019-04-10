@@ -134,7 +134,9 @@ public class ImageComparison {
                 if (r1.isOverlapping(r2)) {
                     rectangles.set(position, r1.merge(r2));
                     r2.makeZeroRectangle();
-                    position--;
+                    if(position != 0) {
+                        position--;
+                    }
                 }
             }
             position++;
