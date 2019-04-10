@@ -24,6 +24,10 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 
 ## Relesase Notes
 
+### 2.0.2
+*   fixed bug #11(finally!!)
+*   fixed bug #43
+
 ### 2.0.1 
 *   fixed bug #21
 
