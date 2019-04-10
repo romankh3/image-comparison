@@ -14,7 +14,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.WindowConstants;
-import ua.comparison.image.model.Rectangle;
 
 /**
  * Tools for the {@link ImageComparison} object.
@@ -85,39 +84,6 @@ public class ImageComparisonTools {
                 /
                 Math.sqrt(Math.pow(255, 2) * 3);
         return result > 0.1;
-    }
-
-    /**
-     * Create a {@link Rectangle} object.
-     *
-     * @param matrix the matrix of the Conformity pixels.
-     * @param counter the number from marks regions.
-     * @return the {@link Rectangle} object.
-     */
-    public static Rectangle createRectangle(int[][] matrix, int counter) {
-        Rectangle rectangle = Rectangle.createDefault();
-
-        //todo refactor it to make it faster.
-        for (int y = 0; y < matrix.length; y++) {
-            for (int x = 0; x < matrix[0].length; x++) {
-                if (matrix[y][x] == counter) {
-                    if (x < rectangle.getMinX()) {
-                        rectangle.setMinX(x);
-                    }
-                    if (x > rectangle.getMaxX()) {
-                        rectangle.setMaxX(x);
-                    }
-
-                    if (y < rectangle.getMinY()) {
-                        rectangle.setMinY(y);
-                    }
-                    if (y > rectangle.getMaxY()) {
-                        rectangle.setMaxY(y);
-                    }
-                }
-            }
-        }
-        return rectangle;
     }
 
     /**
