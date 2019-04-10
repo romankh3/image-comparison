@@ -5,7 +5,6 @@ import static ua.comparison.image.CommandLineUtil.create;
 import static ua.comparison.image.CommandLineUtil.handleResult;
 import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
 import static ua.comparison.image.ImageComparisonTools.createGUI;
-import static ua.comparison.image.ImageComparisonTools.createRectangle;
 import static ua.comparison.image.ImageComparisonTools.deepCopy;
 import static ua.comparison.image.ImageComparisonTools.populateTheMatrixOfTheDifferences;
 import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
@@ -114,12 +113,43 @@ public class ImageComparison {
         while (counter <= regionCount) {
             Rectangle rectangle = createRectangle(matrix, counter);
             if (!rectangle.equals(Rectangle.createDefault())) {
-                rectangles.add(createRectangle(matrix, counter));
+                rectangles.add(rectangle);
             }
             counter++;
         }
 
         return mergeRectangles(rectangles);
+    }
+
+    /**
+     * Create a {@link Rectangle} object.
+     *
+     * @param matrix the matrix of the Conformity pixels.
+     * @param counter the number from marks regions.
+     * @return the {@link Rectangle} object.
+     */
+    private Rectangle createRectangle(int[][] matrix, int counter) {
+        Rectangle rectangle = Rectangle.createDefault();
+        for (int y = 0; y < matrix.length; y++) {
+            for (int x = 0; x < matrix[0].length; x++) {
+                if (matrix[y][x] == counter) {
+                    if (x < rectangle.getMinX()) {
+                        rectangle.setMinX(x);
+                    }
+                    if (x > rectangle.getMaxX()) {
+                        rectangle.setMaxX(x);
+                    }
+
+                    if (y < rectangle.getMinY()) {
+                        rectangle.setMinY(y);
+                    }
+                    if (y > rectangle.getMaxY()) {
+                        rectangle.setMaxY(y);
+                    }
+                }
+            }
+        }
+        return rectangle;
     }
 
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
@@ -128,13 +158,13 @@ public class ImageComparison {
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r1.equals(Rectangle.createZero())) {
+                if (r1.equals(Rectangle.createZero()) || r2.equals(Rectangle.createZero())) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
                     rectangles.set(position, r1.merge(r2));
                     r2.makeZeroRectangle();
-                    if(position != 0) {
+                    if (position != 0) {
                         position--;
                     }
                 }
