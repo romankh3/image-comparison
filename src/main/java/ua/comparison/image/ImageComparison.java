@@ -20,6 +20,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
@@ -118,7 +119,30 @@ public class ImageComparison {
             counter++;
         }
 
-        return rectangles;
+        return mergeRectangles(rectangles);
+    }
+
+    private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
+        int position = 0;
+        while (position < rectangles.size()) {
+            for (int i = 1 + position; i < rectangles.size(); i++) {
+                Rectangle r1 = rectangles.get(position);
+                Rectangle r2 = rectangles.get(i);
+                if (r1.equals(Rectangle.createZero())) {
+                    continue;
+                }
+                if (r1.isOverlapping(r2)) {
+                    rectangles.set(position, r1.merge(r2));
+                    r2.makeZeroRectangle();
+                    if(position != 0) {
+                        position--;
+                    }
+                }
+            }
+            position++;
+        }
+
+        return rectangles.stream().filter(it -> !it.equals(Rectangle.createZero())).collect(Collectors.toList());
     }
 
     private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {

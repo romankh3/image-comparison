@@ -1,5 +1,8 @@
 package ua.comparison.image.model;
 
+import static java.lang.Integer.max;
+import static java.lang.Integer.min;
+
 /**
  * Object contained data for a rectangle.
  */
@@ -38,51 +41,23 @@ public class Rectangle {
         return defaultRectangle;
     }
 
+    public static Rectangle createZero() {
+        Rectangle rectangle = new Rectangle();
+        rectangle.makeZeroRectangle();
+        return rectangle;
+    }
+
     /**
      * Create new {@link Rectangle} via merging this and that.
      *
      * @param that {@link Rectangle} for merging with this.
-     *
      * @return new merged {@link Rectangle}.
      */
     public Rectangle merge(Rectangle that) {
-        Rectangle mergedRectangle = null;
-        if (isR2InsideR1(this, that)) {
-            mergedRectangle = new Rectangle(this);
-        } else if (isR2InsideR1(that, this)) {
-            mergedRectangle = new Rectangle(that);
-        } else if(isR2UnderR1(that, this)) {
-            mergedRectangle = new Rectangle(that.getMinX(), that.getMinY(), this.getMaxX(), this.getMaxY());
-        } else if(isR2UnderR1(this, that)) {
-            mergedRectangle = new Rectangle(this.getMinX(), this.getMinY(), that.getMaxX(), that.getMaxY());
-        } else if(isR1LeftwardR2(this, that)) {
-            mergedRectangle = new Rectangle(this.getMinX(), that.getMinY(), that.getMaxX(), this.getMaxY());
-        } else if(isR1LeftwardR2(that, this)) {
-            mergedRectangle = new Rectangle(that.getMinX(), this.getMinY(), this.getMaxX(), that.getMaxY());
-        }
-        return mergedRectangle;
-    }
-
-    private boolean isR1LeftwardR2(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() && r1.getMaxY() >= r2.getMaxY() &&
-                r1.getMaxX() <= r2.getMaxX() && r1.getMinY() >= r1.getMinY();
-    }
-
-    private boolean isR2UnderR1(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() && r1.getMinY() <= r2.getMinY() &&
-                r1.getMaxX() <= r2.getMaxX() && r1.getMaxY() <= r2.getMaxY();
-    }
-
-    /**
-     * Tell if r2 inside r1.
-     *
-     * @param r1 first rectangle
-     * @param r2 second rectangle
-     * @return true if r2 inside r1, otherwise false.
-     */
-    private boolean isR2InsideR1(Rectangle r1, Rectangle r2) {
-        return r1.getMinX() <= r2.getMinX() && r1.getMinY() <= r2.getMinY() &&
-                r1.getMaxX() >= r2.getMaxX() && r1.getMaxY() >= r2.getMaxY();
+        return new Rectangle(min(this.getMinX(), that.getMinX()),
+                min(this.getMinY(), that.getMinY()),
+                max(this.getMaxX(), that.getMaxX()),
+                max(this.getMaxY(), that.getMaxY()));
     }
 
     public boolean isOverlapping(Rectangle that) {
@@ -98,6 +73,13 @@ public class Rectangle {
 
         this.minY = Integer.MAX_VALUE;
         this.minX = Integer.MAX_VALUE;
+    }
+
+    public void makeZeroRectangle() {
+        this.minX = 0;
+        this.minY = 0;
+        this.maxX = 0;
+        this.maxY = 0;
     }
 
     public int getMinX() {

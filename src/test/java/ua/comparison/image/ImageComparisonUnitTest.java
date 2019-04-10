@@ -84,8 +84,14 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testIssue21() throws IOException, URISyntaxException {
-        BufferedImage bufferedImage = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
-        assertNotNull(bufferedImage);
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result#21.png");
+
+        //when
+        BufferedImage comparisonResult = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
+
+        //then
+        assertImagesEqual(expectedResultImage, comparisonResult);
     }
 
     /**
@@ -93,8 +99,14 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testIssue11() throws IOException, URISyntaxException {
-        BufferedImage bufferedImage = new ImageComparison("image1.png", "image3.png").compareImages();
-        assertNotNull(bufferedImage);
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result#11.png");
+
+        //when
+        BufferedImage comparisonResult = new ImageComparison("b1#11.png", "b2#11.png").compareImages();
+
+        //then
+        assertImagesEqual(expectedResultImage, comparisonResult);
     }
 
     @Test
