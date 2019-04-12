@@ -2,6 +2,16 @@
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4fd1c61d0f147358f8c5df212256491)](https://app.codacy.com/app/romankh3/image-comparison?utm_source=github.com&utm_medium=referral&utm_content=romankh3/image-comparison&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/romankh3/image-comparison.svg?branch=master)](https://travis-ci.org/romankh3/image-comparison) [![Coverage Status](https://coveralls.io/repos/github/romankh3/image-comparison/badge.svg?branch=master)](https://coveralls.io/github/romankh3/image-comparison?branch=master) [![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
 
+*   [About](#about)
+*   [Requirements](#requirements)
+*   [Building](#building)
+*   [Relesase Notes](#relesase-notes)
+*   [Usage](#usage)
+    *   [Using the command-line](#using-the-command-line)
+    *   [Using as a Java library](#using-as-a-java-library)
+*   [Demo](#demo)
+*   [License](#license)
+
 ## About
 The program in Java that compares any 2 images and shows the differences visually by drawing rectangles.
 
@@ -68,8 +78,8 @@ To compare two images programmatically, basic usage is as follows:
 class Example {
     public static void main( String[] args ) {
         // load the images to be compared
-        BufferedImage image1 = ImageIO.read( new File( "image1.png" )  );
-        BufferedImage image2 = ImageIO.read( new File( "image2.png" )  );
+        BufferedImage bufferedImage1 = ImageComparisonTools.readImageFromResources("image1.png");
+        BufferedImage bufferedImage2 = ImageComparisonTools.readImageFromResources("image2.png");
         
         // where to save the result (leave null if you want to see the result in the UI)
         File result = new File( "result.png" );
