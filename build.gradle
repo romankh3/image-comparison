@@ -66,7 +66,7 @@ configure(install.repositories.mavenInstaller) {
         packaging 'jar'
         description project.description
 
-        url 'https://github.com/romankh3/image-comparison'
+        url 'https://romankh3.github.io/image-comparison/'
 
         scm {
             connection 'git@github.com:romankh3/image-comparison.git'

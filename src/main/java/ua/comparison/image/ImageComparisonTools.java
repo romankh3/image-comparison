@@ -71,7 +71,7 @@ public class ImageComparisonTools {
      * @param rgb2 the RGB value of the Pixel of the Image2.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
-    public static boolean isDifferent(int rgb1, int rgb2) {
+    public static boolean isDifferentPixels(int rgb1, int rgb2) {
         int red1 = (rgb1 >> 16) & 0xff;
         int green1 = (rgb1 >> 8) & 0xff;
         int blue1 = (rgb1) & 0xff;
@@ -97,7 +97,7 @@ public class ImageComparisonTools {
         int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
         for (int y = 0; y < image1.getHeight(); y++) {
             for (int x = 0; x < image1.getWidth(); x++) {
-                matrix[x][y] = isDifferent(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
+                matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
             }
         }
         return matrix;
