@@ -13,7 +13,7 @@
 *   [License](#license)
 
 ## About
-The program in Java that compares any 2 images and shows the differences visually by drawing rectangles.
+The program in Java that compares any 2 images and shows the differences visually by drawing rectangles. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
 
 ## Requirements
 *   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
