@@ -58,7 +58,7 @@ public class ImageComparison {
     private int regionCount = counter;
     private int[][] matrix;
 
-    ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
+    public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(readImageFromResources(image1), readImageFromResources(image2), null);
     }
 
@@ -73,6 +73,10 @@ public class ImageComparison {
         this.image1 = image1;
         this.image2 = image2;
         this.destination = destination;
+    }
+
+    public ImageComparison(BufferedImage image1, BufferedImage image2) {
+        this(image1, image2, null);
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
