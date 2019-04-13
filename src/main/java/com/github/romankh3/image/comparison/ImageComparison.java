@@ -94,7 +94,7 @@ public class ImageComparison {
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
 
-        groupRegions(matrix, regionCount);
+        groupRegions();
 
         List<Rectangle> rectangles = populateRectangles();
 
@@ -109,7 +109,7 @@ public class ImageComparison {
     private List<Rectangle> populateRectangles() {
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
-            Rectangle rectangle = createRectangle(matrix, counter);
+            Rectangle rectangle = createRectangle();
             if (!rectangle.equals(Rectangle.createDefault())) {
                 rectangles.add(rectangle);
             }
@@ -122,11 +122,9 @@ public class ImageComparison {
     /**
      * Create a {@link Rectangle} object.
      *
-     * @param matrix the matrix of the Conformity pixels.
-     * @param counter the number from marks regions.
      * @return the {@link Rectangle} object.
      */
-    private Rectangle createRectangle(int[][] matrix, int counter) {
+    private Rectangle createRectangle() {
         Rectangle rectangle = Rectangle.createDefault();
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[0].length; x++) {
@@ -160,7 +158,7 @@ public class ImageComparison {
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r1.equals(Rectangle.createZero())) {
+                if (r1.equals(Rectangle.createZero()) || r2.equals(Rectangle.createZero())) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
@@ -187,7 +185,7 @@ public class ImageComparison {
     /**
      * Group rectangle regions in matrix.
      */
-    private void groupRegions(int[][] matrix, int regionCount) {
+    private void groupRegions() {
         for (int row = 0; row < matrix.length; row++) {
             for (int col = 0; col < matrix[row].length; col++) {
                 if (matrix[row][col] == 1) {
