@@ -1,11 +1,11 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
+import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

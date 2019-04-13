@@ -1,11 +1,11 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import static ua.comparison.image.ImageComparisonTools.createGUI;
-import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
+import static com.github.romankh3.image.comparison.ImageComparisonTools.createGUI;
+import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
 
 import java.awt.Frame;
 import java.awt.image.BufferedImage;

@@ -1,15 +1,9 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
 import static java.awt.Color.RED;
-import static ua.comparison.image.CommandLineUtil.create;
-import static ua.comparison.image.CommandLineUtil.handleResult;
-import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
-import static ua.comparison.image.ImageComparisonTools.createGUI;
-import static ua.comparison.image.ImageComparisonTools.deepCopy;
-import static ua.comparison.image.ImageComparisonTools.populateTheMatrixOfTheDifferences;
-import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
-import static ua.comparison.image.ImageComparisonTools.saveImage;
+import static com.github.romankh3.image.comparison.CommandLineUtil.create;
 
+import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,7 +14,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
 
@@ -59,7 +52,7 @@ public class ImageComparison {
     private int[][] matrix;
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(readImageFromResources(image1), readImageFromResources(image2), null);
+        this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
     }
 
     /**
@@ -80,9 +73,10 @@ public class ImageComparison {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ImageComparison imgCmp = create(args);
+        ImageComparison imgCmp = CommandLineUtil.create(args);
         BufferedImage result = imgCmp.compareImages();
-        handleResult(imgCmp, (file) -> saveImage(file, result), () -> createGUI(result));
+        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonTools.saveImage(file, result), () -> ImageComparisonTools
+                .createGUI(result));
     }
 
     /**
@@ -92,11 +86,11 @@ public class ImageComparison {
      */
     public BufferedImage compareImages() throws IOException {
         // check images for valid
-        checkCorrectImageSize(image1, image2);
+        ImageComparisonTools.checkCorrectImageSize(image1, image2);
 
-        matrix = populateTheMatrixOfTheDifferences(image1, image2);
+        matrix = ImageComparisonTools.populateTheMatrixOfTheDifferences(image1, image2);
 
-        BufferedImage outImg = deepCopy(image2);
+        BufferedImage outImg = ImageComparisonTools.deepCopy(image2);
 
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
@@ -108,7 +102,8 @@ public class ImageComparison {
         drawRectangles(rectangles, graphics);
 
         //save the image:
-        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
+        ImageComparisonTools
+                .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
         return outImg;
     }
 

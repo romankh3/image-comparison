@@ -1,4 +1,4 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
 import java.io.IOException;
 
