@@ -158,7 +158,7 @@ public class ImageComparison {
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r1.equals(Rectangle.createZero()) || r2.equals(Rectangle.createZero())) {
+                if (r1.equals(Rectangle.createZero())) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
