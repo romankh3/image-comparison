@@ -1,7 +1,6 @@
 package com.github.romankh3.image.comparison;
 
 import static java.awt.Color.RED;
-import static com.github.romankh3.image.comparison.CommandLineUtil.create;
 
 import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.Graphics2D;
@@ -95,7 +94,7 @@ public class ImageComparison {
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
 
-        groupRegions();
+        groupRegions(matrix, regionCount);
 
         List<Rectangle> rectangles = populateRectangles();
 
@@ -132,23 +131,27 @@ public class ImageComparison {
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[0].length; x++) {
                 if (matrix[y][x] == counter) {
-                    if (x < rectangle.getMinX()) {
-                        rectangle.setMinX(x);
-                    }
-                    if (x > rectangle.getMaxX()) {
-                        rectangle.setMaxX(x);
-                    }
-
-                    if (y < rectangle.getMinY()) {
-                        rectangle.setMinY(y);
-                    }
-                    if (y > rectangle.getMaxY()) {
-                        rectangle.setMaxY(y);
-                    }
+                    updateRectangleCreation(rectangle, x, y);
                 }
             }
         }
         return rectangle;
+    }
+
+    private void updateRectangleCreation(Rectangle rectangle, int x, int y) {
+        if (x < rectangle.getMinX()) {
+            rectangle.setMinX(x);
+        }
+        if (x > rectangle.getMaxX()) {
+            rectangle.setMaxX(x);
+        }
+
+        if (y < rectangle.getMinY()) {
+            rectangle.setMinY(y);
+        }
+        if (y > rectangle.getMaxY()) {
+            rectangle.setMaxY(y);
+        }
     }
 
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
@@ -157,7 +160,7 @@ public class ImageComparison {
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r1.equals(Rectangle.createZero()) || r2.equals(Rectangle.createZero())) {
+                if (r1.equals(Rectangle.createZero())) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
@@ -184,7 +187,7 @@ public class ImageComparison {
     /**
      * Group rectangle regions in matrix.
      */
-    private void groupRegions() {
+    private void groupRegions(int[][] matrix, int regionCount) {
         for (int row = 0; row < matrix.length; row++) {
             for (int col = 0; col < matrix[row].length; col++) {
                 if (matrix[row][col] == 1) {
@@ -204,9 +207,7 @@ public class ImageComparison {
      * @param col the value of the column.
      */
     private void joinToRegion(int row, int col) {
-        if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1) {
-            return;
-        }
+        if (row >= matrix.length || col >= matrix[row].length) { return; }
 
         matrix[row][col] = regionCount;
 
