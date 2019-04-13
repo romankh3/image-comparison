@@ -133,16 +133,11 @@ public class Rectangle {
 
         Rectangle rectangle = (Rectangle) o;
 
-        if (minX != rectangle.minX) {
-            return false;
-        }
-        if (minY != rectangle.minY) {
-            return false;
-        }
-        if (maxX != rectangle.maxX) {
-            return false;
-        }
-        return maxY == rectangle.maxY;
+        return !hasDifferentPoints(rectangle);
+    }
+
+    private boolean hasDifferentPoints(Rectangle rectangle) {
+        return minX != rectangle.minX || minY != rectangle.minY || maxX != rectangle.maxX || maxY != rectangle.maxY;
     }
 
     @Override

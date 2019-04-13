@@ -1,10 +1,10 @@
 package com.github.romankh3.image.comparison;
 
+import com.github.romankh3.image.comparison.ArgsParser.Arguments;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import com.github.romankh3.image.comparison.ArgsParser.Arguments;
 
 /**
  * Class for static method related to command line.
