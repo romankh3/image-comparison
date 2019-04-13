@@ -1,4 +1,4 @@
-package ua.comparison.image.model;
+package com.github.romankh3.image.comparison.model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;

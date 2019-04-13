@@ -1,11 +1,11 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
+import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -102,8 +102,11 @@ public class ImageComparisonUnitTest {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#11.png");
 
+        BufferedImage image1 = readImageFromResources("b1#11.png");
+        BufferedImage image2 = readImageFromResources("b2#11.png");
+
         //when
-        BufferedImage comparisonResult = new ImageComparison("b1#11.png", "b2#11.png").compareImages();
+        BufferedImage comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
         assertImagesEqual(expectedResultImage, comparisonResult);

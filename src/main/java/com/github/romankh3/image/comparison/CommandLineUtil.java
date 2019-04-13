@@ -1,13 +1,10 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
-import static ua.comparison.image.ImageComparisonTools.readImageFromFile;
-import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
-
+import com.github.romankh3.image.comparison.ArgsParser.Arguments;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.Optional;
-import ua.comparison.image.ArgsParser.Arguments;
 
 /**
  * Class for static method related to command line.
@@ -21,15 +18,15 @@ public class CommandLineUtil {
 
     public static ImageComparison createDefault() throws IOException, URISyntaxException {
         return new ImageComparison(
-                readImageFromResources("image1.png"),
-                readImageFromResources("image2.png"),
+                ImageComparisonTools.readImageFromResources("image1.png"),
+                ImageComparisonTools.readImageFromResources("image2.png"),
                 null);
     }
 
     public static ImageComparison create(ArgsParser.Arguments args) throws IOException {
         return new ImageComparison(
-                readImageFromFile(args.getImage1()),
-                readImageFromFile(args.getImage2()),
+                ImageComparisonTools.readImageFromFile(args.getImage1()),
+                ImageComparisonTools.readImageFromFile(args.getImage2()),
                 args.getDestinationImage().orElse(null));
     }
 

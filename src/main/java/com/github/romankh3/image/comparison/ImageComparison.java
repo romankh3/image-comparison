@@ -1,15 +1,8 @@
-package ua.comparison.image;
+package com.github.romankh3.image.comparison;
 
 import static java.awt.Color.RED;
-import static ua.comparison.image.CommandLineUtil.create;
-import static ua.comparison.image.CommandLineUtil.handleResult;
-import static ua.comparison.image.ImageComparisonTools.checkCorrectImageSize;
-import static ua.comparison.image.ImageComparisonTools.createGUI;
-import static ua.comparison.image.ImageComparisonTools.deepCopy;
-import static ua.comparison.image.ImageComparisonTools.populateTheMatrixOfTheDifferences;
-import static ua.comparison.image.ImageComparisonTools.readImageFromResources;
-import static ua.comparison.image.ImageComparisonTools.saveImage;
 
+import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -20,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import ua.comparison.image.model.Rectangle;
 
 public class ImageComparison {
 
@@ -59,7 +51,7 @@ public class ImageComparison {
     private int[][] matrix;
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(readImageFromResources(image1), readImageFromResources(image2), null);
+        this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
     }
 
     /**
@@ -80,9 +72,10 @@ public class ImageComparison {
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ImageComparison imgCmp = create(args);
+        ImageComparison imgCmp = CommandLineUtil.create(args);
         BufferedImage result = imgCmp.compareImages();
-        handleResult(imgCmp, (file) -> saveImage(file, result), () -> createGUI(result));
+        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonTools.saveImage(file, result), () -> ImageComparisonTools
+                .createGUI(result));
     }
 
     /**
@@ -92,11 +85,11 @@ public class ImageComparison {
      */
     public BufferedImage compareImages() throws IOException {
         // check images for valid
-        checkCorrectImageSize(image1, image2);
+        ImageComparisonTools.checkCorrectImageSize(image1, image2);
 
-        matrix = populateTheMatrixOfTheDifferences(image1, image2);
+        matrix = ImageComparisonTools.populateTheMatrixOfTheDifferences(image1, image2);
 
-        BufferedImage outImg = deepCopy(image2);
+        BufferedImage outImg = ImageComparisonTools.deepCopy(image2);
 
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
@@ -108,14 +101,15 @@ public class ImageComparison {
         drawRectangles(rectangles, graphics);
 
         //save the image:
-        saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
+        ImageComparisonTools
+                .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
         return outImg;
     }
 
     private List<Rectangle> populateRectangles() {
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
-            Rectangle rectangle = createRectangle(matrix, counter);
+            Rectangle rectangle = createRectangle();
             if (!rectangle.equals(Rectangle.createDefault())) {
                 rectangles.add(rectangle);
             }
@@ -128,32 +122,34 @@ public class ImageComparison {
     /**
      * Create a {@link Rectangle} object.
      *
-     * @param matrix the matrix of the Conformity pixels.
-     * @param counter the number from marks regions.
      * @return the {@link Rectangle} object.
      */
-    private Rectangle createRectangle(int[][] matrix, int counter) {
+    private Rectangle createRectangle() {
         Rectangle rectangle = Rectangle.createDefault();
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[0].length; x++) {
                 if (matrix[y][x] == counter) {
-                    if (x < rectangle.getMinX()) {
-                        rectangle.setMinX(x);
-                    }
-                    if (x > rectangle.getMaxX()) {
-                        rectangle.setMaxX(x);
-                    }
-
-                    if (y < rectangle.getMinY()) {
-                        rectangle.setMinY(y);
-                    }
-                    if (y > rectangle.getMaxY()) {
-                        rectangle.setMaxY(y);
-                    }
+                    updateRectangleCreation(rectangle, x, y);
                 }
             }
         }
         return rectangle;
+    }
+
+    private void updateRectangleCreation(Rectangle rectangle, int x, int y) {
+        if (x < rectangle.getMinX()) {
+            rectangle.setMinX(x);
+        }
+        if (x > rectangle.getMaxX()) {
+            rectangle.setMaxX(x);
+        }
+
+        if (y < rectangle.getMinY()) {
+            rectangle.setMinY(y);
+        }
+        if (y > rectangle.getMaxY()) {
+            rectangle.setMaxY(y);
+        }
     }
 
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
@@ -162,7 +158,7 @@ public class ImageComparison {
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r1.equals(Rectangle.createZero()) || r2.equals(Rectangle.createZero())) {
+                if (r1.equals(Rectangle.createZero())) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
@@ -209,7 +205,7 @@ public class ImageComparison {
      * @param col the value of the column.
      */
     private void joinToRegion(int row, int col) {
-        if (row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1) {
+        if (isJumpRejected(row, col)) {
             return;
         }
 
@@ -223,6 +219,10 @@ public class ImageComparison {
             joinToRegion(row - 1 - i, col + 1 + i);
             joinToRegion(row + 1 + i, col + 1 + i);
         }
+    }
+
+    private boolean isJumpRejected(int row, int col) {
+        return row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1;
     }
 
     public Optional<File> getDestination() {

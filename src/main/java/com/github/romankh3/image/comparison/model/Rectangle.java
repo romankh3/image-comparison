@@ -1,4 +1,4 @@
-package ua.comparison.image.model;
+package com.github.romankh3.image.comparison.model;
 
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
@@ -133,16 +133,11 @@ public class Rectangle {
 
         Rectangle rectangle = (Rectangle) o;
 
-        if (minX != rectangle.minX) {
-            return false;
-        }
-        if (minY != rectangle.minY) {
-            return false;
-        }
-        if (maxX != rectangle.maxX) {
-            return false;
-        }
-        return maxY == rectangle.maxY;
+        return !hasDifferentPoints(rectangle);
+    }
+
+    private boolean hasDifferentPoints(Rectangle rectangle) {
+        return minX != rectangle.minX || minY != rectangle.minY || maxX != rectangle.maxX || maxY != rectangle.maxY;
     }
 
     @Override
