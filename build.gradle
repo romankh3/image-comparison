@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.github.romankh3'
-version '2.0.2'
+version '2.1.0'
 description 'A library and utility to compare different images.'
 sourceCompatibility = 1.8
 
@@ -101,7 +101,7 @@ bintray {
     configurations = ['archives']
     publish = true
     pkg {
-        repo = 'maven'
+        repo = 'image-comparison'
         name = 'image-comparison'
         licenses = ['unlicense']
         labels = ['java', 'image', 'image-comparison']

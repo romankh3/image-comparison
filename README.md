@@ -11,6 +11,7 @@
     *   [Using as a Java library](#using-as-a-java-library)
 *   [Demo](#demo)
 *   [License](#license)
+*   [Other Projects](##also-if-youre-interesting---see-my-other-repositories)
 
 ## About
 The program in Java that compares any 2 images and shows the differences visually by drawing rectangles. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
@@ -32,7 +33,10 @@ cd image-comparison
 
 This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
 
-## Relesase Notes
+## Release Notes
+
+### 2.1.0
+*   Added publishing to JCenter
 
 ### 2.0.2
 *   fixed bug #11(finally!!)
