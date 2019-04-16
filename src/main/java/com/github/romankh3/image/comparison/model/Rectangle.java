@@ -3,31 +3,29 @@ package com.github.romankh3.image.comparison.model;
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
+import java.util.Objects;
+
 /**
  * Object contained data for a rectangle.
  */
 public class Rectangle {
 
-    private int minX;
-    private int minY;
-    private int maxX;
-    private int maxY;
+    private Point minPoint;
+    private Point maxPoint;
 
     private Rectangle() {
+        minPoint = new Point();
+        maxPoint = new Point();
     }
 
     public Rectangle(Rectangle rectangle) {
-        this.minX = rectangle.getMinX();
-        this.minY = rectangle.getMinY();
-        this.maxX = rectangle.getMaxX();
-        this.maxY = rectangle.getMaxY();
+        this.minPoint = new Point(rectangle.getMinPoint().getX(), rectangle.getMinPoint().getY());
+        this.maxPoint = new Point(rectangle.getMaxPoint().getX(), rectangle.getMaxPoint().getY());
     }
 
     public Rectangle(int minX, int minY, int maxX, int maxY) {
-        this.minX = minX;
-        this.minY = minY;
-        this.maxX = maxX;
-        this.maxY = maxY;
+        this.minPoint = new Point(minX, minY);
+        this.maxPoint = new Point(maxX, maxY);
     }
 
     /**
@@ -54,72 +52,53 @@ public class Rectangle {
      * @return new merged {@link Rectangle}.
      */
     public Rectangle merge(Rectangle that) {
-        return new Rectangle(min(this.getMinX(), that.getMinX()),
-                min(this.getMinY(), that.getMinY()),
-                max(this.getMaxX(), that.getMaxX()),
-                max(this.getMaxY(), that.getMaxY()));
+        return new Rectangle(min(this.getMinPoint().getX(), that.getMinPoint().getX()),
+                min(this.getMinPoint().getY(), that.getMinPoint().getY()),
+                max(this.getMaxPoint().getX(), that.getMaxPoint().getX()),
+                max(this.getMaxPoint().getY(), that.getMaxPoint().getY()));
     }
 
     public boolean isOverlapping(Rectangle that) {
-        if (this.maxY < that.minY || that.maxY < this.minY) {
+        if (this.getMaxPoint().getY() < that.getMinPoint().getY() ||
+                that.getMaxPoint().getY() < this.getMinPoint().getY()) {
             return false;
         }
-        return this.maxX >= that.minX && that.maxX >= this.minX;
+        return this.getMaxPoint().getX() >= that.getMinPoint().getX() &&
+                that.getMaxPoint().getX() >= this.getMinPoint().getX();
     }
 
     public void setDefaultValues() {
-        this.maxX = Integer.MIN_VALUE;
-        this.maxY = Integer.MIN_VALUE;
-
-        this.minY = Integer.MAX_VALUE;
-        this.minX = Integer.MAX_VALUE;
+        this.maxPoint = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
+        this.minPoint = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     public void makeZeroRectangle() {
-        this.minX = 0;
-        this.minY = 0;
-        this.maxX = 0;
-        this.maxY = 0;
+        this.minPoint.makeZeroPoint();
+        this.maxPoint.makeZeroPoint();
     }
 
-    public int getMinX() {
-        return minX;
+    public Point getMinPoint() {
+        return minPoint;
     }
 
-    public void setMinX(int minX) {
-        this.minX = minX;
+    public void setMinPoint(Point minPoint) {
+        this.minPoint = minPoint;
     }
 
-    public int getMinY() {
-        return minY;
+    public Point getMaxPoint() {
+        return maxPoint;
     }
 
-    public void setMinY(int minY) {
-        this.minY = minY;
-    }
-
-    public int getMaxX() {
-        return maxX;
-    }
-
-    public void setMaxX(int maxX) {
-        this.maxX = maxX;
-    }
-
-    public int getMaxY() {
-        return maxY;
-    }
-
-    public void setMaxY(int maxY) {
-        this.maxY = maxY;
+    public void setMaxPoint(Point maxPoint) {
+        this.maxPoint = maxPoint;
     }
 
     public int getWidth() {
-        return maxY - minY;
+        return maxPoint.getY() - minPoint.getY();
     }
 
     public int getHeight() {
-        return maxX - minX;
+        return maxPoint.getX() - minPoint.getX();
     }
 
     @Override
@@ -130,22 +109,13 @@ public class Rectangle {
         if (o == null || getClass() != o.getClass()) {
             return false;
         }
-
         Rectangle rectangle = (Rectangle) o;
-
-        return !hasDifferentPoints(rectangle);
-    }
-
-    private boolean hasDifferentPoints(Rectangle rectangle) {
-        return minX != rectangle.minX || minY != rectangle.minY || maxX != rectangle.maxX || maxY != rectangle.maxY;
+        return minPoint.equals(rectangle.minPoint) &&
+                maxPoint.equals(rectangle.maxPoint);
     }
 
     @Override
     public int hashCode() {
-        int result = minX;
-        result = 31 * result + minY;
-        result = 31 * result + maxX;
-        result = 31 * result + maxY;
-        return result;
+        return Objects.hash(minPoint, maxPoint);
     }
 }

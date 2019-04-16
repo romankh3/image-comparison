@@ -87,8 +87,22 @@ java -jar image-comparison.jar -h
 
 ### Using as a Java library
 
-To compare two images programmatically, basic usage is as follows:
+#### Dependency
+##### Maven
+```xml
+<dependency>
+    <groupId>com.github.romankh3</groupId>
+    <artifactId>image-comparison</artifactId>
+    <version>2.1.0</version>
+</dependency>
+```
+##### Gradle
+```groovy
+compile 'com.github.romankh3:image-comparison:2.1.0'
+```
 
+
+#### To compare two images programmatically
 ```java
 class Example {
     public static void main( String[] args ) {
