@@ -11,13 +11,16 @@ public class Point {
     private int x;
 
     /**
-     * Y-cootdinate.
+     * Y-coordinate.
      */
     private int y;
 
     public void makeZeroPoint() {
         this.x = 0;
         this.y = 0;
+    }
+
+    public Point() {
     }
 
     public Point(int x, int y) {

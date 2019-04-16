@@ -137,18 +137,18 @@ public class ImageComparison {
     }
 
     private void updateRectangleCreation(Rectangle rectangle, int x, int y) {
-        if (x < rectangle.getMinX()) {
-            rectangle.setMinX(x);
+        if (x < rectangle.getMinPoint().getX()) {
+            rectangle.getMinPoint().setX(x);
         }
-        if (x > rectangle.getMaxX()) {
-            rectangle.setMaxX(x);
+        if (x > rectangle.getMaxPoint().getX()) {
+            rectangle.getMaxPoint().setX(x);
         }
 
-        if (y < rectangle.getMinY()) {
-            rectangle.setMinY(y);
+        if (y < rectangle.getMinPoint().getY()) {
+            rectangle.getMinPoint().setY(y);
         }
-        if (y > rectangle.getMaxY()) {
-            rectangle.setMaxY(y);
+        if (y > rectangle.getMaxPoint().getY()) {
+            rectangle.getMaxPoint().setY(y);
         }
     }
 
@@ -176,8 +176,8 @@ public class ImageComparison {
     }
 
     private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
-        rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinY(),
-                rectangle.getMinX(),
+        rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
+                rectangle.getMinPoint().getX(),
                 rectangle.getWidth(),
                 rectangle.getHeight()));
     }
