@@ -12,7 +12,7 @@
     *   [Using as a Java library](#using-as-a-java-library)
 *   [Demo](#demo)
 *   [License](#license)
-*   [Other Projects](##also-if-youre-interesting---see-my-other-repositories)
+*   [Other Projects](#also-if-youre-interesting---see-my-other-repositories)
 
 ## About
 The program in Java that compares any 2 images and shows the differences visually by drawing rectangles. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
