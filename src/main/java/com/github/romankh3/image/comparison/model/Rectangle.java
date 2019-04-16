@@ -13,6 +13,9 @@ public class Rectangle {
     private int maxX;
     private int maxY;
 
+    private Point minPoint;
+    private Point maxPoint;
+
     private Rectangle() {
     }
 
@@ -21,6 +24,9 @@ public class Rectangle {
         this.minY = rectangle.getMinY();
         this.maxX = rectangle.getMaxX();
         this.maxY = rectangle.getMaxY();
+
+        this.minPoint = new Point(rectangle.getMinPoint().getX(), rectangle.getMinPoint().getY());
+        this.maxPoint = new Point(rectangle.getMaxPoint().getX(), rectangle.getMaxPoint().getY());
     }
 
     public Rectangle(int minX, int minY, int maxX, int maxY) {
@@ -28,6 +34,9 @@ public class Rectangle {
         this.minY = minY;
         this.maxX = maxX;
         this.maxY = maxY;
+
+        this.minPoint = new Point(minX, minY);
+        this.maxPoint = new Point(maxX, maxY);
     }
 
     /**
@@ -70,16 +79,36 @@ public class Rectangle {
     public void setDefaultValues() {
         this.maxX = Integer.MIN_VALUE;
         this.maxY = Integer.MIN_VALUE;
+        this.maxPoint = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
 
         this.minY = Integer.MAX_VALUE;
         this.minX = Integer.MAX_VALUE;
+        this.minPoint = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
     public void makeZeroRectangle() {
+        this.minPoint.makeZeroPoint();
+        this.maxPoint.makeZeroPoint();
         this.minX = 0;
         this.minY = 0;
         this.maxX = 0;
         this.maxY = 0;
+    }
+
+    public Point getMinPoint() {
+        return minPoint;
+    }
+
+    public void setMinPoint(Point minPoint) {
+        this.minPoint = minPoint;
+    }
+
+    public Point getMaxPoint() {
+        return maxPoint;
+    }
+
+    public void setMaxPoint(Point maxPoint) {
+        this.maxPoint = maxPoint;
     }
 
     public int getMinX() {
