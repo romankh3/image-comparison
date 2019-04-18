@@ -51,7 +51,8 @@ public class ImageComparison {
     private int[][] matrix;
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
+        this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2),
+                null);
     }
 
     /**
@@ -74,8 +75,9 @@ public class ImageComparison {
     public static void main(String[] args) throws IOException, URISyntaxException {
         ImageComparison imgCmp = CommandLineUtil.create(args);
         BufferedImage result = imgCmp.compareImages();
-        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonTools.saveImage(file, result), () -> ImageComparisonTools
-                .createGUI(result));
+        CommandLineUtil
+                .handleResult(imgCmp, (file) -> ImageComparisonTools.saveImage(file, result), () -> ImageComparisonTools
+                        .createGUI(result));
     }
 
     /**
@@ -87,7 +89,7 @@ public class ImageComparison {
         // check images for valid
         ImageComparisonTools.checkCorrectImageSize(image1, image2);
 
-        matrix = ImageComparisonTools.populateTheMatrixOfTheDifferences(image1, image2);
+        matrix = populateTheMatrixOfTheDifferences();
 
         BufferedImage outImg = ImageComparisonTools.deepCopy(image2);
 
@@ -102,8 +104,47 @@ public class ImageComparison {
 
         //save the image:
         ImageComparisonTools
-                .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
+                .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()),
+                        outImg);
         return outImg;
+    }
+
+    /**
+     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
+     *
+     * @return populated binary matrix.
+     */
+    private int[][] populateTheMatrixOfTheDifferences() {
+        int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
+        for (int y = 0; y < image1.getHeight(); y++) {
+            for (int x = 0; x < image1.getWidth(); x++) {
+                matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
+            }
+        }
+        return matrix;
+    }
+
+    /**
+     * Say if the two pixels equal or not. The rule is the difference between two pixels
+     * need to be more then 10%.
+     *
+     * @param rgb1 the RGB value of the Pixel of the Image1.
+     * @param rgb2 the RGB value of the Pixel of the Image2.
+     * @return {@code true} if they' are difference, {@code false} otherwise.
+     */
+     private boolean isDifferentPixels(int rgb1, int rgb2) {
+        int red1 = (rgb1 >> 16) & 0xff;
+        int green1 = (rgb1 >> 8) & 0xff;
+        int blue1 = (rgb1) & 0xff;
+        int red2 = (rgb2 >> 16) & 0xff;
+        int green2 = (rgb2 >> 8) & 0xff;
+        int blue2 = (rgb2) & 0xff;
+        double result = Math.sqrt(Math.pow(red2 - red1, 2) +
+                Math.pow(green2 - green1, 2) +
+                Math.pow(blue2 - blue1, 2))
+                /
+                Math.sqrt(Math.pow(255, 2) * 3);
+        return result > 0.1;
     }
 
     private List<Rectangle> populateRectangles() {
