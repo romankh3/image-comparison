@@ -12,6 +12,8 @@
     *   [Using as a Java library](#using-as-a-java-library)
 *   [Demo](#demo)
 *   [License](#license)
+*   [Contributing](#contributing)
+*   [Code of Conduct](#code-of-conduct)
 *   [Other Projects](#also-if-youre-interesting---see-my-other-repositories)
 
 ## About
@@ -137,6 +139,12 @@ The images, which are using:
 ### Result
 
 ![result](https://user-images.githubusercontent.com/16310793/28955568-52f23e02-78f0-11e7-92c5-07602b6a0887.png)
+
+## Contributing
+Please, follow [Contributing](CONTRIBUTING.md) page.
+
+## Code of Conduct
+Please, follow [Code of Conduct](CODE_OF_CONDUCT.md) page.
 
 ## License
 This project is unlicense - see the [LICENSE](LICENSE) file for details
