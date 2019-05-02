@@ -153,5 +153,5 @@ This project is unlicense - see the [LICENSE](LICENSE) file for details
 
 ### Also if you're interesting - see my other repositories
 *   [Raspberry home ecosystem](https://github.com/romankh3/raspberrypi-home-ecosystem) - home ecosystem based on raspberry pi.
-*   [Movie Tracking](https://github.com/romankh3/movietracking) Simple API for tracking movies with favorite actors for the specific time.
-*   [Tic Tac Toe NxM](https://github.com/romankh3/tictactoe)- Own implementation. For any rectangle and any winner line count. 
+*   [Movie Tracking](https://github.com/romankh3/movietracking) - Simple API for tracking movies with favorite actors for the specific time.
+*   [Tic Tac Toe NxM](https://github.com/romankh3/tictactoe) - Own implementation. For any rectangle and any winner line count. 
