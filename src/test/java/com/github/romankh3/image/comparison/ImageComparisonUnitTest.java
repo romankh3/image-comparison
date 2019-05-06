@@ -183,4 +183,14 @@ public class ImageComparisonUnitTest {
         assertFalse(showUI.get());
     }
 
+    @Test
+    public void testSetterAndGettersThresholdWhenItShouldSetsProperly() throws IOException, URISyntaxException {
+        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
+        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
+        ImageComparison comparison = CommandLineUtil.create(new ArgsParser.Arguments(image1, image2, destination));
+        int setValue = 10;
+        comparison.setThreshold(setValue);
+        assertEquals(setValue, comparison.getThreshold());
+    }
 }

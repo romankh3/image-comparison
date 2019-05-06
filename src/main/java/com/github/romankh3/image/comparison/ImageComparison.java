@@ -28,7 +28,7 @@ public class ImageComparison {
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
-    public static int threshold = 5;
+    private int threshold = 5;
     /**
      * First image for comparing
      */
@@ -69,6 +69,14 @@ public class ImageComparison {
 
     public ImageComparison(BufferedImage image1, BufferedImage image2) {
         this(image1, image2, null);
+    }
+
+    public int getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
     }
 
     public static void main(String[] args) throws IOException, URISyntaxException {
