@@ -1,11 +1,6 @@
 package com.github.romankh3.image.comparison;
 
-import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import org.junit.Test;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -13,7 +8,13 @@ import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.Test;
+
+import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -183,4 +184,14 @@ public class ImageComparisonUnitTest {
         assertFalse(showUI.get());
     }
 
+    @Test
+    public void testSetterAndGettersThreshold_setsProperly() throws IOException, URISyntaxException {
+        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
+        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
+        ImageComparison comparison = CommandLineUtil.create(new ArgsParser.Arguments(image1, image2, destination));
+        int setValue = 10;
+        comparison.setThreshold(setValue);
+        assertEquals(setValue, comparison.getThreshold());
+    }
 }
