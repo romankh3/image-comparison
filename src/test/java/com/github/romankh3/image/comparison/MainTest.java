@@ -11,6 +11,7 @@ import static org.junit.Assert.assertNotNull;
 public class MainTest {
     @Test
     public void testMainClass() throws IOException, URISyntaxException {
+        Main main = new Main();
         //given
         String[] args = new String[2];
         File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
