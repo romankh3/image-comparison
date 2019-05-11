@@ -8,11 +8,14 @@ import java.net.URISyntaxException;
 
 import static org.junit.Assert.assertNotNull;
 
+/**
+ * Unit-level testing for {@link Main} object.
+ */
 public class MainTest {
     @Test
     public void testMainClass() throws IOException, URISyntaxException {
-        Main main = new Main();
         //given
+        Main main = new Main();
         String[] args = new String[2];
         File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
         File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
