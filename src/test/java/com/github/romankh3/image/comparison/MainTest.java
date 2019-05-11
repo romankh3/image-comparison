@@ -21,8 +21,8 @@ public class MainTest {
 
         //when
         Main.main(args);
-
         //then
+        assertNotNull(main);
         assertNotNull(image1);
         assertNotNull(image2);
     }
