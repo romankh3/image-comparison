@@ -1,9 +1,8 @@
 package com.github.romankh3.image.comparison;
 
-import static java.awt.Color.RED;
-
 import com.github.romankh3.image.comparison.model.Rectangle;
-import java.awt.Graphics2D;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -13,6 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static java.awt.Color.RED;
 
 public class ImageComparison {
 
@@ -77,13 +78,6 @@ public class ImageComparison {
 
     public void setThreshold(int threshold) {
         this.threshold = threshold;
-    }
-
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        ImageComparison imgCmp = CommandLineUtil.create(args);
-        BufferedImage result = imgCmp.compareImages();
-        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonTools.saveImage(file, result), () -> ImageComparisonTools
-                .createGUI(result));
     }
 
     /**
