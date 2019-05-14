@@ -95,6 +95,20 @@ public class ImageComparisonUnitTest {
         assertImagesEqual(expectedResultImage, comparisonResult);
     }
 
+    /**
+     * Verify that it is possible to use a thick line in the rectangle
+     */
+    @Test
+    public void testRectangleWithLineWidth10() throws IOException, URISyntaxException {
+        BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
+
+        ImageComparison imageComparison = new ImageComparison("b1#11.png", "b2#11.png");
+        imageComparison.setRectangleLineWidth(10);
+        BufferedImage comparisonResult = imageComparison.compareImages();
+
+        assertImagesEqual(expectedResultImage, comparisonResult);
+    }
+
     @Test
     public void testCreateDefault() throws IOException, URISyntaxException {
         ImageComparison comparison = CommandLineUtil.createDefault();
