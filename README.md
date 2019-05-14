@@ -1,5 +1,4 @@
 ![logo-trans](https://user-images.githubusercontent.com/16310793/42029324-df117c42-7ad7-11e8-8d3e-9c6cd8822d6c.png)
-[![Maven Central](https://img.shields.io/maven-central/v/com.github.romankh3/image-comparison.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.romankh3%22%20AND%20a:%22image-comparison%22)
 [ ![Bintray](https://api.bintray.com/packages/romankh3/image-comparison/image-comparison/images/download.svg) ](https://bintray.com/romankh3/image-comparison/image-comparison/_latestVersion)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4fd1c61d0f147358f8c5df212256491)](https://app.codacy.com/app/romankh3/image-comparison?utm_source=github.com&utm_medium=referral&utm_content=romankh3/image-comparison&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/romankh3/image-comparison.svg?branch=master)](https://travis-ci.org/romankh3/image-comparison) [![Coverage Status](https://coveralls.io/repos/github/romankh3/image-comparison/badge.svg?branch=master)](https://coveralls.io/github/romankh3/image-comparison?branch=master) [![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
@@ -13,6 +12,8 @@
     *   [Using as a Java library](#using-as-a-java-library)
 *   [Demo](#demo)
 *   [License](#license)
+*   [Contributing](#contributing)
+*   [Code of Conduct](#code-of-conduct)
 *   [Other Projects](#also-if-youre-interesting---see-my-other-repositories)
 
 ## About
@@ -36,6 +37,13 @@ cd image-comparison
 This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
 
 ## Release Notes
+
+### 2.2.0
+*   Added ability to customise retangle line width.
+*   Moved main method from Image Comparison to own class.
+*   Made non static threshold field.
+*   Added Code of Conduct and Contributing pages.
+*   Added Point model.
 
 ### 2.1.0
 *   Added publishing to JCenter
@@ -138,6 +146,12 @@ The images, which are using:
 ### Result
 
 ![result](https://user-images.githubusercontent.com/16310793/28955568-52f23e02-78f0-11e7-92c5-07602b6a0887.png)
+
+## Contributing
+Please, follow [Contributing](CONTRIBUTING.md) page.
+
+## Code of Conduct
+Please, follow [Code of Conduct](CODE_OF_CONDUCT.md) page.
 
 ## License
 This project is unlicense - see the [LICENSE](LICENSE) file for details
