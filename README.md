@@ -39,9 +39,9 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 ## Release Notes
 
 ### 2.2.0
-*   Added ability to customise retangle line width.
-*   Moved main method from Image Comparison to own class.
-*   Made non static threshold field.
+*   Added ability to customize rectangle line width.
+*   Moved the main method from Image Comparison to own class.
+*   Made non-static threshold field.
 *   Added Code of Conduct and Contributing pages.
 *   Added Point model.
 
@@ -102,12 +102,12 @@ java -jar image-comparison.jar -h
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 ##### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:2.1.0'
+compile 'com.github.romankh3:image-comparison:2.2.0'
 ```
 
 
