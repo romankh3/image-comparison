@@ -17,6 +17,7 @@ import static java.awt.Color.RED;
 
 public class ImageComparison {
 
+
     /**
      * Prefix of the name of the result image.
      */
@@ -34,13 +35,17 @@ public class ImageComparison {
      * First image for comparing
      */
     private final BufferedImage image1;
-
     /**
      * Second image for comparing
      */
     private final BufferedImage image2;
+    /**
+     * Width of the line that is drawn in the rectangle
+     */
+    private int rectangleLineWidth = 1;
 
     private final /* @Nullable */ File destination;
+
     /**
      * The number which marks how many rectangles. Beginning from 2.
      */
@@ -50,7 +55,6 @@ public class ImageComparison {
      */
     private int regionCount = counter;
     private int[][] matrix;
-
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
     }
@@ -86,17 +90,6 @@ public class ImageComparison {
      * @return the result of the drawing.
      */
     public BufferedImage compareImages() throws IOException {
-        return compareImages(1);
-    }
-
-    /**
-     * Draw rectangles which cover the regions of the difference pixels.
-     *
-     * @param lineWidth the width
-     * @return the result of the drawing.
-     * @throws IOException
-     */
-    public BufferedImage compareImages(int lineWidth) throws IOException {
         // check images for valid
         ImageComparisonTools.checkCorrectImageSize(image1, image2);
 
@@ -107,7 +100,7 @@ public class ImageComparison {
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
 
-        BasicStroke stroke = new BasicStroke(lineWidth);
+        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
         graphics.setStroke(stroke);
 
         groupRegions();
@@ -251,5 +244,13 @@ public class ImageComparison {
 
     public BufferedImage getImage2() {
         return image2;
+    }
+
+    public int getRectangleLineWidth() {
+        return rectangleLineWidth;
+    }
+
+    public void setRectangleLineWidth(int rectangleLineWidth) {
+        this.rectangleLineWidth = rectangleLineWidth;
     }
 }
