@@ -86,6 +86,17 @@ public class ImageComparison {
      * @return the result of the drawing.
      */
     public BufferedImage compareImages() throws IOException {
+        return compareImages(1);
+    }
+
+    /**
+     * Draw rectangles which cover the regions of the difference pixels.
+     *
+     * @param lineWidth the width
+     * @return the result of the drawing.
+     * @throws IOException
+     */
+    public BufferedImage compareImages(int lineWidth) throws IOException {
         // check images for valid
         ImageComparisonTools.checkCorrectImageSize(image1, image2);
 
@@ -95,6 +106,9 @@ public class ImageComparison {
 
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
+
+        BasicStroke stroke = new BasicStroke(lineWidth);
+        graphics.setStroke(stroke);
 
         groupRegions();
 
