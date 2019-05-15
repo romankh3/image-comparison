@@ -1,6 +1,7 @@
 package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.github.romankh3.image.comparison.model.Point;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,46 +16,62 @@ import java.util.stream.Collectors;
 
 import static java.awt.Color.RED;
 
+/**
+ * Main class for comparison images.
+ */
 public class ImageComparison {
-
 
     /**
      * Prefix of the name of the result image.
      */
     private static final String NAME_PREFIX = "image-comparison";
+    
     /**
      * Suffix of the name of of the result image.
      */
     private static final String NAME_SUFFIX = ".png";
+    
     /**
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
     private int threshold = 5;
+    
     /**
      * First image for comparing
      */
     private final BufferedImage image1;
+    
     /**
      * Second image for comparing
      */
     private final BufferedImage image2;
+    
     /**
      * Width of the line that is drawn in the rectangle
      */
     private int rectangleLineWidth = 1;
 
+    /**
+     * {@link File} of the result desctination.
+     */
     private final /* @Nullable */ File destination;
 
     /**
      * The number which marks how many rectangles. Beginning from 2.
      */
     private int counter = 2;
+    
     /**
      * The number of the marking specific rectangle.
      */
     private int regionCount = counter;
+    
+    /**
+     * Matrix MxN.
+     */
     private int[][] matrix;
+    
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
     }
@@ -74,14 +91,6 @@ public class ImageComparison {
 
     public ImageComparison(BufferedImage image1, BufferedImage image2) {
         this(image1, image2, null);
-    }
-
-    public int getThreshold() {
-        return threshold;
-    }
-
-    public void setThreshold(int threshold) {
-        this.threshold = threshold;
     }
 
     /**
@@ -115,6 +124,9 @@ public class ImageComparison {
         return outImg;
     }
 
+    /**
+     * Populate rectangles using regions in matrix.
+     */
     private List<Rectangle> populateRectangles() {
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
@@ -145,6 +157,9 @@ public class ImageComparison {
         return rectangle;
     }
 
+    /**
+     * Update {@link Point} of the rectangle based on x and y coordinates.
+     */ 
     private void updateRectangleCreation(Rectangle rectangle, int x, int y) {
         if (x < rectangle.getMinPoint().getX()) {
             rectangle.getMinPoint().setX(x);
@@ -161,6 +176,9 @@ public class ImageComparison {
         }
     }
 
+    /**
+     * Find overlapping rectangles and rmerge them.
+     */
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
         int position = 0;
         while (position < rectangles.size()) {
@@ -184,6 +202,9 @@ public class ImageComparison {
         return rectangles.stream().filter(it -> !it.equals(Rectangle.createZero())).collect(Collectors.toList());
     }
 
+    /**
+     * Draw rectangles on the result image.
+     */
     private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
                 rectangle.getMinPoint().getX(),
@@ -230,8 +251,19 @@ public class ImageComparison {
         }
     }
 
+    /**
+     * Check next step valid or not.
+     */
     private boolean isJumpRejected(int row, int col) {
         return row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1;
+    }
+    
+    public int getThreshold() {
+        return threshold;
+    }
+
+    public void setThreshold(int threshold) {
+        this.threshold = threshold;
     }
 
     public Optional<File> getDestination() {
