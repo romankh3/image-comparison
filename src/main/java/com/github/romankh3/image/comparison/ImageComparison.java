@@ -23,16 +23,6 @@ import java.util.stream.Collectors;
 public class ImageComparison {
 
     /**
-     * Prefix of the name of the result image.
-     */
-    private static final String NAME_PREFIX = "image-comparison";
-
-    /**
-     * Suffix of the name of of the result image.
-     */
-    private static final String NAME_SUFFIX = ".png";
-
-    /**
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
@@ -108,8 +98,6 @@ public class ImageComparison {
 
         matrix = populateTheMatrixOfTheDifferences();
 
-        groupRegions();
-
         List<Rectangle> rectangles = populateRectangles();
 
         ComparisonResult comparisonResult = new ComparisonResult();
@@ -127,13 +115,7 @@ public class ImageComparison {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
         comparisonResult.setResult(resultImage);
 
-        Graphics2D graphics = resultImage.createGraphics();
-        graphics.setColor(RED);
-
-        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
-        graphics.setStroke(stroke);
-
-        drawRectangles(rectangles, graphics);
+        drawRectangles(rectangles, resultImage);
 
         return comparisonResult;
     }
@@ -187,6 +169,7 @@ public class ImageComparison {
     }
 
     private List<Rectangle> populateRectangles() {
+        groupRegions();
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
             Rectangle rectangle = createRectangle();
@@ -262,9 +245,18 @@ public class ImageComparison {
     }
 
     /**
-     * Draw rectangles on the result image.
+     * Draw the rectangles based on collection of the rectangles and result image.
+     *
+     * @param rectangles the collection of the {@link Rectangle} objects.
+     * @param resultImage result image, which will being drawn.
      */
-    private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
+    private void drawRectangles(List<Rectangle> rectangles, BufferedImage resultImage) {
+        Graphics2D graphics = resultImage.createGraphics();
+        graphics.setColor(RED);
+
+        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
+        graphics.setStroke(stroke);
+
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
                 rectangle.getMinPoint().getX(),
                 rectangle.getWidth(),
