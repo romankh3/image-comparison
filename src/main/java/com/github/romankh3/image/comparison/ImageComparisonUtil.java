@@ -53,18 +53,6 @@ public class ImageComparisonUtil {
     }
 
     /**
-     * Check images for equals their widths and heights.
-     *
-     * @param image1 {@link BufferedImage} object of the first image.
-     * @param image2 {@link BufferedImage} object of the second image.
-     */
-    public static void checkCorrectImageSize(BufferedImage image1, BufferedImage image2) {
-        if (image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth()) {
-            throw new IllegalArgumentException("Images dimensions mismatch");
-        }
-    }
-
-    /**
      * Read image from the provided path.
      *
      * @param path the path where contains image.

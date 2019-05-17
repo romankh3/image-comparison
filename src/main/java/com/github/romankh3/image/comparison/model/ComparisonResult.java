@@ -1,6 +1,7 @@
 package com.github.romankh3.image.comparison.model;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,9 +30,20 @@ public class ComparisonResult {
     private ComparisonState comparisonState;
 
     /**
-     * The collection of the reactangles with the differences.
+     * The collection of the rectangles with the differences.
      */
-    private List<Rectangle> rectangles;
+    private List<Rectangle> rectangles = new ArrayList<>();
+
+    /**
+     * Create instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISSMATCH}.
+     *
+     * @return instance of the {@link ComparisonResult} object.
+     */
+    public static ComparisonResult sizeMissMatchResult() {
+        ComparisonResult comparisonResult = new ComparisonResult();
+        comparisonResult.setComparisonState(ComparisonState.SIZE_MISSMATCH);
+        return comparisonResult;
+    }
 
     public List<Rectangle> getRectangles() {
         return rectangles;

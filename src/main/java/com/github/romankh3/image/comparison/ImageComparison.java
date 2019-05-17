@@ -1,20 +1,21 @@
 package com.github.romankh3.image.comparison;
 
-import com.github.romankh3.image.comparison.model.Rectangle;
-import com.github.romankh3.image.comparison.model.Point;
+import static java.awt.Color.RED;
 
-import java.awt.*;
+import com.github.romankh3.image.comparison.model.ComparisonResult;
+import com.github.romankh3.image.comparison.model.ComparisonState;
+import com.github.romankh3.image.comparison.model.Point;
+import com.github.romankh3.image.comparison.model.Rectangle;
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.awt.Color.RED;
 
 /**
  * Main class for comparison images.
@@ -98,31 +99,53 @@ public class ImageComparison {
      *
      * @return the result of the drawing.
      */
-    public BufferedImage compareImages() throws IOException {
+    public ComparisonResult compareImages() throws IOException {
+
         // check images for valid
-        ImageComparisonUtil.checkCorrectImageSize(image1, image2);
+        if (isImageSizesEqual(image1, image2)) {
+            return ComparisonResult.sizeMissMatchResult();
+        }
 
         matrix = populateTheMatrixOfTheDifferences();
-
-        BufferedImage outImg = ImageComparisonUtil.deepCopy(image2);
-
-        Graphics2D graphics = outImg.createGraphics();
-        graphics.setColor(RED);
-
-        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
-        graphics.setStroke(stroke);
 
         groupRegions();
 
         List<Rectangle> rectangles = populateRectangles();
 
+        ComparisonResult comparisonResult = new ComparisonResult();
+        comparisonResult.setImage1(image1);
+        comparisonResult.setImage2(image2);
+
+        if (rectangles.isEmpty()) {
+            comparisonResult.setComparisonState(ComparisonState.MATCH);
+            return comparisonResult;
+        } else {
+            comparisonResult.setComparisonState(ComparisonState.MISSMATCH);
+            comparisonResult.setRectangles(rectangles);
+        }
+
+        BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
+        comparisonResult.setResult(resultImage);
+
+        Graphics2D graphics = resultImage.createGraphics();
+        graphics.setColor(RED);
+
+        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
+        graphics.setStroke(stroke);
+
         drawRectangles(rectangles, graphics);
 
-        //save the image:
-        ImageComparisonUtil
-                .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()),
-                        outImg);
-        return outImg;
+        return comparisonResult;
+    }
+
+    /**
+     * Check images for equals their widths and heights.
+     *
+     * @param image1 {@link BufferedImage} object of the first image.
+     * @param image2 {@link BufferedImage} object of the second image.
+     */
+    public boolean isImageSizesEqual(BufferedImage image1, BufferedImage image2) {
+        return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
     }
 
     /**

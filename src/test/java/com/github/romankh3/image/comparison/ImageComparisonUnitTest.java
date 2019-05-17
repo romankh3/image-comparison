@@ -1,18 +1,23 @@
 package com.github.romankh3.image.comparison;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
+import static com.github.romankh3.image.comparison.model.ComparisonState.MATCH;
+import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISSMATCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
+import com.github.romankh3.image.comparison.model.ComparisonResult;
+import com.github.romankh3.image.comparison.model.ComparisonState;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
+import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -47,10 +52,11 @@ public class ImageComparisonUnitTest {
         BufferedImage expectedResultImage = readImageFromResources("result1.png");
 
         //when
-        BufferedImage drawnDifferences = new ImageComparison("image1.png", "image2.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("image1.png", "image2.png").compareImages();
 
         //then
-        assertImagesEqual(expectedResultImage, drawnDifferences);
+        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
     /**
@@ -58,8 +64,12 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testIssue17() throws IOException, URISyntaxException {
-        BufferedImage bufferedImage = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
-        assertNotNull(bufferedImage);
+        //when
+        ComparisonResult comparisonResult = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
+
+        //then
+        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertNotNull(comparisonResult.getResult());
     }
 
     /**
@@ -71,10 +81,11 @@ public class ImageComparisonUnitTest {
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
         //when
-        BufferedImage comparisonResult = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
 
         //then
-        assertImagesEqual(expectedResultImage, comparisonResult);
+        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
     /**
@@ -89,10 +100,11 @@ public class ImageComparisonUnitTest {
         BufferedImage image2 = readImageFromResources("b2#11.png");
 
         //when
-        BufferedImage comparisonResult = new ImageComparison(image1, image2).compareImages();
+        ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
-        assertImagesEqual(expectedResultImage, comparisonResult);
+        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
     /**
@@ -100,13 +112,40 @@ public class ImageComparisonUnitTest {
      */
     @Test
     public void testRectangleWithLineWidth10() throws IOException, URISyntaxException {
+        //given
         BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
 
+        //when
         ImageComparison imageComparison = new ImageComparison("b1#11.png", "b2#11.png");
         imageComparison.setRectangleLineWidth(10);
-        BufferedImage comparisonResult = imageComparison.compareImages();
+        ComparisonResult comparisonResult = imageComparison.compareImages();
 
-        assertImagesEqual(expectedResultImage, comparisonResult);
+        //then
+        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
+        assertEquals(10, imageComparison.getRectangleLineWidth());
+    }
+
+    @Test
+    public void testSizeMissMatch() throws IOException {
+        //given
+        BufferedImage image1 = new BufferedImage(10, 10, 10);
+        BufferedImage image2 = new BufferedImage(12, 12, 10);
+
+        //when
+        ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
+
+        //then
+        Assert.assertEquals(SIZE_MISSMATCH, comparisonResult.getComparisonState());
+    }
+
+    @Test
+    public void testMatchSize() throws IOException, URISyntaxException {
+        //when
+        ComparisonResult comparisonResult = new ImageComparison("image1.png", "image1.png").compareImages();
+
+        //then
+        Assert.assertEquals(MATCH, comparisonResult.getComparisonState());
     }
 
     @Test
