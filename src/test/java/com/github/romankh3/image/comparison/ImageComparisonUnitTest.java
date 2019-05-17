@@ -2,6 +2,7 @@ package com.github.romankh3.image.comparison;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static com.github.romankh3.image.comparison.model.ComparisonState.MATCH;
+import static com.github.romankh3.image.comparison.model.ComparisonState.MISSMATCH;
 import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISSMATCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -10,37 +11,18 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
-import com.github.romankh3.image.comparison.model.ComparisonState;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.nio.file.Files;
 import java.util.concurrent.atomic.AtomicBoolean;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
  */
 public class ImageComparisonUnitTest {
-
-    private static void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {
-        if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
-            fail("Images have different dimensions");
-        }
-
-        int width = imgA.getWidth();
-        int height = imgA.getHeight();
-
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
-                if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
-                    fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
-                }
-            }
-        }
-    }
 
     /**
      * The most important test. Shown, that the changes in algorithm,
@@ -55,7 +37,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = new ImageComparison("image1.png", "image2.png").compareImages();
 
         //then
-        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
@@ -68,7 +50,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
 
         //then
-        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
         assertNotNull(comparisonResult.getResult());
     }
 
@@ -84,7 +66,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
 
         //then
-        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
@@ -103,7 +85,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
-        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
@@ -121,7 +103,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(ComparisonState.MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
         assertEquals(10, imageComparison.getRectangleLineWidth());
     }
@@ -136,7 +118,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
-        Assert.assertEquals(SIZE_MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(SIZE_MISSMATCH, comparisonResult.getComparisonState());
     }
 
     @Test
@@ -145,7 +127,7 @@ public class ImageComparisonUnitTest {
         ComparisonResult comparisonResult = new ImageComparison("image1.png", "image1.png").compareImages();
 
         //then
-        Assert.assertEquals(MATCH, comparisonResult.getComparisonState());
+        assertEquals(MATCH, comparisonResult.getComparisonState());
     }
 
     @Test
@@ -228,5 +210,22 @@ public class ImageComparisonUnitTest {
         int setValue = 10;
         comparison.setThreshold(setValue);
         assertEquals(setValue, comparison.getThreshold());
+    }
+
+    private static void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {
+        if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
+            fail("Images have different dimensions");
+        }
+
+        int width = imgA.getWidth();
+        int height = imgA.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
+                    fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
+                }
+            }
+        }
     }
 }
