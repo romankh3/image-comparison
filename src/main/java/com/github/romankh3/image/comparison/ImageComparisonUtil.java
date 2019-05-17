@@ -71,7 +71,7 @@ public class ImageComparisonUtil {
      * @return the {@link BufferedImage} object of this specific image.
      */
     public static BufferedImage readImageFromResources(String path) throws IOException, URISyntaxException {
-        return ImageIO.read(new File(ImageComparison.class.getClassLoader().getResource(path).toURI().getPath()));
+        return ImageIO.read(new File(ImageComparisonUtil.class.getClassLoader().getResource(path).toURI().getPath()));
     }
 
     /**
