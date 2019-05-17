@@ -1,12 +1,13 @@
 package com.github.romankh3.image.comparison.model;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
@@ -34,11 +35,11 @@ public class ComparisonResultUnitTest {
         comparisonResult.setRectangles(new ArrayList<>());
 
         //then
-        Assert.assertEquals(ComparisonState.MATCH, comparisonResult.getComparisonState());
-        Assert.assertNotNull(comparisonResult.getImage1());
-        Assert.assertNotNull(comparisonResult.getImage2());
-        Assert.assertNotNull(comparisonResult.getResult());
-        Assert.assertTrue(comparisonResult.getRectangles().isEmpty());
+        assertEquals(ComparisonState.MATCH, comparisonResult.getComparisonState());
+        assertNotNull(comparisonResult.getImage1());
+        assertNotNull(comparisonResult.getImage2());
+        assertNotNull(comparisonResult.getResult());
+        assertTrue(comparisonResult.getRectangles().isEmpty());
     }
 
 }
