@@ -10,6 +10,7 @@ import static org.mockito.Mockito.when;
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import org.junit.Assert;
@@ -44,7 +45,7 @@ public class ImageComparisonUtilUnitTest {
         Assert.assertTrue(new File(path).exists());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = FileNotFoundException.class)
     public void testNullParent() throws IOException {
         //given
         File path = mock(File.class);
