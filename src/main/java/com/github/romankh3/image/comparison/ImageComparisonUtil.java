@@ -90,7 +90,6 @@ public class ImageComparisonUtil {
      * @param image the {@link BufferedImage} object of this specific image.
      */
     public static void saveImage(File path, BufferedImage image) throws IOException {
-        File dir = path.getParentFile();
         ImageIO.write(image, "png", path);
     }
 }
