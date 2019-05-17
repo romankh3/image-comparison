@@ -92,11 +92,9 @@ public class ImageComparison {
     public ComparisonResult compareImages() throws IOException {
 
         // check images for valid
-        if (isImageSizesEqual(image1, image2)) {
+        if (isImageSizesNotEqual(image1, image2)) {
             return ComparisonResult.sizeMissMatchResult();
         }
-
-        matrix = populateTheMatrixOfTheDifferences();
 
         List<Rectangle> rectangles = populateRectangles();
 
@@ -126,23 +124,20 @@ public class ImageComparison {
      * @param image1 {@link BufferedImage} object of the first image.
      * @param image2 {@link BufferedImage} object of the second image.
      */
-    public boolean isImageSizesEqual(BufferedImage image1, BufferedImage image2) {
+    public boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
         return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
     }
 
     /**
      * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
-     *
-     * @return populated binary matrix.
      */
-    private int[][] populateTheMatrixOfTheDifferences() {
-        int[][] matrix = new int[image1.getWidth()][image1.getHeight()];
+    private void populateTheMatrixOfTheDifferences() {
+        matrix = new int[image1.getWidth()][image1.getHeight()];
         for (int y = 0; y < image1.getHeight(); y++) {
             for (int x = 0; x < image1.getWidth(); x++) {
                 matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
             }
         }
-        return matrix;
     }
 
     /**
@@ -168,7 +163,13 @@ public class ImageComparison {
         return result > 0.1;
     }
 
+    /**
+     * Populate rectangles of the differences
+     *
+     * @return the collection of the populated {@link Rectangle} objects.
+     */
     private List<Rectangle> populateRectangles() {
+        populateTheMatrixOfTheDifferences();
         groupRegions();
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
