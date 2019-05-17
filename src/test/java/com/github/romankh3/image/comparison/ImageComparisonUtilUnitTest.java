@@ -1,24 +1,25 @@
 package com.github.romankh3.image.comparison;
 
-import static com.github.romankh3.image.comparison.ImageComparisonTools.createGUI;
-import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
+import static com.github.romankh3.image.comparison.ImageComparisonUtil.createGUI;
+import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import org.junit.Assert;
 import org.junit.Test;
 
 /**
- * Unit-level testing for {@link ImageComparisonTools} object.
+ * Unit-level testing for {@link ImageComparisonUtil} object.
  */
-public class ImageComparisonToolsUnitTest {
+public class ImageComparisonUtilUnitTest {
 
     @Test
     public void testFrameMethod() throws IOException, URISyntaxException {
@@ -28,23 +29,15 @@ public class ImageComparisonToolsUnitTest {
         assertEquals(image.getWidth(), resultFrame.getWidth());
     }
 
-    @Test(expected = IllegalArgumentException.class)
-    public void testCheckCorrectImageSize() {
-        BufferedImage image1 = new BufferedImage(10, 10, 10);
-        BufferedImage image2 = new BufferedImage(12, 12, 10);
-
-        ImageComparisonTools.checkCorrectImageSize(image1, image2);
-    }
-
     @Test
     public void testSaveImage() throws IOException, URISyntaxException {
         BufferedImage image = readImageFromResources("result1.png");
         String path = "build/test/correct/save/image.png";
-        ImageComparisonTools.saveImage(new File(path), image);
-        Assert.assertTrue(new File(path).exists());
+        ImageComparisonUtil.saveImage(new File(path), image);
+        assertTrue(new File(path).exists());
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = FileNotFoundException.class)
     public void testNullParent() throws IOException {
         //given
         File path = mock(File.class);
@@ -54,16 +47,16 @@ public class ImageComparisonToolsUnitTest {
         when(path.getParentFile()).thenReturn(parent);
 
         //when-then
-        ImageComparisonTools.saveImage(path, null);
+        ImageComparisonUtil.saveImage(path, null);
     }
 
     @Test
     public void testCreation() {
         //when
-        ImageComparisonTools imageComparisonTools = new ImageComparisonTools();
+        ImageComparisonUtil imageComparisonUtil = new ImageComparisonUtil();
 
         //then
-        assertNotNull(imageComparisonTools);
+        assertNotNull(imageComparisonUtil);
     }
 
     @Test

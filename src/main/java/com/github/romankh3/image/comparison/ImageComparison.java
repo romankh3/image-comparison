@@ -1,20 +1,21 @@
 package com.github.romankh3.image.comparison;
 
-import com.github.romankh3.image.comparison.model.Rectangle;
-import com.github.romankh3.image.comparison.model.Point;
+import static java.awt.Color.RED;
 
-import java.awt.*;
+import com.github.romankh3.image.comparison.model.ComparisonResult;
+import com.github.romankh3.image.comparison.model.ComparisonState;
+import com.github.romankh3.image.comparison.model.Point;
+import com.github.romankh3.image.comparison.model.Rectangle;
+import java.awt.BasicStroke;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import static java.awt.Color.RED;
 
 /**
  * Main class for comparison images.
@@ -22,38 +23,28 @@ import static java.awt.Color.RED;
 public class ImageComparison {
 
     /**
-     * Prefix of the name of the result image.
-     */
-    private static final String NAME_PREFIX = "image-comparison";
-    
-    /**
-     * Suffix of the name of of the result image.
-     */
-    private static final String NAME_SUFFIX = ".png";
-    
-    /**
      * The threshold which means the max distance between non-equal pixels.
      * Could be changed according size and requirements to the image.
      */
     private int threshold = 5;
-    
+
     /**
      * First image for comparing
      */
     private final BufferedImage image1;
-    
+
     /**
      * Second image for comparing
      */
     private final BufferedImage image2;
-    
+
     /**
      * Width of the line that is drawn in the rectangle
      */
     private int rectangleLineWidth = 1;
 
     /**
-     * {@link File} of the result desctination.
+     * {@link File} of the result destination.
      */
     private final /* @Nullable */ File destination;
 
@@ -61,19 +52,19 @@ public class ImageComparison {
      * The number which marks how many rectangles. Beginning from 2.
      */
     private int counter = 2;
-    
+
     /**
      * The number of the marking specific rectangle.
      */
     private int regionCount = counter;
-    
+
     /**
      * Matrix MxN.
      */
     private int[][] matrix;
-    
+
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
+        this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2), null);
     }
 
     /**
@@ -98,36 +89,88 @@ public class ImageComparison {
      *
      * @return the result of the drawing.
      */
-    public BufferedImage compareImages() throws IOException {
+    public ComparisonResult compareImages() {
+
         // check images for valid
-        ImageComparisonTools.checkCorrectImageSize(image1, image2);
-
-        matrix = ImageComparisonTools.populateTheMatrixOfTheDifferences(image1, image2);
-
-        BufferedImage outImg = ImageComparisonTools.deepCopy(image2);
-
-        Graphics2D graphics = outImg.createGraphics();
-        graphics.setColor(RED);
-
-        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
-        graphics.setStroke(stroke);
-
-        groupRegions();
+        if (isImageSizesNotEqual(image1, image2)) {
+            return ComparisonResult.sizeMissMatchResult();
+        }
 
         List<Rectangle> rectangles = populateRectangles();
 
-        drawRectangles(rectangles, graphics);
+        ComparisonResult comparisonResult = new ComparisonResult();
+        comparisonResult.setImage1(image1);
+        comparisonResult.setImage2(image2);
 
-        //save the image:
-        ImageComparisonTools
-                .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()), outImg);
-        return outImg;
+        if (rectangles.isEmpty()) {
+            comparisonResult.setComparisonState(ComparisonState.MATCH);
+            return comparisonResult;
+        } else {
+            comparisonResult.setComparisonState(ComparisonState.MISSMATCH);
+            comparisonResult.setRectangles(rectangles);
+        }
+
+        BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
+        comparisonResult.setResult(resultImage);
+
+        drawRectangles(rectangles, resultImage);
+
+        return comparisonResult;
     }
 
     /**
-     * Populate rectangles using regions in matrix.
+     * Check images for equals their widths and heights.
+     *
+     * @param image1 {@link BufferedImage} object of the first image.
+     * @param image2 {@link BufferedImage} object of the second image.
+     */
+    public boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
+        return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
+    }
+
+    /**
+     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
+     */
+    private void populateTheMatrixOfTheDifferences() {
+        matrix = new int[image1.getWidth()][image1.getHeight()];
+        for (int y = 0; y < image1.getHeight(); y++) {
+            for (int x = 0; x < image1.getWidth(); x++) {
+                matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
+            }
+        }
+    }
+
+    /**
+     * Say if the two pixels equal or not. The rule is the difference between two pixels
+     * need to be more then 10%.
+     *
+     * @param rgb1 the RGB value of the Pixel of the Image1.
+     * @param rgb2 the RGB value of the Pixel of the Image2.
+     * @return {@code true} if they' are difference, {@code false} otherwise.
+     */
+     private boolean isDifferentPixels(int rgb1, int rgb2) {
+        int red1 = (rgb1 >> 16) & 0xff;
+        int green1 = (rgb1 >> 8) & 0xff;
+        int blue1 = (rgb1) & 0xff;
+        int red2 = (rgb2 >> 16) & 0xff;
+        int green2 = (rgb2 >> 8) & 0xff;
+        int blue2 = (rgb2) & 0xff;
+        double result = Math.sqrt(Math.pow(red2 - red1, 2) +
+                Math.pow(green2 - green1, 2) +
+                Math.pow(blue2 - blue1, 2))
+                /
+                Math.sqrt(Math.pow(255, 2) * 3);
+        return result > 0.1;
+    }
+
+    /**
+     * Populate rectangles of the differences
+     *
+     * @return the collection of the populated {@link Rectangle} objects.
      */
     private List<Rectangle> populateRectangles() {
+        populateTheMatrixOfTheDifferences();
+        groupRegions();
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
             Rectangle rectangle = createRectangle();
@@ -159,7 +202,7 @@ public class ImageComparison {
 
     /**
      * Update {@link Point} of the rectangle based on x and y coordinates.
-     */ 
+     */
     private void updateRectangleCreation(Rectangle rectangle, int x, int y) {
         if (x < rectangle.getMinPoint().getX()) {
             rectangle.getMinPoint().setX(x);
@@ -203,9 +246,18 @@ public class ImageComparison {
     }
 
     /**
-     * Draw rectangles on the result image.
+     * Draw the rectangles based on collection of the rectangles and result image.
+     *
+     * @param rectangles the collection of the {@link Rectangle} objects.
+     * @param resultImage result image, which will being drawn.
      */
-    private void drawRectangles(List<Rectangle> rectangles, Graphics2D graphics) {
+    private void drawRectangles(List<Rectangle> rectangles, BufferedImage resultImage) {
+        Graphics2D graphics = resultImage.createGraphics();
+        graphics.setColor(RED);
+
+        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
+        graphics.setStroke(stroke);
+
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
                 rectangle.getMinPoint().getX(),
                 rectangle.getWidth(),
@@ -257,7 +309,7 @@ public class ImageComparison {
     private boolean isJumpRejected(int row, int col) {
         return row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1;
     }
-    
+
     public int getThreshold() {
         return threshold;
     }
