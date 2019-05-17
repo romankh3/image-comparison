@@ -1,5 +1,5 @@
 ![logo-trans](https://user-images.githubusercontent.com/16310793/42029324-df117c42-7ad7-11e8-8d3e-9c6cd8822d6c.png)
-[ ![Download](https://api.bintray.com/packages/romankh3/image-comparison/image-comparison/images/download.svg) ](https://bintray.com/romankh3/image-comparison/image-comparison/_latestVersion)
+[ ![Bintray](https://api.bintray.com/packages/romankh3/image-comparison/image-comparison/images/download.svg) ](https://bintray.com/romankh3/image-comparison/image-comparison/_latestVersion)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4fd1c61d0f147358f8c5df212256491)](https://app.codacy.com/app/romankh3/image-comparison?utm_source=github.com&utm_medium=referral&utm_content=romankh3/image-comparison&utm_campaign=Badge_Grade_Dashboard)
 [![Build Status](https://travis-ci.org/romankh3/image-comparison.svg?branch=master)](https://travis-ci.org/romankh3/image-comparison) [![Coverage Status](https://coveralls.io/repos/github/romankh3/image-comparison/badge.svg?branch=master)](https://coveralls.io/github/romankh3/image-comparison?branch=master) [![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
 
@@ -37,6 +37,13 @@ cd image-comparison
 This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
 
 ## Release Notes
+
+### 2.2.0
+*   Added ability to customize rectangle line width.
+*   Moved the main method from Image Comparison to own class.
+*   Made non-static threshold field.
+*   Added Code of Conduct and Contributing pages.
+*   Added Point model.
 
 ### 2.1.0
 *   Added publishing to JCenter
@@ -95,12 +102,12 @@ java -jar image-comparison.jar -h
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 ##### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:2.1.0'
+compile 'com.github.romankh3:image-comparison:2.2.0'
 ```
 
 

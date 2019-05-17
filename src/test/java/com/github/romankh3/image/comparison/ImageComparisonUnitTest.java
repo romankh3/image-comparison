@@ -37,23 +37,6 @@ public class ImageComparisonUnitTest {
         }
     }
 
-    @Test
-    public void testMainClass() throws IOException, URISyntaxException {
-        //given
-        String[] args = new String[2];
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
-        args[0] = image1.getAbsolutePath();
-        args[1] = image2.getAbsolutePath();
-
-        //when
-        ImageComparison.main(args);
-
-        //then
-        assertNotNull(image1);
-        assertNotNull(image2);
-    }
-
     /**
      * The most important test. Shown, that the changes in algorithm,
      * don't break the main behaviour and result as expected.
@@ -109,6 +92,20 @@ public class ImageComparisonUnitTest {
         BufferedImage comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
+        assertImagesEqual(expectedResultImage, comparisonResult);
+    }
+
+    /**
+     * Verify that it is possible to use a thick line in the rectangle
+     */
+    @Test
+    public void testRectangleWithLineWidth10() throws IOException, URISyntaxException {
+        BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
+
+        ImageComparison imageComparison = new ImageComparison("b1#11.png", "b2#11.png");
+        imageComparison.setRectangleLineWidth(10);
+        BufferedImage comparisonResult = imageComparison.compareImages();
+
         assertImagesEqual(expectedResultImage, comparisonResult);
     }
 
@@ -183,4 +180,14 @@ public class ImageComparisonUnitTest {
         assertFalse(showUI.get());
     }
 
+    @Test
+    public void testSetterAndGettersThresholdWhenItShouldSetsProperly() throws IOException, URISyntaxException {
+        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
+        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
+        ImageComparison comparison = CommandLineUtil.create(new ArgsParser.Arguments(image1, image2, destination));
+        int setValue = 10;
+        comparison.setThreshold(setValue);
+        assertEquals(setValue, comparison.getThreshold());
+    }
 }
