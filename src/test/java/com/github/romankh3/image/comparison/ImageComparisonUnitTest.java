@@ -127,7 +127,7 @@ public class ImageComparisonUnitTest {
     }
 
     @Test
-    public void testSizeMissMatch() throws IOException {
+    public void testSizeMissMatch() {
         //given
         BufferedImage image1 = new BufferedImage(10, 10, 10);
         BufferedImage image2 = new BufferedImage(12, 12, 10);

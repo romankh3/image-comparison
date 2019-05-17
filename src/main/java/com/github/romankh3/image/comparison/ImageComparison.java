@@ -44,7 +44,7 @@ public class ImageComparison {
     private int rectangleLineWidth = 1;
 
     /**
-     * {@link File} of the result desctination.
+     * {@link File} of the result destination.
      */
     private final /* @Nullable */ File destination;
 
@@ -89,7 +89,7 @@ public class ImageComparison {
      *
      * @return the result of the drawing.
      */
-    public ComparisonResult compareImages() throws IOException {
+    public ComparisonResult compareImages() {
 
         // check images for valid
         if (isImageSizesNotEqual(image1, image2)) {
