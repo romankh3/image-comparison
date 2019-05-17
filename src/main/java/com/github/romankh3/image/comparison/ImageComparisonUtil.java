@@ -18,7 +18,7 @@ import javax.swing.WindowConstants;
 /**
  * Tools for the {@link ImageComparison} object.
  */
-public class ImageComparisonTools {
+public class ImageComparisonUtil {
 
     /**
      * Create GUI for represents the resulting image.
@@ -91,10 +91,6 @@ public class ImageComparisonTools {
      */
     public static void saveImage(File path, BufferedImage image) throws IOException {
         File dir = path.getParentFile();
-        boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
-        if (!dirExists) {
-            throw new RuntimeException("Unable to create directory " + dir);
-        }
         ImageIO.write(image, "png", path);
     }
 }

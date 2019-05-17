@@ -1,6 +1,6 @@
 package com.github.romankh3.image.comparison;
 
-import static com.github.romankh3.image.comparison.ImageComparisonTools.readImageFromResources;
+import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;

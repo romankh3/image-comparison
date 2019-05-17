@@ -12,7 +12,7 @@ public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException {
         ImageComparison imgCmp = CommandLineUtil.create(args);
         BufferedImage result = imgCmp.compareImages();
-        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonTools.saveImage(file, result), () -> ImageComparisonTools
+        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonUtil.saveImage(file, result), () -> ImageComparisonUtil
                 .createGUI(result));
     }
 }

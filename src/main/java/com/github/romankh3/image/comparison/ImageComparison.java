@@ -73,7 +73,7 @@ public class ImageComparison {
     private int[][] matrix;
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(ImageComparisonTools.readImageFromResources(image1), ImageComparisonTools.readImageFromResources(image2), null);
+        this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2), null);
     }
 
     /**
@@ -100,11 +100,11 @@ public class ImageComparison {
      */
     public BufferedImage compareImages() throws IOException {
         // check images for valid
-        ImageComparisonTools.checkCorrectImageSize(image1, image2);
+        ImageComparisonUtil.checkCorrectImageSize(image1, image2);
 
         matrix = populateTheMatrixOfTheDifferences();
 
-        BufferedImage outImg = ImageComparisonTools.deepCopy(image2);
+        BufferedImage outImg = ImageComparisonUtil.deepCopy(image2);
 
         Graphics2D graphics = outImg.createGraphics();
         graphics.setColor(RED);
@@ -119,7 +119,7 @@ public class ImageComparison {
         drawRectangles(rectangles, graphics);
 
         //save the image:
-        ImageComparisonTools
+        ImageComparisonUtil
                 .saveImage(this.getDestination().orElse(Files.createTempFile(NAME_PREFIX, NAME_SUFFIX).toFile()),
                         outImg);
         return outImg;

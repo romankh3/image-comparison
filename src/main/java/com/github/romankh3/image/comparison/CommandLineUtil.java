@@ -18,15 +18,15 @@ class CommandLineUtil {
 
     static ImageComparison createDefault() throws IOException, URISyntaxException {
         return new ImageComparison(
-                ImageComparisonTools.readImageFromResources("image1.png"),
-                ImageComparisonTools.readImageFromResources("image2.png"),
+                ImageComparisonUtil.readImageFromResources("image1.png"),
+                ImageComparisonUtil.readImageFromResources("image2.png"),
                 null);
     }
 
     static ImageComparison create(ArgsParser.Arguments args) throws IOException {
         return new ImageComparison(
-                ImageComparisonTools.readImageFromFile(args.getImage1()),
-                ImageComparisonTools.readImageFromFile(args.getImage2()),
+                ImageComparisonUtil.readImageFromFile(args.getImage1()),
+                ImageComparisonUtil.readImageFromFile(args.getImage2()),
                 args.getDestinationImage().orElse(null));
     }
 
