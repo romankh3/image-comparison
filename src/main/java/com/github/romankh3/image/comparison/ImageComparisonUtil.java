@@ -7,6 +7,7 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import javax.imageio.ImageIO;
@@ -78,6 +79,12 @@ public class ImageComparisonUtil {
      * @param image the {@link BufferedImage} object of this specific image.
      */
     public static void saveImage(File pathFile, BufferedImage image) throws IOException {
+        File dir = pathFile.getParentFile();
+        // make dir if it's not using from Gradle.
+        boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
+        if (!dirExists) {
+            throw new FileNotFoundException("Unable to create directory " + dir);
+        }
         ImageIO.write(image, "png", pathFile);
     }
 }
