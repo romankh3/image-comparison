@@ -75,16 +75,16 @@ public class ImageComparisonUtil {
     /**
      * Save image to the provided path.
      *
-     * @param path the path to the saving image.
+     * @param pathFile the path to the saving image.
      * @param image the {@link BufferedImage} object of this specific image.
      */
-    public static void saveImage( File path, BufferedImage image ) throws IOException {
-        File dir = path.getParentFile();
+    public static void saveImage( File pathFile, BufferedImage image ) throws IOException {
+        File dir = pathFile.getParentFile();
         // make dir if it's not using from Gradle.
         boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
         if (!dirExists) {
             throw new FileNotFoundException("Unable to create directory " + dir);
         }
-        ImageIO.write( image, "png", path );
+        ImageIO.write( image, "png", pathFile );
     }
 }

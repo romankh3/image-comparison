@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -57,6 +58,18 @@ public class ImageComparison {
      * The number of the marking specific rectangle.
      */
     private int regionCount = counter;
+
+    /**
+     * The number of the minimal rectangle size. Count as (width x height).
+     */
+    private Integer minimalRectangleSize = 1;
+
+    /**
+     * Maximal count of the {@link Rectangle}s.
+     * It means that would get first x biggest rectangles.
+     * Default value is -1, that means that all the rectagles would be drawn.
+     */
+    private Integer maximalRectangleCount = -1;
 
     /**
      * Matrix MxN.
@@ -174,7 +187,7 @@ public class ImageComparison {
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
             Rectangle rectangle = createRectangle();
-            if (!rectangle.equals(Rectangle.createDefault())) {
+            if (!rectangle.equals(Rectangle.createDefault()) && rectangle.size() >= minimalRectangleSize) {
                 rectangles.add(rectangle);
             }
             counter++;
@@ -258,6 +271,13 @@ public class ImageComparison {
         BasicStroke stroke = new BasicStroke(rectangleLineWidth);
         graphics.setStroke(stroke);
 
+        if(maximalRectangleCount > 0) {
+            rectangles = rectangles.stream()
+                    .sorted(Comparator.comparing(Rectangle::size))
+                    .skip(rectangles.size() - maximalRectangleCount)
+                    .collect(Collectors.toList());
+        }
+
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
                 rectangle.getMinPoint().getX(),
                 rectangle.getWidth(),
@@ -336,5 +356,21 @@ public class ImageComparison {
 
     public void setRectangleLineWidth(int rectangleLineWidth) {
         this.rectangleLineWidth = rectangleLineWidth;
+    }
+
+    public Integer getMinimalRectangleSize() {
+        return minimalRectangleSize;
+    }
+
+    public void setMinimalRectangleSize(Integer minimalRectangleSize) {
+        this.minimalRectangleSize = minimalRectangleSize;
+    }
+
+    public Integer getMaximalRectangleCount() {
+        return maximalRectangleCount;
+    }
+
+    public void setMaximalRectangleCount(Integer maximalRectangleCount) {
+        this.maximalRectangleCount = maximalRectangleCount;
     }
 }

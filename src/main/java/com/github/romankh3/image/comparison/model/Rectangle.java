@@ -58,6 +58,12 @@ public class Rectangle {
                 max(this.getMaxPoint().getY(), that.getMaxPoint().getY()));
     }
 
+    /**
+     * Check is that rectangle overlapp this.
+     *
+     * @param that {@link Rectangle} which checks with this.
+     * @return true if this overlapp that, false otherwise.
+     */
     public boolean isOverlapping(Rectangle that) {
         if (this.getMaxPoint().getY() < that.getMinPoint().getY() ||
                 that.getMaxPoint().getY() < this.getMinPoint().getY()) {
@@ -67,14 +73,29 @@ public class Rectangle {
                 that.getMaxPoint().getX() >= this.getMinPoint().getX();
     }
 
+    /**
+     * Set default values for rectangle.
+     */
     public void setDefaultValues() {
         this.maxPoint = new Point(Integer.MIN_VALUE, Integer.MIN_VALUE);
         this.minPoint = new Point(Integer.MAX_VALUE, Integer.MAX_VALUE);
     }
 
+    /**
+     * Make zero rectagle.
+     */
     public void makeZeroRectangle() {
         this.minPoint.makeZeroPoint();
         this.maxPoint.makeZeroPoint();
+    }
+
+    /**
+     * Size of the {@link Rectangle}, counted as width x height.
+     *
+     * @return
+     */
+    public Integer size() {
+        return getWidth() * getHeight();
     }
 
     public Point getMinPoint() {
