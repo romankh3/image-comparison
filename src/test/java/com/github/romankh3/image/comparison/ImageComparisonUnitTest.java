@@ -41,6 +41,36 @@ public class ImageComparisonUnitTest {
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
+    @Test
+    public void testMaximalRectangleCount() throws IOException, URISyntaxException {
+        //given
+        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
+        imageComparison.setMaximalRectangleCount(3);
+        BufferedImage expectedImage = readImageFromResources("maximalReqtangleCountResult.png");
+
+        //when
+        ComparisonResult comparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
+    }
+
+    @Test
+    public void testMinimalRectangleSize() throws IOException, URISyntaxException {
+        //given
+        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
+        imageComparison.setMinimalRectangleSize(10);
+        BufferedImage expectedImage = readImageFromResources("minimalRectangleSizeResult.png");
+
+        //when
+        ComparisonResult comparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
+    }
+
     /**
      * Test issue #17. It was StackOverFlowError.
      */
@@ -210,6 +240,24 @@ public class ImageComparisonUnitTest {
         int setValue = 10;
         comparison.setThreshold(setValue);
         assertEquals(setValue, comparison.getThreshold());
+    }
+
+    @Test
+    public void testGettersAnsSetters() throws IOException, URISyntaxException {
+        //given
+        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
+
+        //when
+        imageComparison.setMinimalRectangleSize(100);
+        imageComparison.setMaximalRectangleCount(200);
+        imageComparison.setRectangleLineWidth(300);
+        imageComparison.setThreshold(400);
+
+        //then
+        assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
+        assertEquals(String.valueOf(200), String.valueOf(imageComparison.getMaximalRectangleCount()));
+        assertEquals(String.valueOf(300), String.valueOf(imageComparison.getRectangleLineWidth()));
+        assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
     }
 
     private static void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {

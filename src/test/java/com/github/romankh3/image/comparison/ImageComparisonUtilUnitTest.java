@@ -40,14 +40,14 @@ public class ImageComparisonUtilUnitTest {
     @Test(expected = FileNotFoundException.class)
     public void testNullParent() throws IOException {
         //given
-        File path = mock(File.class);
+        File pathFile = mock(File.class);
         File parent = mock(File.class);
-        when(path.isDirectory()).thenReturn(false);
-        when(path.mkdirs()).thenReturn(false);
-        when(path.getParentFile()).thenReturn(parent);
+        when(pathFile.isDirectory()).thenReturn(false);
+        when(pathFile.mkdirs()).thenReturn(false);
+        when(pathFile.getParentFile()).thenReturn(parent);
 
         //when-then
-        ImageComparisonUtil.saveImage(path, null);
+        ImageComparisonUtil.saveImage(pathFile, null);
     }
 
     @Test
