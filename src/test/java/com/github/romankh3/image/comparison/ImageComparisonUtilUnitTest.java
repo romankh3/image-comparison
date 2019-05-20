@@ -5,13 +5,10 @@ import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImage
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 import java.awt.Frame;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import org.junit.Test;
@@ -35,19 +32,6 @@ public class ImageComparisonUtilUnitTest {
         String path = "build/test/correct/save/image.png";
         ImageComparisonUtil.saveImage(new File(path), image);
         assertTrue(new File(path).exists());
-    }
-
-    @Test(expected = FileNotFoundException.class)
-    public void testNullParent() throws IOException {
-        //given
-        File pathFile = mock(File.class);
-        File parent = mock(File.class);
-        when(pathFile.isDirectory()).thenReturn(false);
-        when(pathFile.mkdirs()).thenReturn(false);
-        when(pathFile.getParentFile()).thenReturn(parent);
-
-        //when-then
-        ImageComparisonUtil.saveImage(pathFile, null);
     }
 
     @Test

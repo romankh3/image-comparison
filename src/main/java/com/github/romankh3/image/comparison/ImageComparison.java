@@ -77,7 +77,8 @@ public class ImageComparison {
     private int[][] matrix;
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2), null);
+        this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2),
+                null);
     }
 
     /**
@@ -161,7 +162,7 @@ public class ImageComparison {
      * @param rgb2 the RGB value of the Pixel of the Image2.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
-     private boolean isDifferentPixels(int rgb1, int rgb2) {
+    private boolean isDifferentPixels(int rgb1, int rgb2) {
         int red1 = (rgb1 >> 16) & 0xff;
         int green1 = (rgb1 >> 8) & 0xff;
         int blue1 = (rgb1) & 0xff;
@@ -271,14 +272,18 @@ public class ImageComparison {
         BasicStroke stroke = new BasicStroke(rectangleLineWidth);
         graphics.setStroke(stroke);
 
-        if(maximalRectangleCount > 0) {
-            rectangles = rectangles.stream()
+        List<Rectangle> rectanglesForDraw;
+
+        if (maximalRectangleCount > 0) {
+            rectanglesForDraw = rectangles.stream()
                     .sorted(Comparator.comparing(Rectangle::size))
                     .skip(rectangles.size() - maximalRectangleCount)
                     .collect(Collectors.toList());
+        } else {
+            rectanglesForDraw = new ArrayList<>(rectangles);
         }
 
-        rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
+        rectanglesForDraw.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
                 rectangle.getMinPoint().getX(),
                 rectangle.getWidth(),
                 rectangle.getHeight()));
