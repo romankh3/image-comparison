@@ -121,7 +121,6 @@ public class ImageComparison {
             return comparisonResult;
         } else {
             comparisonResult.setComparisonState(ComparisonState.MISSMATCH);
-            comparisonResult.setRectangles(rectangles);
         }
 
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);

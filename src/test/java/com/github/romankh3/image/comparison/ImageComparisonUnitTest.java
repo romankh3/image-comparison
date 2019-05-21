@@ -57,6 +57,20 @@ public class ImageComparisonUnitTest {
     }
 
     @Test
+    public void testImagesWithTotallyDifferentImages() throws IOException, URISyntaxException {
+        //when
+        BufferedImage expectedResult = readImageFromResources("totallyDifferentImageResult.png");
+
+        //when
+        ComparisonResult comparisonResult =
+                new ImageComparison("image1.png", "image1TotallyDifferent.png").compareImages();
+
+        //then
+        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResult, comparisonResult.getResult());
+    }
+
+    @Test
     public void testMinimalRectangleSize() throws IOException, URISyntaxException {
         //given
         ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
