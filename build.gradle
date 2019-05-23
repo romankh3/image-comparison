@@ -12,7 +12,7 @@ version '3.0.0-SNAPSHOT'
 description 'A library and utility to compare different images.'
 sourceCompatibility = 1.8
 
-mainClassName = "com.github.romankh3.image.comparison.CommandLineUsage"
+mainClassName = "com.github.romankh3.image.comparison.Main"
 
 repositories {
     mavenCentral()
