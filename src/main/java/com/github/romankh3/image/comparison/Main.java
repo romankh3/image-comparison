@@ -1,17 +1,21 @@
 package com.github.romankh3.image.comparison;
 
+import static com.github.romankh3.image.comparison.CommandLineUsage.handleResult;
+
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 
 /**
- * Class for the presentation of the program.
+ * Main class for running image-comparison from commandline.
  */
 public class Main {
+
     public static void main(String[] args) throws IOException, URISyntaxException {
-        ImageComparison imgCmp = CommandLineUtil.create(args);
+        CommandLineUsage commandLineUsage = new CommandLineUsage();
+        ImageComparison imgCmp = commandLineUsage.create(args);
         BufferedImage result = imgCmp.compareImages().getResult();
-        CommandLineUtil.handleResult(imgCmp, (file) -> ImageComparisonUtil.saveImage(file, result), () -> ImageComparisonUtil
-                .createGUI(result));
+        handleResult(imgCmp, (file) -> ImageComparisonUtil.saveImage(file, result),
+                () -> ImageComparisonUtil.createGUI(result));
     }
 }

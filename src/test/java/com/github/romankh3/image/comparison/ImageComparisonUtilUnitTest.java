@@ -62,7 +62,7 @@ public class ImageComparisonUtilUnitTest {
     @Test
     public void testCommanlineUtilCreation() {
         //when
-        CommandLineUtil commandLineUtil = new CommandLineUtil();
+        CommandLineUsage commandLineUtil = new CommandLineUsage();
 
         //then
         assertNotNull(commandLineUtil);

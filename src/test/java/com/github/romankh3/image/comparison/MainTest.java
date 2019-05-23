@@ -1,17 +1,17 @@
 package com.github.romankh3.image.comparison;
 
-import org.junit.Test;
+import static org.junit.Assert.assertNotNull;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
-
-import static org.junit.Assert.assertNotNull;
+import org.junit.Test;
 
 /**
- * Unit-level testing for {@link Main} object.
+ * Unit-level testing for {@link Main}.
  */
 public class MainTest {
+
     @Test
     public void testMainClass() throws IOException, URISyntaxException {
         //given
