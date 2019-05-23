@@ -3,7 +3,6 @@ package com.github.romankh3.image.comparison;
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 import java.io.File;
@@ -19,22 +18,6 @@ import org.junit.Test;
 public class CommandLineUsageTest extends BaseTest {
 
     private CommandLineUsage commandLineUsage = new CommandLineUsage();
-
-    @Test
-    public void testMainClass() throws IOException, URISyntaxException {
-        //given
-        String[] args = new String[2];
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
-        args[0] = image1.getAbsolutePath();
-        args[1] = image2.getAbsolutePath();
-
-        //when
-        CommandLineUsage.main(args);
-        //then
-        assertNotNull(image1);
-        assertNotNull(image2);
-    }
 
     @Test
     public void testCreateDefault() throws IOException, URISyntaxException {

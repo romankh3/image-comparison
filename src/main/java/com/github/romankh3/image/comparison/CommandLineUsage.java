@@ -1,7 +1,6 @@
 package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.ArgsParser.Arguments;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
@@ -11,15 +10,6 @@ import java.util.Optional;
  * Class for static method related to command line.
  */
 class CommandLineUsage {
-
-    public static void main(String[] args) throws IOException, URISyntaxException {
-        CommandLineUsage commandLineUsage = new CommandLineUsage();
-        ImageComparison imgCmp = commandLineUsage.create(args);
-        BufferedImage result = imgCmp.compareImages().getResult();
-        handleResult(imgCmp,
-                (file) -> ImageComparisonUtil.saveImage(file, result),
-                () -> ImageComparisonUtil.createGUI(result));
-    }
 
     public ImageComparison create(String... args) throws IOException, URISyntaxException {
         Optional<Arguments> arguments = new ArgsParser().parseArgs(args);
