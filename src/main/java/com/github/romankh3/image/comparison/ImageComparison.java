@@ -4,6 +4,7 @@ import static java.awt.Color.RED;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ComparisonState;
+import com.github.romankh3.image.comparison.model.Mask;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.BasicStroke;
@@ -76,6 +77,11 @@ public class ImageComparison {
      */
     private int[][] matrix;
 
+    /**
+     * Mask contains a List of {@link Rectangle}s to be ignored when comparing images
+     */
+    private Mask mask = new Mask();
+
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2),
                 null);
@@ -146,9 +152,12 @@ public class ImageComparison {
      */
     private void populateTheMatrixOfTheDifferences() {
         matrix = new int[image1.getWidth()][image1.getHeight()];
-        for (int y = 0; y < image1.getHeight(); y++) {
-            for (int x = 0; x < image1.getWidth(); x++) {
-                matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
+        for (int x = 0; x < image1.getHeight(); x++) {
+            for (int y = 0; y < image1.getWidth(); y++) {
+                Point point = new Point(x, y);
+                if (!mask.contains(point)) {
+                    matrix[y][x] = isDifferentPixels(image1.getRGB(y, x), image2.getRGB(y, x)) ? 1 : 0;
+                }
             }
         }
     }
@@ -328,6 +337,19 @@ public class ImageComparison {
     }
 
     /**
+     * Returns the list of rectangles that would be drawn as a diff image.
+     * If you submit two images that are the same barring the parts you want to mask you get a list of rectangles that can be used as said mask
+     *
+     * @return List of {@link Rectangle}
+     */
+    public List<Rectangle> createMask() {
+        if (isImageSizesNotEqual(image1, image2)) {
+            throw new RuntimeException("Size miss match on images");
+        }
+        return populateRectangles();
+    }
+
+    /**
      * Check next step valid or not.
      */
     private boolean isJumpRejected(int row, int col) {
@@ -376,5 +398,9 @@ public class ImageComparison {
 
     public void setMaximalRectangleCount(Integer maximalRectangleCount) {
         this.maximalRectangleCount = maximalRectangleCount;
+    }
+
+    public void setMask(List<Rectangle> maskedRectangles) {
+        this.mask = new Mask(maskedRectangles);
     }
 }

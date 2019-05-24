@@ -6,11 +6,16 @@ import static com.github.romankh3.image.comparison.model.ComparisonState.MISSMAT
 import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISSMATCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.github.romankh3.image.comparison.model.Rectangle;
 import org.junit.Test;
 
 /**
@@ -147,6 +152,23 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
+    public void testShouldReturnARectangleList() throws IOException, URISyntaxException {
+        //Arrange
+        BufferedImage original = readImageFromResources("b1#17.png");
+        BufferedImage masked = readImageFromResources("Masked#58.png");
+        List<Rectangle> expectedRectangleList = new ArrayList<>();
+        expectedRectangleList.add(new Rectangle(0, 131, 224, 224));
+        ImageComparison imageComparison = new ImageComparison(original, masked);
+
+        //Act
+        List<Rectangle> actualRectangleList = imageComparison.createMask();
+
+        //Assert
+        assertEquals(1, actualRectangleList.size());
+        assertEquals(expectedRectangleList.get(0), actualRectangleList.get(0));
+    }
+
+    @Test
     public void testSizeMissMatch() {
         //given
         BufferedImage image1 = new BufferedImage(10, 10, 10);
@@ -157,6 +179,23 @@ public class ImageComparisonUnitTest extends BaseTest {
 
         //then
         assertEquals(SIZE_MISSMATCH, comparisonResult.getComparisonState());
+    }
+
+    @Test
+    public void testShouldIgnoreMaskedPart() throws IOException, URISyntaxException {
+        //Arrange
+        BufferedImage image1 = readImageFromResources("b1#17.png");
+        BufferedImage image2 = readImageFromResources("MaskedComparison#58.png");
+        List<Rectangle> maskedRectangles = new ArrayList<>();
+        maskedRectangles.add(new Rectangle(0, 131, 224, 224));
+        ImageComparison imageComparison = new ImageComparison(image1, image2);
+        imageComparison.setMask(maskedRectangles);
+
+        //Act
+        ComparisonResult result = imageComparison.compareImages();
+
+        //Assert
+        assertEquals(result.getComparisonState(), MATCH);
     }
 
     @Test
@@ -184,5 +223,16 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(200), String.valueOf(imageComparison.getMaximalRectangleCount()));
         assertEquals(String.valueOf(300), String.valueOf(imageComparison.getRectangleLineWidth()));
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
+    }
+
+    @Test(expected = RuntimeException.class)
+    public void testShouldTriggerExceptionForSizeMissMatch() throws IOException, URISyntaxException {
+        //Arrange
+        BufferedImage image1 = readImageFromResources("b1#17.png");
+        BufferedImage image2 = readImageFromResources("b1#21.png");
+        ImageComparison imageComparison = new ImageComparison(image1, image2);
+
+        //Act
+        imageComparison.createMask();
     }
 }

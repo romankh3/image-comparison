@@ -122,6 +122,13 @@ public class Rectangle {
         return maxPoint.getX() - minPoint.getX();
     }
 
+    boolean containsPoint(Point point) {
+        return  point.getX() >= minPoint.getX() &&
+                point.getX() <= maxPoint.getX() &&
+                point.getY() >= minPoint.getY() &&
+                point.getY() <= maxPoint.getY();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) {
