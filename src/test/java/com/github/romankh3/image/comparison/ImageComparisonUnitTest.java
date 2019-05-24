@@ -224,7 +224,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
     }
 
-    @Test(expected = RuntimeException.class)
+    @Test(expected = SizeMissMatchException.class)
     public void testShouldTriggerExceptionForSizeMissMatch() throws IOException, URISyntaxException {
         //Arrange
         BufferedImage image1 = readImageFromResources("b1#17.png");
