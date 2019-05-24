@@ -6,7 +6,6 @@ import static com.github.romankh3.image.comparison.model.ComparisonState.MISSMAT
 import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISSMATCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import java.awt.image.BufferedImage;
