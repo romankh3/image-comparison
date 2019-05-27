@@ -28,13 +28,13 @@ public class ComparisonResult {
     private ComparisonState comparisonState;
 
     /**
-     * Create instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISSMATCH}.
+     * Create instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
      *
      * @return instance of the {@link ComparisonResult} object.
      */
     public static ComparisonResult sizeMissMatchResult() {
         ComparisonResult comparisonResult = new ComparisonResult();
-        comparisonResult.setComparisonState(ComparisonState.SIZE_MISSMATCH);
+        comparisonResult.setComparisonState(ComparisonState.SIZE_MISMATCH);
         return comparisonResult;
     }
 

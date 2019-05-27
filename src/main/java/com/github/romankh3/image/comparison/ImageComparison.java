@@ -120,7 +120,7 @@ public class ImageComparison {
             comparisonResult.setComparisonState(ComparisonState.MATCH);
             return comparisonResult;
         } else {
-            comparisonResult.setComparisonState(ComparisonState.MISSMATCH);
+            comparisonResult.setComparisonState(ComparisonState.MISMATCH);
         }
 
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
