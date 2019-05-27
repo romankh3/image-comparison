@@ -152,17 +152,17 @@ public class ImageComparisonUnitTest extends BaseTest {
 
     @Test
     public void testShouldReturnARectangleList() throws IOException, URISyntaxException {
-        //Arrange
+        //given
         BufferedImage original = readImageFromResources("b1#17.png");
         BufferedImage masked = readImageFromResources("Masked#58.png");
         List<Rectangle> expectedRectangleList = new ArrayList<>();
         expectedRectangleList.add(new Rectangle(0, 131, 224, 224));
         ImageComparison imageComparison = new ImageComparison(original, masked);
 
-        //Act
+        //when
         List<Rectangle> actualRectangleList = imageComparison.createMask();
 
-        //Assert
+        //then
         assertEquals(1, actualRectangleList.size());
         assertEquals(expectedRectangleList.get(0), actualRectangleList.get(0));
     }
@@ -182,7 +182,7 @@ public class ImageComparisonUnitTest extends BaseTest {
 
     @Test
     public void testShouldIgnoreExcludedArea() throws IOException, URISyntaxException {
-        //Arrange
+        //given
         BufferedImage image1 = readImageFromResources("b1#17.png");
         BufferedImage image2 = readImageFromResources("MaskedComparison#58.png");
         List<Rectangle> excludedAreas = new ArrayList<>();
@@ -190,10 +190,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         ImageComparison imageComparison = new ImageComparison(image1, image2);
         imageComparison.setExcludedAreas(excludedAreas);
 
-        //Act
+        //when
         ComparisonResult result = imageComparison.compareImages();
 
-        //Assert
+        //then
         assertEquals(result.getComparisonState(), MATCH);
     }
 
@@ -226,12 +226,12 @@ public class ImageComparisonUnitTest extends BaseTest {
 
     @Test(expected = SizeMissMatchException.class)
     public void testShouldTriggerExceptionForSizeMissMatch() throws IOException, URISyntaxException {
-        //Arrange
+        //given
         BufferedImage image1 = readImageFromResources("b1#17.png");
         BufferedImage image2 = readImageFromResources("b1#21.png");
         ImageComparison imageComparison = new ImageComparison(image1, image2);
 
-        //Act
+        //then
         imageComparison.createMask();
     }
 }
