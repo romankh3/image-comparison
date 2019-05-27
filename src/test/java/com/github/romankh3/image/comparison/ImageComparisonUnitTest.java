@@ -181,14 +181,14 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testShouldIgnoreMaskedPart() throws IOException, URISyntaxException {
+    public void testShouldIgnoreExcludedArea() throws IOException, URISyntaxException {
         //Arrange
         BufferedImage image1 = readImageFromResources("b1#17.png");
         BufferedImage image2 = readImageFromResources("MaskedComparison#58.png");
-        List<Rectangle> maskedRectangles = new ArrayList<>();
-        maskedRectangles.add(new Rectangle(0, 131, 224, 224));
+        List<Rectangle> excludedAreas = new ArrayList<>();
+        excludedAreas.add(new Rectangle(0, 131, 224, 224));
         ImageComparison imageComparison = new ImageComparison(image1, image2);
-        imageComparison.setMask(maskedRectangles);
+        imageComparison.setExcludedAreas(excludedAreas);
 
         //Act
         ComparisonResult result = imageComparison.compareImages();

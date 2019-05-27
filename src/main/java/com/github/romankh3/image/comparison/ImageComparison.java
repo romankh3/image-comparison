@@ -4,7 +4,7 @@ import static java.awt.Color.RED;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ComparisonState;
-import com.github.romankh3.image.comparison.model.Mask;
+import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.BasicStroke;
@@ -78,9 +78,9 @@ public class ImageComparison {
     private int[][] matrix;
 
     /**
-     * Mask contains a List of {@link Rectangle}s to be ignored when comparing images
+     * ExcludedAreas contains a List of {@link Rectangle}s to be ignored when comparing images
      */
-    private Mask mask = new Mask();
+    private ExcludedAreas excludedAreas = new ExcludedAreas();
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2),
@@ -155,7 +155,7 @@ public class ImageComparison {
         for (int x = 0; x < image1.getHeight(); x++) {
             for (int y = 0; y < image1.getWidth(); y++) {
                 Point point = new Point(x, y);
-                if (!mask.contains(point)) {
+                if (!excludedAreas.contains(point)) {
                     matrix[y][x] = isDifferentPixels(image1.getRGB(y, x), image2.getRGB(y, x)) ? 1 : 0;
                 }
             }
@@ -338,7 +338,7 @@ public class ImageComparison {
 
     /**
      * Returns the list of rectangles that would be drawn as a diff image.
-     * If you submit two images that are the same barring the parts you want to mask you get a list of rectangles that can be used as said mask
+     * If you submit two images that are the same barring the parts you want to excludedAreas you get a list of rectangles that can be used as said excludedAreas
      *
      * @return List of {@link Rectangle}
      */
@@ -400,7 +400,7 @@ public class ImageComparison {
         this.maximalRectangleCount = maximalRectangleCount;
     }
 
-    public void setMask(List<Rectangle> maskedRectangles) {
-        this.mask = new Mask(maskedRectangles);
+    public void setExcludedAreas(List<Rectangle> excludedAreas) {
+        this.excludedAreas = new ExcludedAreas(excludedAreas);
     }
 }
