@@ -2,8 +2,8 @@ package com.github.romankh3.image.comparison;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static com.github.romankh3.image.comparison.model.ComparisonState.MATCH;
-import static com.github.romankh3.image.comparison.model.ComparisonState.MISSMATCH;
-import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISSMATCH;
+import static com.github.romankh3.image.comparison.model.ComparisonState.MISMATCH;
+import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISMATCH;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
@@ -35,7 +35,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = new ImageComparison("image1.png", "image2.png").compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
@@ -50,7 +50,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedImage, comparisonResult.getResult());
     }
 
@@ -64,7 +64,7 @@ public class ImageComparisonUnitTest extends BaseTest {
                 new ImageComparison("image1.png", "image1TotallyDifferent.png").compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResult, comparisonResult.getResult());
     }
 
@@ -79,7 +79,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedImage, comparisonResult.getResult());
     }
 
@@ -92,7 +92,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertNotNull(comparisonResult.getResult());
     }
 
@@ -108,7 +108,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
@@ -127,7 +127,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
     }
 
@@ -145,7 +145,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResultImage, comparisonResult.getResult());
         assertEquals(10, imageComparison.getRectangleLineWidth());
     }
@@ -177,7 +177,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
 
         //then
-        assertEquals(SIZE_MISSMATCH, comparisonResult.getComparisonState());
+        assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
     }
 
     @Test
