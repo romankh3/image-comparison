@@ -223,15 +223,4 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(300), String.valueOf(imageComparison.getRectangleLineWidth()));
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
     }
-
-    @Test(expected = SizeMissMatchException.class)
-    public void testShouldTriggerExceptionForSizeMissMatch() throws IOException, URISyntaxException {
-        //given
-        BufferedImage image1 = readImageFromResources("b1#17.png");
-        BufferedImage image2 = readImageFromResources("b1#21.png");
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
-
-        //then
-        imageComparison.createMask();
-    }
 }

@@ -343,9 +343,6 @@ public class ImageComparison {
      * @return List of {@link Rectangle}
      */
     public List<Rectangle> createMask() {
-        if (isImageSizesNotEqual(image1, image2)) {
-            throw new SizeMissMatchException("Size miss match on images");
-        }
         return populateRectangles();
     }
 
