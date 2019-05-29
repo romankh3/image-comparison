@@ -9,7 +9,7 @@
 
 *   [Building](#building)
 
-*   [Relesase Notes](#relesase-notes)
+*   [Relesase Notes](#release-notes)
 
 *   [Usage](#usage)
     *   [Using the command-line](#using-the-command-line)
