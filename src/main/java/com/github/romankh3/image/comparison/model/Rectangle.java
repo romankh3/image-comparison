@@ -30,6 +30,8 @@ public class Rectangle {
 
     /**
      * Create default {@link Rectangle} object.
+     *
+     * @return default rectangle {@link Rectangle}.
      */
     public static Rectangle createDefault() {
         Rectangle defaultRectangle = new Rectangle();
@@ -92,7 +94,7 @@ public class Rectangle {
     /**
      * Size of the {@link Rectangle}, counted as width x height.
      *
-     * @return
+     * @return the size of the {@link Rectangle}.
      */
     public Integer size() {
         return getWidth() * getHeight();

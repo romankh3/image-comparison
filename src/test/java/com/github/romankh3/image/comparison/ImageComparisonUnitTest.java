@@ -8,13 +8,12 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
+import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.github.romankh3.image.comparison.model.Rectangle;
 import org.junit.Test;
 
 /**
@@ -168,7 +167,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testSizeMissMatch() {
+    public void testSizeMissMatch() throws IOException {
         //given
         BufferedImage image1 = new BufferedImage(10, 10, 10);
         BufferedImage image2 = new BufferedImage(12, 12, 10);

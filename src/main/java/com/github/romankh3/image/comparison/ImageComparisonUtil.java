@@ -25,6 +25,8 @@ public class ImageComparisonUtil {
      * Create GUI for represents the resulting image.
      *
      * @param image resulting image.
+     *
+     * @return {@link Frame} for running GUI.
      */
     public static Frame createGUI(BufferedImage image) {
         JFrame frame = new JFrame("The result of the comparison");
@@ -32,7 +34,7 @@ public class ImageComparisonUtil {
         JLabel label = new JLabel();
         label.setIcon(new ImageIcon(image, "Result"));
         frame.getContentPane().add(label, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension(image.getWidth(), (int) (image.getHeight())));
+        frame.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
         frame.pack();
         frame.setLocationRelativeTo(null);
         frame.setVisible(true);
@@ -57,6 +59,9 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
+     *
+     * @throws IOException due to the saving result image
+     * @throws URISyntaxException due to the creating file based on simple string.
      */
     public static BufferedImage readImageFromResources(String path) throws IOException, URISyntaxException {
         return ImageIO.read(new File(ImageComparisonUtil.class.getClassLoader().getResource(path).toURI().getPath()));
@@ -67,6 +72,8 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
+     *
+     * @throws IOException due to read the image from FS.
      */
     public static BufferedImage readImageFromFile(File path) throws IOException {
         return ImageIO.read(path);
@@ -77,6 +84,7 @@ public class ImageComparisonUtil {
      *
      * @param pathFile the path to the saving image.
      * @param image the {@link BufferedImage} object of this specific image.
+     * @throws IOException due to save image.
      */
     public static void saveImage(File pathFile, BufferedImage image) throws IOException {
         File dir = pathFile.getParentFile();

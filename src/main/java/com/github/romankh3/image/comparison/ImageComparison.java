@@ -16,6 +16,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -48,7 +49,7 @@ public class ImageComparison {
     /**
      * {@link File} of the result destination.
      */
-    private final /* @Nullable */ File destination;
+    private /* @Nullable */ File destination;
 
     /**
      * The number which marks how many rectangles. Beginning from 2.
@@ -108,8 +109,9 @@ public class ImageComparison {
      * Draw rectangles which cover the regions of the difference pixels.
      *
      * @return the result of the drawing.
+     * @throws IOException due to saving result image.
      */
-    public ComparisonResult compareImages() {
+    public ComparisonResult compareImages() throws IOException {
 
         // check images for valid
         if (isImageSizesNotEqual(image1, image2)) {
@@ -130,9 +132,13 @@ public class ImageComparison {
         }
 
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
+        drawRectangles(rectangles, resultImage);
+
         comparisonResult.setResult(resultImage);
 
-        drawRectangles(rectangles, resultImage);
+        if (Objects.nonNull(destination)) {
+            ImageComparisonUtil.saveImage(destination, resultImage);
+        }
 
         return comparisonResult;
     }
@@ -142,6 +148,8 @@ public class ImageComparison {
      *
      * @param image1 {@link BufferedImage} object of the first image.
      * @param image2 {@link BufferedImage} object of the second image.
+     *
+     * @return true if image size are not equal, false otherwise.
      */
     public boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
         return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
@@ -152,11 +160,11 @@ public class ImageComparison {
      */
     private void populateTheMatrixOfTheDifferences() {
         matrix = new int[image1.getWidth()][image1.getHeight()];
-        for (int x = 0; x < image1.getHeight(); x++) {
-            for (int y = 0; y < image1.getWidth(); y++) {
-                Point point = new Point(x, y);
+        for (int y = 0; y < image1.getHeight(); y++) {
+            for (int x = 0; x < image1.getWidth(); x++) {
+                Point point = new Point(y, x);
                 if (!excludedAreas.contains(point)) {
-                    matrix[y][x] = isDifferentPixels(image1.getRGB(y, x), image2.getRGB(y, x)) ? 1 : 0;
+                    matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
                 }
             }
         }
@@ -363,6 +371,10 @@ public class ImageComparison {
 
     public Optional<File> getDestination() {
         return Optional.ofNullable(destination);
+    }
+
+    public void setDestination(File destination) {
+        this.destination = destination;
     }
 
     public BufferedImage getImage1() {
