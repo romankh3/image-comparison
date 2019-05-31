@@ -25,11 +25,10 @@ public class ComparisonResultUnitTest {
     @Test
     public void testGettersAndSetters() throws IOException, URISyntaxException {
         //when
-        ComparisonResult comparisonResult = new ComparisonResult();
-        comparisonResult.setComparisonState(ComparisonState.MATCH);
-        comparisonResult.setImage1(readImageFromResources("image1.png"));
-        comparisonResult.setImage2(readImageFromResources("image2.png"));
-        comparisonResult.setResult(readImageFromResources("result1.png"));
+        ComparisonResult comparisonResult = new ComparisonResult().setComparisonState(ComparisonState.MATCH)
+                .setImage1(readImageFromResources("image1.png"))
+                .setImage2(readImageFromResources("image2.png"))
+                .setResult(readImageFromResources("result1.png"));
 
         //then
         assertEquals(ComparisonState.MATCH, comparisonResult.getComparisonState());

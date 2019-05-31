@@ -115,14 +115,15 @@ public class ImageComparison {
 
         // check images for valid
         if (isImageSizesNotEqual(image1, image2)) {
-            return ComparisonResult.sizeMissMatchResult();
+            return ComparisonResult.sizeMissMatchResult(image1, image2);
         }
 
         List<Rectangle> rectangles = populateRectangles();
 
-        ComparisonResult comparisonResult = new ComparisonResult();
-        comparisonResult.setImage1(image1);
-        comparisonResult.setImage2(image2);
+        ComparisonResult comparisonResult = new ComparisonResult()
+                .setImage1(image1)
+                .setImage2(image2)
+                .setResult(image1);
 
         if (rectangles.isEmpty()) {
             comparisonResult.setComparisonState(ComparisonState.MATCH);
