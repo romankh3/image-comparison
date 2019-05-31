@@ -176,7 +176,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage original = readImageFromResources("b1#17.png");
         BufferedImage masked = readImageFromResources("Masked#58.png");
         List<Rectangle> expectedRectangleList = new ArrayList<>();
-        expectedRectangleList.add(new Rectangle(0, 131, 224, 224));
+        expectedRectangleList.add(new Rectangle(131, 0, 224, 224));
         ImageComparison imageComparison = new ImageComparison(original, masked);
 
         //when
