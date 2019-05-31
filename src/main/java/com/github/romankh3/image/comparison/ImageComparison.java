@@ -151,7 +151,7 @@ public class ImageComparison {
      *
      * @return true if image size are not equal, false otherwise.
      */
-    public boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
+    private boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
         return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
     }
 
@@ -162,7 +162,7 @@ public class ImageComparison {
         matrix = new int[image1.getWidth()][image1.getHeight()];
         for (int y = 0; y < image1.getHeight(); y++) {
             for (int x = 0; x < image1.getWidth(); x++) {
-                Point point = new Point(y, x);
+                Point point = new Point(x, y);
                 if (!excludedAreas.contains(point)) {
                     matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
                 }
@@ -346,7 +346,8 @@ public class ImageComparison {
 
     /**
      * Returns the list of rectangles that would be drawn as a diff image.
-     * If you submit two images that are the same barring the parts you want to excludedAreas you get a list of rectangles that can be used as said excludedAreas
+     * If you submit two images that are the same barring the parts you want to excludedAreas you get a list of
+     * rectangles that can be used as said excludedAreas
      *
      * @return List of {@link Rectangle}
      */

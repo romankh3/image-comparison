@@ -50,6 +50,9 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 
 ## Release Notes
 
+### 3.0.1
+*   Fixed #98: Ignored area was not actually ignored.
+
 ### 3.0.0
 *   Added ComparisonResult as a returning value for comparing. It contains:
     *   image1

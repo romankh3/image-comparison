@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.github.romankh3'
-version '3.0.0'
+version '3.0.1'
 description 'A library and utility to compare different images.'
 sourceCompatibility = 1.8
 

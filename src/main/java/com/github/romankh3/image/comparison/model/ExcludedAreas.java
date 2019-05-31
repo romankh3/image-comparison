@@ -7,7 +7,8 @@ import java.util.List;
  * The area that will be excluded, masked, in the image.
  */
 public class ExcludedAreas {
-    private List<Rectangle> excluded;
+
+    private final List<Rectangle> excluded;
 
     public ExcludedAreas() {
         excluded = new ArrayList<>();
@@ -25,5 +26,9 @@ public class ExcludedAreas {
         }
 
         return false;
+    }
+
+    public List<Rectangle> getExcluded() {
+        return excluded;
     }
 }
