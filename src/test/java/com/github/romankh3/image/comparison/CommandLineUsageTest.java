@@ -92,12 +92,17 @@ public class CommandLineUsageTest extends BaseTest {
 
     @Test
     public void testSetterAndGettersThresholdWhenItShouldSetsProperly() throws IOException, URISyntaxException {
+        //given
         File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
         File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
         File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
-        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(image1, image2, destination));
         int setValue = 10;
-        comparison.setThreshold(setValue);
+
+        //when
+        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(image1, image2, destination))
+                .setThreshold(setValue);
+
+        //then
         assertEquals(setValue, comparison.getThreshold());
     }
 }

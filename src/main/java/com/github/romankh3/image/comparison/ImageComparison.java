@@ -366,16 +366,18 @@ public class ImageComparison {
         return threshold;
     }
 
-    public void setThreshold(int threshold) {
+    public ImageComparison setThreshold(int threshold) {
         this.threshold = threshold;
+        return this;
     }
 
     public Optional<File> getDestination() {
         return Optional.ofNullable(destination);
     }
 
-    public void setDestination(File destination) {
+    public ImageComparison setDestination(File destination) {
         this.destination = destination;
+        return this;
     }
 
     public BufferedImage getImage1() {
@@ -390,27 +392,31 @@ public class ImageComparison {
         return rectangleLineWidth;
     }
 
-    public void setRectangleLineWidth(int rectangleLineWidth) {
+    public ImageComparison setRectangleLineWidth(int rectangleLineWidth) {
         this.rectangleLineWidth = rectangleLineWidth;
+        return this;
     }
 
     public Integer getMinimalRectangleSize() {
         return minimalRectangleSize;
     }
 
-    public void setMinimalRectangleSize(Integer minimalRectangleSize) {
+    public ImageComparison setMinimalRectangleSize(Integer minimalRectangleSize) {
         this.minimalRectangleSize = minimalRectangleSize;
+        return this;
     }
 
     public Integer getMaximalRectangleCount() {
         return maximalRectangleCount;
     }
 
-    public void setMaximalRectangleCount(Integer maximalRectangleCount) {
+    public ImageComparison setMaximalRectangleCount(Integer maximalRectangleCount) {
         this.maximalRectangleCount = maximalRectangleCount;
+        return this;
     }
 
-    public void setExcludedAreas(List<Rectangle> excludedAreas) {
+    public ImageComparison setExcludedAreas(List<Rectangle> excludedAreas) {
         this.excludedAreas = new ExcludedAreas(excludedAreas);
+        return this;
     }
 }

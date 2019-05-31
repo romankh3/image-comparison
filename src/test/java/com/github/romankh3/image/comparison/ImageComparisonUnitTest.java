@@ -75,10 +75,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage image1 = readImageFromResources("image1.png");
         BufferedImage image2 = readImageFromResources("image2.png");
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
 
         //when
-        imageComparison.setDestination(new File("result1.png"));
+        ImageComparison imageComparison = new ImageComparison(image1, image2)
+                .setDestination(new File("result1.png"));
 
         //then
         assertTrue(imageComparison.getDestination().isPresent());
@@ -158,9 +158,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage image1 = readImageFromResources("b1#11.png");
         BufferedImage image2 = readImageFromResources("b2#11.png");
 
+        ImageComparison imageComparison = new ImageComparison(image1, image2, new File("build/test-images/result.png"))
+                .setRectangleLineWidth(10);
+
         //when
-        ImageComparison imageComparison = new ImageComparison(image1, image2, new File("build/test-images/result.png"));
-        imageComparison.setRectangleLineWidth(10);
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
@@ -206,8 +207,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage image2 = readImageFromResources("MaskedComparison#58.png");
         List<Rectangle> excludedAreas = new ArrayList<>();
         excludedAreas.add(new Rectangle(131, 0, 224, 224));
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
-        imageComparison.setExcludedAreas(excludedAreas);
+        ImageComparison imageComparison = new ImageComparison(image1, image2).setExcludedAreas(excludedAreas);
 
         //when
         ComparisonResult result = imageComparison.compareImages();
@@ -252,14 +252,12 @@ public class ImageComparisonUnitTest extends BaseTest {
 
     @Test
     public void testGettersAnsSetters() throws IOException, URISyntaxException {
-        //given
-        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
-
         //when
-        imageComparison.setMinimalRectangleSize(100);
-        imageComparison.setMaximalRectangleCount(200);
-        imageComparison.setRectangleLineWidth(300);
-        imageComparison.setThreshold(400);
+        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png")
+                .setMinimalRectangleSize(100)
+                .setMaximalRectangleCount(200)
+                .setRectangleLineWidth(300)
+                .setThreshold(400);
 
         //then
         assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
