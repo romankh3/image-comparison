@@ -145,8 +145,7 @@ public class ImageComparison {
         if (rectangles.isEmpty()) {
             comparisonResult.setComparisonState(ComparisonState.MATCH);
             if (drawExcludedRectangles) {
-                BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
-                drawRectangles(excludedAreas.getExcluded(), resultImage, Color.GREEN);
+                BufferedImage resultImage = drawRectangles(excludedAreas.getExcluded(), Color.GREEN);
                 comparisonResult.setResult(resultImage);
             }
             return comparisonResult;
@@ -154,8 +153,7 @@ public class ImageComparison {
             comparisonResult.setComparisonState(ComparisonState.MISMATCH);
         }
 
-        BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
-        drawRectangles(rectangles, resultImage, Color.RED);
+        BufferedImage resultImage = drawRectangles(rectangles, Color.RED);
 
         comparisonResult.setResult(resultImage);
 
@@ -301,10 +299,11 @@ public class ImageComparison {
      * Draw the rectangles based on collection of the rectangles and result image.
      *
      * @param rectangles the collection of the {@link Rectangle} objects.
-     * @param resultImage result image, which will being drawn.
      * @param color color which would be drawn rectangle.
+     * @return result {@link BufferedImage} with drawn rectangles.
      */
-    private void drawRectangles(List<Rectangle> rectangles, BufferedImage resultImage, Color color) {
+    private BufferedImage drawRectangles(List<Rectangle> rectangles, Color color) {
+        BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
         Graphics2D graphics = resultImage.createGraphics();
         graphics.setColor(color);
 
@@ -326,6 +325,8 @@ public class ImageComparison {
                 rectangle.getMinPoint().getY(),
                 rectangle.getWidth(),
                 rectangle.getHeight()));
+
+        return resultImage;
     }
 
     /**
