@@ -1,7 +1,6 @@
 package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
-import com.github.romankh3.image.comparison.model.ComparisonState;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
@@ -75,7 +74,7 @@ public class ImageComparison {
     /**
      * Matrix YxX => int[y][x].
      * E.g.:
-     * X - width ----
+     * | X - width ----
      * | .....................................
      * Y . (0, 0)                            .
      * | .                                   .
@@ -132,36 +131,22 @@ public class ImageComparison {
 
         // check images for valid
         if (isImageSizesNotEqual(image1, image2)) {
-            return ComparisonResult.sizeMissMatchResult(image1, image2);
+            return ComparisonResult.defaultSizeMissMatchResult(image1, image2);
         }
 
         List<Rectangle> rectangles = populateRectangles();
 
-        ComparisonResult comparisonResult = new ComparisonResult()
-                .setImage1(image1)
-                .setImage2(image2)
-                .setResult(image1);
-
         if (rectangles.isEmpty()) {
-            comparisonResult.setComparisonState(ComparisonState.MATCH);
+            ComparisonResult matchResult = ComparisonResult.defaultMatchResult(image1, image2);
             if (drawExcludedRectangles) {
-                BufferedImage resultImage = drawRectangles(excludedAreas.getExcluded(), Color.GREEN);
-                comparisonResult.setResult(resultImage);
+                matchResult.setResult(drawRectangles(excludedAreas.getExcluded(), Color.GREEN));
             }
-            return comparisonResult;
-        } else {
-            comparisonResult.setComparisonState(ComparisonState.MISMATCH);
+            return matchResult;
         }
 
         BufferedImage resultImage = drawRectangles(rectangles, Color.RED);
 
-        comparisonResult.setResult(resultImage);
-
-        if (Objects.nonNull(destination)) {
-            ImageComparisonUtil.saveImage(destination, resultImage);
-        }
-
-        return comparisonResult;
+        return ComparisonResult.defaultMisMatchResult(image1, image2).setResult(resultImage);
     }
 
     /**
@@ -302,7 +287,7 @@ public class ImageComparison {
      * @param color color which would be drawn rectangle.
      * @return result {@link BufferedImage} with drawn rectangles.
      */
-    private BufferedImage drawRectangles(List<Rectangle> rectangles, Color color) {
+    private BufferedImage drawRectangles(List<Rectangle> rectangles, Color color) throws IOException {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
         Graphics2D graphics = resultImage.createGraphics();
         graphics.setColor(color);
@@ -325,6 +310,10 @@ public class ImageComparison {
                 rectangle.getMinPoint().getY(),
                 rectangle.getWidth(),
                 rectangle.getHeight()));
+
+        if (Objects.nonNull(destination)) {
+            ImageComparisonUtil.saveImage(destination, resultImage);
+        }
 
         return resultImage;
     }

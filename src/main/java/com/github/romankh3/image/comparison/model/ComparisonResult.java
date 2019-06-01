@@ -32,12 +32,28 @@ public class ComparisonResult {
      *
      * @return instance of the {@link ComparisonResult} object.
      */
-    public static ComparisonResult sizeMissMatchResult(BufferedImage image1, BufferedImage image2) {
+    public static ComparisonResult defaultSizeMissMatchResult(BufferedImage image1, BufferedImage image2) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.SIZE_MISMATCH)
                 .setImage1(image1)
                 .setImage2(image2)
-                .setResult(image1);
+                .setResult(image2);
+    }
+
+    public static ComparisonResult defaultMisMatchResult(BufferedImage image1, BufferedImage image2) {
+        return new ComparisonResult()
+                .setComparisonState(ComparisonState.MISMATCH)
+                .setImage1(image1)
+                .setImage2(image2)
+                .setResult(image2);
+    }
+
+    public static ComparisonResult defaultMatchResult(BufferedImage image1, BufferedImage image2) {
+        return new ComparisonResult()
+                .setComparisonState(ComparisonState.MATCH)
+                .setImage1(image1)
+                .setImage2(image2)
+                .setResult(image2);
     }
 
     public BufferedImage getImage1() {
