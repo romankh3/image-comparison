@@ -75,10 +75,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage image1 = readImageFromResources("image1.png");
         BufferedImage image2 = readImageFromResources("image2.png");
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
 
         //when
-        imageComparison.setDestination(new File("result1.png"));
+        ImageComparison imageComparison = new ImageComparison(image1, image2)
+                .setDestination(new File("result1.png"));
 
         //then
         assertTrue(imageComparison.getDestination().isPresent());
@@ -158,9 +158,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage image1 = readImageFromResources("b1#11.png");
         BufferedImage image2 = readImageFromResources("b2#11.png");
 
+        ImageComparison imageComparison = new ImageComparison(image1, image2, new File("build/test-images/result.png"))
+                .setRectangleLineWidth(10);
+
         //when
-        ImageComparison imageComparison = new ImageComparison(image1, image2, new File("build/test-images/result.png"));
-        imageComparison.setRectangleLineWidth(10);
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
@@ -175,7 +176,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage original = readImageFromResources("b1#17.png");
         BufferedImage masked = readImageFromResources("Masked#58.png");
         List<Rectangle> expectedRectangleList = new ArrayList<>();
-        expectedRectangleList.add(new Rectangle(0, 131, 224, 224));
+        expectedRectangleList.add(new Rectangle(131, 0, 224, 224));
         ImageComparison imageComparison = new ImageComparison(original, masked);
 
         //when
@@ -206,8 +207,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage image2 = readImageFromResources("MaskedComparison#58.png");
         List<Rectangle> excludedAreas = new ArrayList<>();
         excludedAreas.add(new Rectangle(131, 0, 224, 224));
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
-        imageComparison.setExcludedAreas(excludedAreas);
+        ImageComparison imageComparison = new ImageComparison(image1, image2).setExcludedAreas(excludedAreas);
 
         //when
         ComparisonResult result = imageComparison.compareImages();
@@ -217,7 +217,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     /**
-     * Test issue #98.
+     * Test issue #98 and #97 to see the drawn excluded areas.
      */
     @Test
     public void testIssue98() throws IOException, URISyntaxException {
@@ -231,14 +231,19 @@ public class ImageComparisonUnitTest extends BaseTest {
                 new Rectangle(410, 636, 900, 754)
         );
 
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
-        imageComparison.setExcludedAreas(excludedAreas);
+        BufferedImage expectedImage = readImageFromResources("result#98WithExcludedAreas.png");
+
+        ImageComparison imageComparison = new ImageComparison(image1, image2)
+                .setExcludedAreas(excludedAreas)
+                .setRectangleLineWidth(5)
+                .setDrawExcludedRectangles(true);
 
         //when
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
         assertEquals(MATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
     }
 
     @Test
@@ -252,19 +257,20 @@ public class ImageComparisonUnitTest extends BaseTest {
 
     @Test
     public void testGettersAnsSetters() throws IOException, URISyntaxException {
-        //given
-        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
-
         //when
-        imageComparison.setMinimalRectangleSize(100);
-        imageComparison.setMaximalRectangleCount(200);
-        imageComparison.setRectangleLineWidth(300);
-        imageComparison.setThreshold(400);
+        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png")
+                .setMinimalRectangleSize(100)
+                .setMaximalRectangleCount(200)
+                .setRectangleLineWidth(300)
+                .setExcludedAreas(asList(Rectangle.createZero(), Rectangle.createDefault()))
+                .setDrawExcludedRectangles(true)
+                .setThreshold(400);
 
         //then
         assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
         assertEquals(String.valueOf(200), String.valueOf(imageComparison.getMaximalRectangleCount()));
         assertEquals(String.valueOf(300), String.valueOf(imageComparison.getRectangleLineWidth()));
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
+        assertTrue(imageComparison.isDrawExcludedRectangles());
     }
 }

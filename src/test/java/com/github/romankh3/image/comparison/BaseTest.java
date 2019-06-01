@@ -9,17 +9,17 @@ import java.awt.image.BufferedImage;
  */
 class BaseTest {
 
-    public void assertImagesEqual(BufferedImage imgA, BufferedImage imgB) {
-        if (imgA.getWidth() != imgB.getWidth() || imgA.getHeight() != imgB.getHeight()) {
+    public void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
+        if (expected.getWidth() != actual.getWidth() || expected.getHeight() != actual.getHeight()) {
             fail("Images have different dimensions");
         }
 
-        int width = imgA.getWidth();
-        int height = imgA.getHeight();
+        int width = expected.getWidth();
+        int height = expected.getHeight();
 
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if (imgA.getRGB(x, y) != imgB.getRGB(x, y)) {
+                if (expected.getRGB(x, y) != actual.getRGB(x, y)) {
                     fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
                 }
             }
