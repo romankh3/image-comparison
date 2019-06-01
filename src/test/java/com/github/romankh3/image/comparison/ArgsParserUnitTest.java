@@ -45,8 +45,8 @@ public class ArgsParserUnitTest {
         assertTrue(result.isPresent());
 
         ArgsParser.Arguments args = result.get();
-        assertEquals("img1", args.getImage1().getPath());
-        assertEquals("img2", args.getImage2().getPath());
+        assertEquals("img1", args.getExpected().getPath());
+        assertEquals("img2", args.getActual().getPath());
         assertFalse(args.getDestinationImage().isPresent());
 
         assertFalse(successExitMock.isHasRun());
@@ -59,8 +59,8 @@ public class ArgsParserUnitTest {
         assertTrue(result.isPresent());
 
         ArgsParser.Arguments args = result.get();
-        assertEquals("first", args.getImage1().getPath());
-        assertEquals("second", args.getImage2().getPath());
+        assertEquals("first", args.getExpected().getPath());
+        assertEquals("second", args.getActual().getPath());
         assertTrue(args.getDestinationImage().isPresent());
 
         File destinationImage = args.getDestinationImage().get();

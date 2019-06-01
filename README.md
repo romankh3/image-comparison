@@ -55,8 +55,8 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 
 ### 3.0.0
 *   Added ComparisonResult as a returning value for comparing. It contains:
-    *   image1
-    *   image2
+    *   expected(ex image1)
+    *   actual(ex image2)
     *   ComparisonState, with conditions MATCH, MISMATCH, SIZE_MISMATCH
     *   Result image, only if ComparisonState is MISMATCH. When it is MATCH or SIZE_MISMATCH no needs to create result image.
 *   added minimalRectangleSize and maximalRectangleCount(sorted by rectangle size).
@@ -149,19 +149,19 @@ compile 'com.github.romankh3:image-comparison:3.0.0'
 class Example {
     public static void main( String[] args ) {
        // load the images to be compared
-               BufferedImage bufferedImage1 = ImageComparisonUtil.readImageFromResources("image1.png");
-               BufferedImage bufferedImage2 = ImageComparisonUtil.readImageFromResources("image2.png");
+               BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
+               BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("actual.png");
        
                // where to save the result (leave null if you want to see the result in the UI)
                File resultDestination = new File( "result.png" );
        
                //Create ImageComparison object for it.
-               ImageComparison imageComparison = new ImageComparison( bufferedImage1, bufferedImage2, resultDestination );
+               ImageComparison imageComparison = new ImageComparison( expectedImage, actualImage, resultDestination );
        
                //Can be used another constructor for it, without destination.
-               new ImageComparison("image1.png", "image2.png");
+               new ImageComparison("expected.png", "actual.png");
                //or
-               new ImageComparison(bufferedImage1, bufferedImage2);
+               new ImageComparison(expectedImage, actualImage);
        
                //Also can be configured BEFORE comparing next properties:
        
@@ -209,13 +209,13 @@ Run the `./run.sh` script to run the demo.
 You will get the result of comparing two images.
 The images, which are using:
 
-### Image 1
+### Expected Image(ex image1)
 
-![image1](https://user-images.githubusercontent.com/16310793/28955567-52edeabe-78f0-11e7-8bb2-d435c8df23ff.png)
+![expected](https://user-images.githubusercontent.com/16310793/28955567-52edeabe-78f0-11e7-8bb2-d435c8df23ff.png)
 
-### Image 2
+### Actual Image(ex image 2)
 
-![image2](https://user-images.githubusercontent.com/16310793/28955566-52ead892-78f0-11e7-993c-847350da0bf8.png)
+![actual](https://user-images.githubusercontent.com/16310793/28955566-52ead892-78f0-11e7-993c-847350da0bf8.png)
 
 ### Result
 
