@@ -107,8 +107,8 @@ public class ImageComparison {
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
-     * @param expected first image to be compared
-     * @param actual second image to be compared
+     * @param expected expected image to be compared
+     * @param actual actual image to be compared
      * @param destination destination to save the result. If null, the result is shown in the UI.
      */
     public ImageComparison(BufferedImage expected, BufferedImage actual, File destination) {

@@ -41,8 +41,8 @@ final class ArgsParser {
                     "Usage:\n" +
                     "  java -jar image-comparison.jar <options> [expected actual [result]]\n" +
                     "where:\n" +
-                    "    expected     the first image to compare.\n" +
-                    "    actual     the second image to compare.\n" +
+                    "    expected     expected image to compare.\n" +
+                    "    actual     actual image to compare.\n" +
                     "    result     the comparison result image. If not provided, the image is shown in a UI.\n" +
                     "\n" +
                     "Options:\n" +
