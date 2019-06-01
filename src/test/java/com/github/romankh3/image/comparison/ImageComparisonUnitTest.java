@@ -16,7 +16,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
@@ -263,7 +262,7 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setMinimalRectangleSize(100)
                 .setMaximalRectangleCount(200)
                 .setRectangleLineWidth(300)
-                .setExcludedAreas(Arrays.asList(Rectangle.createZero(), Rectangle.createDefault()))
+                .setExcludedAreas(asList(Rectangle.createZero(), Rectangle.createDefault()))
                 .setDrawExcludedRectangles(true)
                 .setThreshold(400);
 
