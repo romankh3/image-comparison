@@ -8,14 +8,14 @@ import java.awt.image.BufferedImage;
 public class ComparisonResult {
 
     /**
-     * {@link BufferedImage} object of the image1.
+     * {@link BufferedImage} object of the expected.
      */
-    private BufferedImage image1;
+    private BufferedImage expected;
 
     /**
-     * {@link BufferedImage} object of the image2.
+     * {@link BufferedImage} object of the actual.
      */
-    private BufferedImage image2;
+    private BufferedImage actual;
 
     /**
      * {@link BufferedImage} object of the comparison result.
@@ -28,49 +28,67 @@ public class ComparisonResult {
     private ComparisonState comparisonState;
 
     /**
-     * Create instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
+     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
+     *
+     * @param expected expected {@link BufferedImage} object.
+     * @param actual actual {@link BufferedImage} object.
      *
      * @return instance of the {@link ComparisonResult} object.
      */
-    public static ComparisonResult defaultSizeMissMatchResult(BufferedImage image1, BufferedImage image2) {
+    public static ComparisonResult defaultSizeMissMatchResult(BufferedImage expected, BufferedImage actual) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.SIZE_MISMATCH)
-                .setImage1(image1)
-                .setImage2(image2)
-                .setResult(image2);
+                .setExpected(expected)
+                .setActual(actual)
+                .setResult(actual);
     }
 
-    public static ComparisonResult defaultMisMatchResult(BufferedImage image1, BufferedImage image2) {
+    /**
+     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MISMATCH}.
+     *
+     * @param expected expected {@link BufferedImage} object.
+     * @param actual actual {@link BufferedImage} object.
+     * @return instance of the {@link ComparisonResult} object.
+     */
+    public static ComparisonResult defaultMisMatchResult(BufferedImage expected, BufferedImage actual) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.MISMATCH)
-                .setImage1(image1)
-                .setImage2(image2)
-                .setResult(image2);
+                .setExpected(expected)
+                .setActual(actual)
+                .setResult(actual);
     }
 
-    public static ComparisonResult defaultMatchResult(BufferedImage image1, BufferedImage image2) {
+    /**
+     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MATCH}.
+     *
+     * @param expected expected {@link BufferedImage} object.
+     * @param actual actual {@link BufferedImage} object.
+     *
+     * @return instance of the {@link ComparisonResult} object.
+     */
+    public static ComparisonResult defaultMatchResult(BufferedImage expected, BufferedImage actual) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.MATCH)
-                .setImage1(image1)
-                .setImage2(image2)
-                .setResult(image2);
+                .setExpected(expected)
+                .setActual(actual)
+                .setResult(actual);
     }
 
-    public BufferedImage getImage1() {
-        return image1;
+    public BufferedImage getExpected() {
+        return expected;
     }
 
-    public ComparisonResult setImage1(BufferedImage image1) {
-        this.image1 = image1;
+    public ComparisonResult setExpected(BufferedImage expected) {
+        this.expected = expected;
         return this;
     }
 
-    public BufferedImage getImage2() {
-        return image2;
+    public BufferedImage getActual() {
+        return actual;
     }
 
-    public ComparisonResult setImage2(BufferedImage image2) {
-        this.image2 = image2;
+    public ComparisonResult setActual(BufferedImage actual) {
+        this.actual = actual;
         return this;
     }
 

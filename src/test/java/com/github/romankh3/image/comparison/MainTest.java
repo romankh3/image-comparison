@@ -17,16 +17,16 @@ public class MainTest {
         //given
         Main main = new Main();
         String[] args = new String[2];
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
-        args[0] = image1.getAbsolutePath();
-        args[1] = image2.getAbsolutePath();
+        File expected = new File(ImageComparison.class.getClassLoader().getResource("expected.png").toURI().getPath());
+        File actual = new File(ImageComparison.class.getClassLoader().getResource("actual.png").toURI().getPath());
+        args[0] = expected.getAbsolutePath();
+        args[1] = actual.getAbsolutePath();
 
         //when
         Main.main(args);
         //then
         assertNotNull(main);
-        assertNotNull(image1);
-        assertNotNull(image2);
+        assertNotNull(expected);
+        assertNotNull(actual);
     }
 }

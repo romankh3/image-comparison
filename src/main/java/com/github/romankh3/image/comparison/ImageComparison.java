@@ -30,14 +30,14 @@ public class ImageComparison {
     private int threshold = 5;
 
     /**
-     * First image for comparing
+     * Expected image for comparing
      */
-    private final BufferedImage image1;
+    private final BufferedImage expected;
 
     /**
-     * Second image for comparing
+     * Actual image for comparing
      */
-    private final BufferedImage image2;
+    private final BufferedImage actual;
 
     /**
      * Width of the line that is drawn in the rectangle
@@ -99,26 +99,26 @@ public class ImageComparison {
      */
     private boolean drawExcludedRectangles = false;
 
-    public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2),
+    public ImageComparison(String expected, String actual) throws IOException, URISyntaxException {
+        this(ImageComparisonUtil.readImageFromResources(expected), ImageComparisonUtil.readImageFromResources(actual),
                 null);
     }
 
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
-     * @param image1 first image to be compared
-     * @param image2 second image to be compared
+     * @param expected expected image to be compared
+     * @param actual actual image to be compared
      * @param destination destination to save the result. If null, the result is shown in the UI.
      */
-    public ImageComparison(BufferedImage image1, BufferedImage image2, File destination) {
-        this.image1 = image1;
-        this.image2 = image2;
+    public ImageComparison(BufferedImage expected, BufferedImage actual, File destination) {
+        this.expected = expected;
+        this.actual = actual;
         this.destination = destination;
     }
 
-    public ImageComparison(BufferedImage image1, BufferedImage image2) {
-        this(image1, image2, null);
+    public ImageComparison(BufferedImage expected, BufferedImage actual) {
+        this(expected, actual, null);
     }
 
     /**
@@ -130,14 +130,14 @@ public class ImageComparison {
     public ComparisonResult compareImages() throws IOException {
 
         // check images for valid
-        if (isImageSizesNotEqual(image1, image2)) {
-            return ComparisonResult.defaultSizeMissMatchResult(image1, image2);
+        if (isImageSizesNotEqual(expected, actual)) {
+            return ComparisonResult.defaultSizeMissMatchResult(expected, actual);
         }
 
         List<Rectangle> rectangles = populateRectangles();
 
         if (rectangles.isEmpty()) {
-            ComparisonResult matchResult = ComparisonResult.defaultMatchResult(image1, image2);
+            ComparisonResult matchResult = ComparisonResult.defaultMatchResult(expected, actual);
             if (drawExcludedRectangles) {
                 matchResult.setResult(drawRectangles(excludedAreas.getExcluded(), Color.GREEN));
             }
@@ -146,30 +146,30 @@ public class ImageComparison {
 
         BufferedImage resultImage = drawRectangles(rectangles, Color.RED);
 
-        return ComparisonResult.defaultMisMatchResult(image1, image2).setResult(resultImage);
+        return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
 
     /**
      * Check images for equals their widths and heights.
      *
-     * @param image1 {@link BufferedImage} object of the first image.
-     * @param image2 {@link BufferedImage} object of the second image.
+     * @param expected {@link BufferedImage} object of the expected image.
+     * @param actual {@link BufferedImage} object of the actual image.
      * @return true if image size are not equal, false otherwise.
      */
-    private boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
-        return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
+    private boolean isImageSizesNotEqual(BufferedImage expected, BufferedImage actual) {
+        return expected.getHeight() != actual.getHeight() || expected.getWidth() != actual.getWidth();
     }
 
     /**
      * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
      */
     private void populateTheMatrixOfTheDifferences() {
-        matrix = new int[image1.getHeight()][image1.getWidth()];
-        for (int y = 0; y < image1.getHeight(); y++) {
-            for (int x = 0; x < image1.getWidth(); x++) {
+        matrix = new int[expected.getHeight()][expected.getWidth()];
+        for (int y = 0; y < expected.getHeight(); y++) {
+            for (int x = 0; x < expected.getWidth(); x++) {
                 Point point = new Point(x, y);
                 if (!excludedAreas.contains(point)) {
-                    matrix[y][x] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
+                    matrix[y][x] = isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y)) ? 1 : 0;
                 }
             }
         }
@@ -179,8 +179,8 @@ public class ImageComparison {
      * Say if the two pixels equal or not. The rule is the difference between two pixels
      * need to be more then 10%.
      *
-     * @param rgb1 the RGB value of the Pixel of the Image1.
-     * @param rgb2 the RGB value of the Pixel of the Image2.
+     * @param rgb1 the RGB value of the Pixel of the Expected image.
+     * @param rgb2 the RGB value of the Pixel of the Actual image.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int rgb1, int rgb2) {
@@ -288,7 +288,7 @@ public class ImageComparison {
      * @return result {@link BufferedImage} with drawn rectangles.
      */
     private BufferedImage drawRectangles(List<Rectangle> rectangles, Color color) throws IOException {
-        BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
+        BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
         Graphics2D graphics = resultImage.createGraphics();
         graphics.setColor(color);
 
@@ -406,12 +406,12 @@ public class ImageComparison {
         return this;
     }
 
-    public BufferedImage getImage1() {
-        return image1;
+    public BufferedImage getExpected() {
+        return expected;
     }
 
-    public BufferedImage getImage2() {
-        return image2;
+    public BufferedImage getActual() {
+        return actual;
     }
 
     public int getRectangleLineWidth() {

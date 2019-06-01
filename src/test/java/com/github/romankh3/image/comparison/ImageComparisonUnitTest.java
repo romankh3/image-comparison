@@ -29,12 +29,12 @@ public class ImageComparisonUnitTest extends BaseTest {
      * don't break the main behaviour and result as expected.
      */
     @Test
-    public void testCorrectWorkingImage1Image2() throws IOException, URISyntaxException {
+    public void testCorrectWorkingExpectedActual() throws IOException, URISyntaxException {
         //given
-        BufferedImage expectedResultImage = readImageFromResources("result1.png");
+        BufferedImage expectedResultImage = readImageFromResources("result.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison("image1.png", "image2.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("expected.png", "actual.png").compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
@@ -44,9 +44,9 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testMaximalRectangleCount() throws IOException, URISyntaxException {
         //given
-        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMaximalRectangleCount(3);
-        BufferedImage expectedImage = readImageFromResources("maximalReqtangleCountResult.png");
+        BufferedImage expectedImage = readImageFromResources("maximalRectangleCountResult.png");
 
         //when
         ComparisonResult comparisonResult = imageComparison.compareImages();
@@ -63,7 +63,7 @@ public class ImageComparisonUnitTest extends BaseTest {
 
         //when
         ComparisonResult comparisonResult =
-                new ImageComparison("image1.png", "image1TotallyDifferent.png").compareImages();
+                new ImageComparison("expected.png", "actualTotallyDifferent.png").compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
@@ -73,12 +73,12 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testDestinationGetting() throws IOException, URISyntaxException {
         //given
-        BufferedImage image1 = readImageFromResources("image1.png");
-        BufferedImage image2 = readImageFromResources("image2.png");
+        BufferedImage expected = readImageFromResources("expected.png");
+        BufferedImage actual = readImageFromResources("actual.png");
 
         //when
-        ImageComparison imageComparison = new ImageComparison(image1, image2)
-                .setDestination(new File("result1.png"));
+        ImageComparison imageComparison = new ImageComparison(expected, actual)
+                .setDestination(new File("result.png"));
 
         //then
         assertTrue(imageComparison.getDestination().isPresent());
@@ -87,7 +87,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testMinimalRectangleSize() throws IOException, URISyntaxException {
         //given
-        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png");
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMinimalRectangleSize(10);
         BufferedImage expectedImage = readImageFromResources("minimalRectangleSizeResult.png");
 
@@ -105,7 +105,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testIssue17() throws IOException, URISyntaxException {
         //when
-        ComparisonResult comparisonResult = new ImageComparison("b1#17.png", "b2#17.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("expected#17.png", "actual#17.png").compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
@@ -121,7 +121,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison("b1#21.png", "b2#21.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("expected#21.png", "actual#21.png").compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
@@ -136,11 +136,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#11.png");
 
-        BufferedImage image1 = readImageFromResources("b1#11.png");
-        BufferedImage image2 = readImageFromResources("b2#11.png");
+        BufferedImage expected = readImageFromResources("expected#11.png");
+        BufferedImage actual = readImageFromResources("actual#11.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
@@ -155,10 +155,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
 
-        BufferedImage image1 = readImageFromResources("b1#11.png");
-        BufferedImage image2 = readImageFromResources("b2#11.png");
+        BufferedImage expected = readImageFromResources("expected#11.png");
+        BufferedImage actual = readImageFromResources("actual#11.png");
 
-        ImageComparison imageComparison = new ImageComparison(image1, image2, new File("build/test-images/result.png"))
+        ImageComparison imageComparison = new ImageComparison(expected, actual,
+                new File("build/test-images/result.png"))
                 .setRectangleLineWidth(10);
 
         //when
@@ -173,8 +174,8 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testShouldReturnARectangleList() throws IOException, URISyntaxException {
         //given
-        BufferedImage original = readImageFromResources("b1#17.png");
-        BufferedImage masked = readImageFromResources("Masked#58.png");
+        BufferedImage original = readImageFromResources("expected#17.png");
+        BufferedImage masked = readImageFromResources("actualMasked#58.png");
         List<Rectangle> expectedRectangleList = new ArrayList<>();
         expectedRectangleList.add(new Rectangle(131, 0, 224, 224));
         ImageComparison imageComparison = new ImageComparison(original, masked);
@@ -190,11 +191,11 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testSizeMissMatch() throws IOException {
         //given
-        BufferedImage image1 = new BufferedImage(10, 10, 10);
-        BufferedImage image2 = new BufferedImage(12, 12, 10);
+        BufferedImage expected = new BufferedImage(10, 10, 10);
+        BufferedImage actual = new BufferedImage(12, 12, 10);
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(image1, image2).compareImages();
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
         assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
@@ -203,11 +204,11 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testShouldIgnoreExcludedArea() throws IOException, URISyntaxException {
         //given
-        BufferedImage image1 = readImageFromResources("b1#17.png");
-        BufferedImage image2 = readImageFromResources("MaskedComparison#58.png");
+        BufferedImage expected = readImageFromResources("expected#17.png");
+        BufferedImage actual = readImageFromResources("actualMaskedComparison#58.png");
         List<Rectangle> excludedAreas = new ArrayList<>();
         excludedAreas.add(new Rectangle(131, 0, 224, 224));
-        ImageComparison imageComparison = new ImageComparison(image1, image2).setExcludedAreas(excludedAreas);
+        ImageComparison imageComparison = new ImageComparison(expected, actual).setExcludedAreas(excludedAreas);
 
         //when
         ComparisonResult result = imageComparison.compareImages();
@@ -222,8 +223,8 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testIssue98() throws IOException, URISyntaxException {
         //given
-        BufferedImage image1 = readImageFromResources("b1#98.png");
-        BufferedImage image2 = readImageFromResources("b2#98.png");
+        BufferedImage expected = readImageFromResources("expected#98.png");
+        BufferedImage actual = readImageFromResources("actual#98.png");
 
         List<Rectangle> excludedAreas = asList(
                 new Rectangle(80, 388, 900, 514),
@@ -233,7 +234,7 @@ public class ImageComparisonUnitTest extends BaseTest {
 
         BufferedImage expectedImage = readImageFromResources("result#98WithExcludedAreas.png");
 
-        ImageComparison imageComparison = new ImageComparison(image1, image2)
+        ImageComparison imageComparison = new ImageComparison(expected, actual)
                 .setExcludedAreas(excludedAreas)
                 .setRectangleLineWidth(5)
                 .setDrawExcludedRectangles(true);
@@ -249,7 +250,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testMatchSize() throws IOException, URISyntaxException {
         //when
-        ComparisonResult comparisonResult = new ImageComparison("image1.png", "image1.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("expected.png", "expected.png").compareImages();
 
         //then
         assertEquals(MATCH, comparisonResult.getComparisonState());
@@ -258,7 +259,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testGettersAnsSetters() throws IOException, URISyntaxException {
         //when
-        ImageComparison imageComparison = new ImageComparison("image1.png", "image2.png")
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png")
                 .setMinimalRectangleSize(100)
                 .setMaximalRectangleCount(200)
                 .setRectangleLineWidth(300)
