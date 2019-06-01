@@ -16,6 +16,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import org.junit.Test;
 
@@ -217,7 +218,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     /**
-     * Test issue #98.
+     * Test issue #98 and #97 to see the drawn excluded areas.
      */
     @Test
     public void testIssue98() throws IOException, URISyntaxException {
@@ -231,14 +232,19 @@ public class ImageComparisonUnitTest extends BaseTest {
                 new Rectangle(410, 636, 900, 754)
         );
 
-        ImageComparison imageComparison = new ImageComparison(image1, image2);
-        imageComparison.setExcludedAreas(excludedAreas);
+        BufferedImage expectedImage = readImageFromResources("result#98WithExcludedAreas.png");
+
+        ImageComparison imageComparison = new ImageComparison(image1, image2)
+                .setExcludedAreas(excludedAreas)
+                .setRectangleLineWidth(5)
+                .setDrawExcludedRectangles(true);
 
         //when
         ComparisonResult comparisonResult = imageComparison.compareImages();
 
         //then
         assertEquals(MATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
     }
 
     @Test
@@ -257,6 +263,8 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setMinimalRectangleSize(100)
                 .setMaximalRectangleCount(200)
                 .setRectangleLineWidth(300)
+                .setExcludedAreas(Arrays.asList(Rectangle.createZero(), Rectangle.createDefault()))
+                .setDrawExcludedRectangles(true)
                 .setThreshold(400);
 
         //then
@@ -264,5 +272,6 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(200), String.valueOf(imageComparison.getMaximalRectangleCount()));
         assertEquals(String.valueOf(300), String.valueOf(imageComparison.getRectangleLineWidth()));
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
+        assertTrue(imageComparison.isDrawExcludedRectangles());
     }
 }

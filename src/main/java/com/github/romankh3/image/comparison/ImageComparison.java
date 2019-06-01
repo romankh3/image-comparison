@@ -1,13 +1,12 @@
 package com.github.romankh3.image.comparison;
 
-import static java.awt.Color.RED;
-
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ComparisonState;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -75,20 +74,19 @@ public class ImageComparison {
 
     /**
      * Matrix YxX => int[y][x].
-     * E.g.
-     *     X - width ----
-     *    .....................................
-     *  Y . (0, 0)                            .
-     *  | .                                   .
-     *  | .                                   .
-     *  h .                                   .
-     *  e .                                   .
-     *  i .                                   .
-     *  g .                                   .
-     *  h .                                   .
-     *  t .                             (X, Y).
-     *    .....................................
-     *
+     * E.g.:
+     * X - width ----
+     * .....................................
+     * Y . (0, 0)                            .
+     * | .                                   .
+     * | .                                   .
+     * h .                                   .
+     * e .                                   .
+     * i .                                   .
+     * g .                                   .
+     * h .                                   .
+     * t .                             (X, Y).
+     * .....................................
      */
     private int[][] matrix;
 
@@ -96,6 +94,11 @@ public class ImageComparison {
      * ExcludedAreas contains a List of {@link Rectangle}s to be ignored when comparing images
      */
     private ExcludedAreas excludedAreas = new ExcludedAreas();
+
+    /**
+     * Flag which says draw excluded rectangles or not.
+     */
+    private boolean drawExcludedRectangles = false;
 
     public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
         this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2),
@@ -141,13 +144,18 @@ public class ImageComparison {
 
         if (rectangles.isEmpty()) {
             comparisonResult.setComparisonState(ComparisonState.MATCH);
+            if (drawExcludedRectangles) {
+                BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
+                drawRectangles(excludedAreas.getExcluded(), resultImage, Color.GREEN);
+                comparisonResult.setResult(resultImage);
+            }
             return comparisonResult;
         } else {
             comparisonResult.setComparisonState(ComparisonState.MISMATCH);
         }
 
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
-        drawRectangles(rectangles, resultImage);
+        drawRectangles(rectangles, resultImage, Color.RED);
 
         comparisonResult.setResult(resultImage);
 
@@ -163,7 +171,6 @@ public class ImageComparison {
      *
      * @param image1 {@link BufferedImage} object of the first image.
      * @param image2 {@link BufferedImage} object of the second image.
-     *
      * @return true if image size are not equal, false otherwise.
      */
     private boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
@@ -295,10 +302,11 @@ public class ImageComparison {
      *
      * @param rectangles the collection of the {@link Rectangle} objects.
      * @param resultImage result image, which will being drawn.
+     * @param color color which would be drawn rectangle.
      */
-    private void drawRectangles(List<Rectangle> rectangles, BufferedImage resultImage) {
+    private void drawRectangles(List<Rectangle> rectangles, BufferedImage resultImage, Color color) {
         Graphics2D graphics = resultImage.createGraphics();
-        graphics.setColor(RED);
+        graphics.setColor(color);
 
         BasicStroke stroke = new BasicStroke(rectangleLineWidth);
         graphics.setStroke(stroke);
@@ -372,9 +380,22 @@ public class ImageComparison {
 
     /**
      * Check next step valid or not.
+     *
+     * @param x X-coordinate of the image.
+     * @param y Y-coordinate of the image
+     * @return true if jump rejected, otherwise false.
      */
     private boolean isJumpRejected(int x, int y) {
         return y < 0 || y >= matrix.length || x < 0 || x >= matrix[y].length || matrix[y][x] != 1;
+    }
+
+    public boolean isDrawExcludedRectangles() {
+        return drawExcludedRectangles;
+    }
+
+    public ImageComparison setDrawExcludedRectangles(boolean drawExcludedRectangles) {
+        this.drawExcludedRectangles = drawExcludedRectangles;
+        return this;
     }
 
     public int getThreshold() {
