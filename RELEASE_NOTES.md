@@ -1,6 +1,6 @@
 # Release Notes
 
-### 3.1.0
+## 3.1.0
 *   Added the ability to draw excluded areas on the result image. Rectangles with the differences drawing RED color.
     Rectangles of the excluded areas - GREEN color.
 
@@ -10,10 +10,10 @@
 
 *   renamed image1 to expected and image2 to actual.
 
-### 3.0.1
+## 3.0.1
 *   Fixed #98: Ignored area was not actually ignored.
 
-### 3.0.0
+## 3.0.0
 *   Added ComparisonResult as a returning value for comparing. It contains:
     
     *   expected(ex image1)
@@ -32,7 +32,7 @@
 
 *   Added ExcludedAreas functionality, which helps to exclude some parts of the image.
 
-### 2.2.0
+## 2.2.0
 *   Added ability to customize rectangle line width.
 
 *   Moved the main method from Image Comparison to own class.
@@ -43,21 +43,21 @@
 
 *   Added Point model.
 
-### 2.1.0
+## 2.1.0
 *   Added publishing to JCenter
 
-### 2.0.2
+## 2.0.2
 *   fixed bug #11(finally!!)
 
 *   fixed bug #43
 
-### 2.0.1 
+## 2.0.1 
 *   fixed bug #21
 
-### 2.0
+## 2.0
 *   use as a library 
 
-### 1.0
+## 1.0
 *   The program in Java that compares any 2 images and shows the differences visually by drawing rectangles.*
 
 *   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
