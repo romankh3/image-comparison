@@ -35,7 +35,7 @@ public class ComparisonResult {
      *
      * @return instance of the {@link ComparisonResult} object.
      */
-    public static ComparisonResult defaultSizeMissMatchResult(BufferedImage expected, BufferedImage actual) {
+    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.SIZE_MISMATCH)
                 .setExpected(expected)

@@ -131,7 +131,7 @@ public class ImageComparison {
 
         // check images for valid
         if (isImageSizesNotEqual(expected, actual)) {
-            return ComparisonResult.defaultSizeMissMatchResult(expected, actual);
+            return ComparisonResult.defaultSizeMisMatchResult(expected, actual);
         }
 
         List<Rectangle> rectangles = populateRectangles();
@@ -337,8 +337,8 @@ public class ImageComparison {
      * in binary matrix using {@code threshold} for setting max distance between values which equal "1".
      * and set the {@code groupCount} to matrix.
      *
-     * @param x the value of the column.
-     * @param y the value of the row.
+     * @param x the value of the X-coordinate.
+     * @param y the value of the Y-coordinate.
      */
     private void joinToRegion(int x, int y) {
         if (isJumpRejected(x, y)) {

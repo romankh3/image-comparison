@@ -5,11 +5,9 @@
 
 *   [About](#about)
 
-*   [Requirements](#requirements)
-
 *   [Building](#building)
 
-*   [Relesase Notes](#release-notes)
+*   [Release Notes](#release-notes)
 
 *   [Usage](#usage)
     *   [Using the command-line](#using-the-command-line)
@@ -28,14 +26,15 @@
 ## About
 The program in Java that compares any 2 images and shows the differences visually by drawing rectangles. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
 
-## Requirements
 *   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
 
 *   Pixels (with the same coordinates in two images) can be visually similar, but have different values of RGB. 2 pixels are considered to be "different" if they differ more than 10% from each other.
 
-*   The output of the comparison is a copy of one of the images. The differences are outlined with red rectangles as shown below.
+*   The output of the comparison is a copy of `actual` images. The differences are outlined with red rectangles as shown below.
 
 *   No third party libraries or borrowed code are in usage.
+
+*   Some parts of the image can be excluded from the comparison and drawn in the result image.
 
 ## Building
 To clone and build this project, run the following commands:
@@ -50,57 +49,7 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 
 ## Release Notes
 
-### 3.0.1
-*   Fixed #98: Ignored area was not actually ignored.
-
-### 3.0.0
-*   Added ComparisonResult as a returning value for comparing. It contains:
-    *   expected(ex image1)
-    *   actual(ex image2)
-    *   ComparisonState, with conditions MATCH, MISMATCH, SIZE_MISMATCH
-    *   Result image, only if ComparisonState is MISMATCH. When it is MATCH or SIZE_MISMATCH no needs to create result image.
-*   added minimalRectangleSize and maximalRectangleCount(sorted by rectangle size).
-*   Added more tests to cover more test cases.
-*   Refactored CommandLineUsage, moved main() method to separated class.
-*   Added ExcludedAreas functionality, which helps to exclude some parts of the image.
-
-### 2.2.0
-*   Added ability to customize rectangle line width.
-
-*   Moved the main method from Image Comparison to own class.
-
-*   Made non-static threshold field.
-
-*   Added Code of Conduct and Contributing pages.
-
-*   Added Point model.
-
-### 2.1.0
-*   Added publishing to JCenter
-
-### 2.0.2
-*   fixed bug #11(finally!!)
-
-*   fixed bug #43
-
-### 2.0.1 
-*   fixed bug #21
-
-### 2.0
-*   use as a library 
-
-### 1.0
-*   The program in Java that compares any 2 images and shows the differences visually by drawing rectangles.*
-
-*   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
-*   Pixels (with the same coordinates in two images) can be visually similar, but have
-different values of RGB. We are only consider 2 pixels to be "different" if the
-difference between them is more than 10%.
-
-*   The output of the comparison is a copy of one of the images image with
-differences outlined with red rectangles as shown below.
-
-*   No third party libraries and borrowed code are not using.
+Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 
 ## Usage
 
