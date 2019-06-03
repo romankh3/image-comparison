@@ -1,5 +1,8 @@
 # Release Notes
 
+## 3.1.1 
+*   Fixed bug #113: RED (not equals) and GREEN (ignored) areas are not shown at result image at the same time
+
 ## 3.1.0
 *   Added the ability to draw excluded areas on the result image. Rectangles with the differences drawing RED color.
     Rectangles of the excluded areas - GREEN color.

@@ -85,12 +85,12 @@ java -jar image-comparison.jar -h
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>3.0.0</version>
+    <version>3.1.1</version>
 </dependency>
 ```
 ##### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:3.0.0'
+compile 'com.github.romankh3:image-comparison:3.1.1'
 ```
 
 #### To compare two images programmatically
