@@ -1,6 +1,9 @@
 package com.github.romankh3.image.comparison.model;
 
+import com.github.romankh3.image.comparison.ImageComparisonUtil;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Result of the comparison.
@@ -72,6 +75,11 @@ public class ComparisonResult {
                 .setExpected(expected)
                 .setActual(actual)
                 .setResult(actual);
+    }
+
+    public ComparisonResult writeResultTo(File file) throws IOException {
+        ImageComparisonUtil.saveImage(file, result);
+        return this;
     }
 
     public BufferedImage getExpected() {

@@ -33,8 +33,12 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result.png");
 
+        File file = new File("build/test-images/result.png");
+
         //when
-        ComparisonResult comparisonResult = new ImageComparison("expected.png", "actual.png").compareImages();
+        ComparisonResult comparisonResult = new ImageComparison("expected.png", "actual.png")
+                .compareImages()
+                .writeResultTo(file);
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
