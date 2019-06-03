@@ -8,7 +8,9 @@
 
 *   Added returning `this` for setters in ImageComparison and ComparisonResult.
 
-*   renamed image1 to expected and image2 to actual.
+*   renamed image1 => expected and image2 => actual.
+
+*   Added writeResultTo() for ComparisonResult.
 
 ## 3.0.1
 *   Fixed #98: Ignored area was not actually ignored.
