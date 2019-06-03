@@ -251,6 +251,36 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, comparisonResult.getResult());
     }
 
+    /**
+     * Test issue #113 to draw red and green rectangles.
+     */
+    @Test
+    public void testIssue113() throws IOException, URISyntaxException {
+        //given
+        BufferedImage expected = readImageFromResources("expected#98.png");
+        BufferedImage actual = readImageFromResources("actual#98.png");
+
+        List<Rectangle> excludedAreas = asList(
+//                new Rectangle(80, 388, 900, 514),
+                new Rectangle(410, 514, 900, 565),
+                new Rectangle(410, 636, 900, 754)
+        );
+
+        BufferedImage expectedImage = readImageFromResources("result#113.png");
+
+        ImageComparison imageComparison = new ImageComparison(expected, actual)
+                .setExcludedAreas(excludedAreas)
+                .setRectangleLineWidth(5)
+                .setDrawExcludedRectangles(true);
+
+        //when
+        ComparisonResult comparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
+    }
+
     @Test
     public void testMatchSize() throws IOException, URISyntaxException {
         //when
