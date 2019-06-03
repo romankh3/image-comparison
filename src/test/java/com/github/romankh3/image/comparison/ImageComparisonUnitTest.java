@@ -261,7 +261,6 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage actual = readImageFromResources("actual#98.png");
 
         List<Rectangle> excludedAreas = asList(
-//                new Rectangle(80, 388, 900, 514),
                 new Rectangle(410, 514, 900, 565),
                 new Rectangle(410, 636, 900, 754)
         );
