@@ -39,10 +39,10 @@ final class ArgsParser {
             System.out.println("Java ImageComparison Tool\n" +
                     "\n" +
                     "Usage:\n" +
-                    "  java -jar image-comparison.jar <options> [image1 image2 [result]]\n" +
+                    "  java -jar image-comparison.jar <options> [expected actual [result]]\n" +
                     "where:\n" +
-                    "    image1     the first image to compare.\n" +
-                    "    image2     the second image to compare.\n" +
+                    "    expected     expected image to compare.\n" +
+                    "    actual     actual image to compare.\n" +
                     "    result     the comparison result image. If not provided, the image is shown in a UI.\n" +
                     "\n" +
                     "Options:\n" +
@@ -56,13 +56,13 @@ final class ArgsParser {
     }
 
     private Optional<Arguments> execute(String... args) {
-        File image1 = new File(args[0]);
-        File image2 = new File(args[1]);
+        File expected = new File(args[0]);
+        File actual = new File(args[1]);
         File result = null;
         if (args.length == 3) {
             result = new File(args[2]);
         }
-        return Optional.of(new Arguments(image1, image2, result));
+        return Optional.of(new Arguments(expected, actual, result));
     }
 
     private Optional<Arguments> error(String errorMessage) {
@@ -73,22 +73,22 @@ final class ArgsParser {
 
     public static final class Arguments {
 
-        private final File image1;
-        private final File image2;
+        private final File expected;
+        private final File actual;
         private final File destinationImage;
 
-        Arguments(File image1, File image2, File destinationImage) {
-            this.image1 = image1;
-            this.image2 = image2;
+        Arguments(File expected, File actual, File destinationImage) {
+            this.expected = expected;
+            this.actual = actual;
             this.destinationImage = destinationImage;
         }
 
-        public File getImage1() {
-            return image1;
+        public File getExpected() {
+            return expected;
         }
 
-        public File getImage2() {
-            return image2;
+        public File getActual() {
+            return actual;
         }
 
         public Optional<File> getDestinationImage() {

@@ -21,83 +21,109 @@ public class CommandLineUsageTest extends BaseTest {
 
     @Test
     public void testCreateDefault() throws IOException, URISyntaxException {
+        //when
         ImageComparison comparison = commandLineUsage.create();
-        assertImagesEqual(readImageFromResources("image1.png"), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png"), comparison.getImage2());
+
+        //then
+        assertImagesEqual(readImageFromResources("expected.png"), comparison.getExpected());
+        assertImagesEqual(readImageFromResources("actual.png"), comparison.getActual());
         assertFalse(comparison.getDestination().isPresent());
     }
 
     @Test
     public void testCreateWithTwoArgs() throws IOException, URISyntaxException {
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
-        ImageComparison comparison = commandLineUsage.create(image1.getAbsolutePath(), image2.getAbsolutePath());
+        //given
+        File expected = new File(ImageComparison.class.getClassLoader().getResource("expected.png").toURI().getPath());
+        File actual = new File(ImageComparison.class.getClassLoader().getResource("actual.png").toURI().getPath());
 
-        assertImagesEqual(readImageFromResources("image1.png"), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png"), comparison.getImage2());
+        //when
+        ImageComparison comparison = commandLineUsage.create(expected.getAbsolutePath(), actual.getAbsolutePath());
+
+        //then
+        assertImagesEqual(readImageFromResources("expected.png"), comparison.getExpected());
+        assertImagesEqual(readImageFromResources("actual.png"), comparison.getActual());
         assertFalse(comparison.getDestination().isPresent());
     }
 
     @Test
     public void testCreateWithTwoImagesAsArgs() throws IOException, URISyntaxException {
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
-        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(image1, image2, null));
+        //given
+        File expected = new File(ImageComparison.class.getClassLoader().getResource("expected.png").toURI().getPath());
+        File actual = new File(ImageComparison.class.getClassLoader().getResource("actual.png").toURI().getPath());
 
-        assertImagesEqual(readImageFromResources("image1.png"), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png"), comparison.getImage2());
+        //when
+        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(expected, actual, null));
+
+        //then
+        assertImagesEqual(readImageFromResources("expected.png"), comparison.getExpected());
+        assertImagesEqual(readImageFromResources("actual.png"), comparison.getActual());
         assertFalse(comparison.getDestination().isPresent());
     }
 
     @Test
     public void testCreateWithTwoImagesAndDestinationFileAsArgs() throws IOException, URISyntaxException {
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        //given
+        File expected = new File(ImageComparison.class.getClassLoader().getResource("expected.png").toURI().getPath());
+        File actual = new File(ImageComparison.class.getClassLoader().getResource("actual.png").toURI().getPath());
         File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
-        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(image1, image2, destination));
 
-        assertImagesEqual(readImageFromResources("image1.png"), comparison.getImage1());
-        assertImagesEqual(readImageFromResources("image2.png"), comparison.getImage2());
+        //when
+        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(expected, actual, destination));
+
+        //then
+        assertImagesEqual(readImageFromResources("expected.png"), comparison.getExpected());
+        assertImagesEqual(readImageFromResources("actual.png"), comparison.getActual());
         assertTrue(comparison.getDestination().isPresent());
         assertEquals(destination, comparison.getDestination().get());
     }
 
     @Test
     public void resultIsHandledCorrectlyWhenItShouldShowUI() throws IOException, URISyntaxException {
-        ImageComparison comparison = new ImageComparison("image1.png", "image2.png");
+        //given
+        ImageComparison comparison = new ImageComparison("expected.png", "actual.png");
         AtomicBoolean savedToFile = new AtomicBoolean(false);
         AtomicBoolean showUI = new AtomicBoolean(false);
 
+        //when
         CommandLineUsage.handleResult(comparison, file -> savedToFile.set(true), () -> showUI.set(true));
 
+        //then
         assertFalse(savedToFile.get());
         assertTrue(showUI.get());
     }
 
     @Test
     public void resultIsHandledCorrectlyWhenItShouldSaveToFile() throws IOException, URISyntaxException {
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        //given
+        File expected = new File(ImageComparison.class.getClassLoader().getResource("expected.png").toURI().getPath());
+        File actual = new File(ImageComparison.class.getClassLoader().getResource("actual.png").toURI().getPath());
         File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
-        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(image1, image2, destination));
+        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(expected, actual, destination));
 
         AtomicBoolean savedToFile = new AtomicBoolean(false);
         AtomicBoolean showUI = new AtomicBoolean(false);
 
+        //when
         CommandLineUsage.handleResult(comparison, file -> savedToFile.set(true), () -> showUI.set(true));
 
+        //then
         assertTrue(savedToFile.get());
         assertFalse(showUI.get());
     }
 
     @Test
     public void testSetterAndGettersThresholdWhenItShouldSetsProperly() throws IOException, URISyntaxException {
-        File image1 = new File(ImageComparison.class.getClassLoader().getResource("image1.png").toURI().getPath());
-        File image2 = new File(ImageComparison.class.getClassLoader().getResource("image2.png").toURI().getPath());
+        //given
+        File expected = new File(ImageComparison.class.getClassLoader().getResource("expected.png").toURI().getPath());
+        File actual = new File(ImageComparison.class.getClassLoader().getResource("actual.png").toURI().getPath());
         File destination = Files.createTempFile("image-comparison-test", ".png").toFile();
-        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(image1, image2, destination));
         int setValue = 10;
-        comparison.setThreshold(setValue);
+
+        //when
+        ImageComparison comparison = commandLineUsage.create(new ArgsParser.Arguments(expected, actual, destination))
+                .setThreshold(setValue);
+
+        //then
         assertEquals(setValue, comparison.getThreshold());
     }
 }

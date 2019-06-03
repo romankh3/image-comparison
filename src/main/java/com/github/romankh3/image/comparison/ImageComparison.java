@@ -1,13 +1,11 @@
 package com.github.romankh3.image.comparison;
 
-import static java.awt.Color.RED;
-
 import com.github.romankh3.image.comparison.model.ComparisonResult;
-import com.github.romankh3.image.comparison.model.ComparisonState;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.BasicStroke;
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -32,14 +30,14 @@ public class ImageComparison {
     private int threshold = 5;
 
     /**
-     * First image for comparing
+     * Expected image for comparing
      */
-    private final BufferedImage image1;
+    private final BufferedImage expected;
 
     /**
-     * Second image for comparing
+     * Actual image for comparing
      */
-    private final BufferedImage image2;
+    private final BufferedImage actual;
 
     /**
      * Width of the line that is drawn in the rectangle
@@ -74,7 +72,20 @@ public class ImageComparison {
     private Integer maximalRectangleCount = -1;
 
     /**
-     * Matrix MxN.
+     * Matrix YxX => int[y][x].
+     * E.g.:
+     * | X - width ----
+     * | .....................................
+     * Y . (0, 0)                            .
+     * | .                                   .
+     * | .                                   .
+     * h .                                   .
+     * e .                                   .
+     * i .                                   .
+     * g .                                   .
+     * h .                                   .
+     * t .                             (X, Y).
+     * | .....................................
      */
     private int[][] matrix;
 
@@ -83,26 +94,31 @@ public class ImageComparison {
      */
     private ExcludedAreas excludedAreas = new ExcludedAreas();
 
-    public ImageComparison(String image1, String image2) throws IOException, URISyntaxException {
-        this(ImageComparisonUtil.readImageFromResources(image1), ImageComparisonUtil.readImageFromResources(image2),
+    /**
+     * Flag which says draw excluded rectangles or not.
+     */
+    private boolean drawExcludedRectangles = false;
+
+    public ImageComparison(String expected, String actual) throws IOException, URISyntaxException {
+        this(ImageComparisonUtil.readImageFromResources(expected), ImageComparisonUtil.readImageFromResources(actual),
                 null);
     }
 
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
-     * @param image1 first image to be compared
-     * @param image2 second image to be compared
+     * @param expected expected image to be compared
+     * @param actual actual image to be compared
      * @param destination destination to save the result. If null, the result is shown in the UI.
      */
-    public ImageComparison(BufferedImage image1, BufferedImage image2, File destination) {
-        this.image1 = image1;
-        this.image2 = image2;
+    public ImageComparison(BufferedImage expected, BufferedImage actual, File destination) {
+        this.expected = expected;
+        this.actual = actual;
         this.destination = destination;
     }
 
-    public ImageComparison(BufferedImage image1, BufferedImage image2) {
-        this(image1, image2, null);
+    public ImageComparison(BufferedImage expected, BufferedImage actual) {
+        this(expected, actual, null);
     }
 
     /**
@@ -114,57 +130,46 @@ public class ImageComparison {
     public ComparisonResult compareImages() throws IOException {
 
         // check images for valid
-        if (isImageSizesNotEqual(image1, image2)) {
-            return ComparisonResult.sizeMissMatchResult();
+        if (isImageSizesNotEqual(expected, actual)) {
+            return ComparisonResult.defaultSizeMisMatchResult(expected, actual);
         }
 
         List<Rectangle> rectangles = populateRectangles();
 
-        ComparisonResult comparisonResult = new ComparisonResult();
-        comparisonResult.setImage1(image1);
-        comparisonResult.setImage2(image2);
-
         if (rectangles.isEmpty()) {
-            comparisonResult.setComparisonState(ComparisonState.MATCH);
-            return comparisonResult;
-        } else {
-            comparisonResult.setComparisonState(ComparisonState.MISMATCH);
+            ComparisonResult matchResult = ComparisonResult.defaultMatchResult(expected, actual);
+            if (drawExcludedRectangles) {
+                matchResult.setResult(drawRectangles(excludedAreas.getExcluded(), Color.GREEN));
+            }
+            return matchResult;
         }
 
-        BufferedImage resultImage = ImageComparisonUtil.deepCopy(image2);
-        drawRectangles(rectangles, resultImage);
+        BufferedImage resultImage = drawRectangles(rectangles, Color.RED);
 
-        comparisonResult.setResult(resultImage);
-
-        if (Objects.nonNull(destination)) {
-            ImageComparisonUtil.saveImage(destination, resultImage);
-        }
-
-        return comparisonResult;
+        return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
 
     /**
      * Check images for equals their widths and heights.
      *
-     * @param image1 {@link BufferedImage} object of the first image.
-     * @param image2 {@link BufferedImage} object of the second image.
-     *
+     * @param expected {@link BufferedImage} object of the expected image.
+     * @param actual {@link BufferedImage} object of the actual image.
      * @return true if image size are not equal, false otherwise.
      */
-    private boolean isImageSizesNotEqual(BufferedImage image1, BufferedImage image2) {
-        return image1.getHeight() != image2.getHeight() || image1.getWidth() != image2.getWidth();
+    private boolean isImageSizesNotEqual(BufferedImage expected, BufferedImage actual) {
+        return expected.getHeight() != actual.getHeight() || expected.getWidth() != actual.getWidth();
     }
 
     /**
      * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
      */
     private void populateTheMatrixOfTheDifferences() {
-        matrix = new int[image1.getWidth()][image1.getHeight()];
-        for (int y = 0; y < image1.getHeight(); y++) {
-            for (int x = 0; x < image1.getWidth(); x++) {
+        matrix = new int[expected.getHeight()][expected.getWidth()];
+        for (int y = 0; y < expected.getHeight(); y++) {
+            for (int x = 0; x < expected.getWidth(); x++) {
                 Point point = new Point(x, y);
                 if (!excludedAreas.contains(point)) {
-                    matrix[x][y] = isDifferentPixels(image1.getRGB(x, y), image2.getRGB(x, y)) ? 1 : 0;
+                    matrix[y][x] = isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y)) ? 1 : 0;
                 }
             }
         }
@@ -174,8 +179,8 @@ public class ImageComparison {
      * Say if the two pixels equal or not. The rule is the difference between two pixels
      * need to be more then 10%.
      *
-     * @param rgb1 the RGB value of the Pixel of the Image1.
-     * @param rgb2 the RGB value of the Pixel of the Image2.
+     * @param rgb1 the RGB value of the Pixel of the Expected image.
+     * @param rgb2 the RGB value of the Pixel of the Actual image.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int rgb1, int rgb2) {
@@ -279,11 +284,13 @@ public class ImageComparison {
      * Draw the rectangles based on collection of the rectangles and result image.
      *
      * @param rectangles the collection of the {@link Rectangle} objects.
-     * @param resultImage result image, which will being drawn.
+     * @param color color which would be drawn rectangle.
+     * @return result {@link BufferedImage} with drawn rectangles.
      */
-    private void drawRectangles(List<Rectangle> rectangles, BufferedImage resultImage) {
+    private BufferedImage drawRectangles(List<Rectangle> rectangles, Color color) throws IOException {
+        BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
         Graphics2D graphics = resultImage.createGraphics();
-        graphics.setColor(RED);
+        graphics.setColor(color);
 
         BasicStroke stroke = new BasicStroke(rectangleLineWidth);
         graphics.setStroke(stroke);
@@ -299,20 +306,26 @@ public class ImageComparison {
             rectanglesForDraw = new ArrayList<>(rectangles);
         }
 
-        rectanglesForDraw.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getY(),
-                rectangle.getMinPoint().getX(),
+        rectanglesForDraw.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getX(),
+                rectangle.getMinPoint().getY(),
                 rectangle.getWidth(),
                 rectangle.getHeight()));
+
+        if (Objects.nonNull(destination)) {
+            ImageComparisonUtil.saveImage(destination, resultImage);
+        }
+
+        return resultImage;
     }
 
     /**
      * Group rectangle regions in matrix.
      */
     private void groupRegions() {
-        for (int row = 0; row < matrix.length; row++) {
-            for (int col = 0; col < matrix[row].length; col++) {
-                if (matrix[row][col] == 1) {
-                    joinToRegion(row, col);
+        for (int y = 0; y < matrix.length; y++) {
+            for (int x = 0; x < matrix[y].length; x++) {
+                if (matrix[y][x] == 1) {
+                    joinToRegion(x, y);
                     regionCount++;
                 }
             }
@@ -324,23 +337,23 @@ public class ImageComparison {
      * in binary matrix using {@code threshold} for setting max distance between values which equal "1".
      * and set the {@code groupCount} to matrix.
      *
-     * @param row the value of the row.
-     * @param col the value of the column.
+     * @param x the value of the X-coordinate.
+     * @param y the value of the Y-coordinate.
      */
-    private void joinToRegion(int row, int col) {
-        if (isJumpRejected(row, col)) {
+    private void joinToRegion(int x, int y) {
+        if (isJumpRejected(x, y)) {
             return;
         }
 
-        matrix[row][col] = regionCount;
+        matrix[y][x] = regionCount;
 
         for (int i = 0; i < threshold; i++) {
-            joinToRegion(row + 1 + i, col);
-            joinToRegion(row, col + 1 + i);
+            joinToRegion(x + 1 + i, y);
+            joinToRegion(x, y + 1 + i);
 
-            joinToRegion(row + 1 + i, col - 1 - i);
-            joinToRegion(row - 1 - i, col + 1 + i);
-            joinToRegion(row + 1 + i, col + 1 + i);
+            joinToRegion(x + 1 + i, y - 1 - i);
+            joinToRegion(x - 1 - i, y + 1 + i);
+            joinToRegion(x + 1 + i, y + 1 + i);
         }
     }
 
@@ -357,60 +370,79 @@ public class ImageComparison {
 
     /**
      * Check next step valid or not.
+     *
+     * @param x X-coordinate of the image.
+     * @param y Y-coordinate of the image
+     * @return true if jump rejected, otherwise false.
      */
-    private boolean isJumpRejected(int row, int col) {
-        return row < 0 || row >= matrix.length || col < 0 || col >= matrix[row].length || matrix[row][col] != 1;
+    private boolean isJumpRejected(int x, int y) {
+        return y < 0 || y >= matrix.length || x < 0 || x >= matrix[y].length || matrix[y][x] != 1;
+    }
+
+    public boolean isDrawExcludedRectangles() {
+        return drawExcludedRectangles;
+    }
+
+    public ImageComparison setDrawExcludedRectangles(boolean drawExcludedRectangles) {
+        this.drawExcludedRectangles = drawExcludedRectangles;
+        return this;
     }
 
     public int getThreshold() {
         return threshold;
     }
 
-    public void setThreshold(int threshold) {
+    public ImageComparison setThreshold(int threshold) {
         this.threshold = threshold;
+        return this;
     }
 
     public Optional<File> getDestination() {
         return Optional.ofNullable(destination);
     }
 
-    public void setDestination(File destination) {
+    public ImageComparison setDestination(File destination) {
         this.destination = destination;
+        return this;
     }
 
-    public BufferedImage getImage1() {
-        return image1;
+    public BufferedImage getExpected() {
+        return expected;
     }
 
-    public BufferedImage getImage2() {
-        return image2;
+    public BufferedImage getActual() {
+        return actual;
     }
 
     public int getRectangleLineWidth() {
         return rectangleLineWidth;
     }
 
-    public void setRectangleLineWidth(int rectangleLineWidth) {
+    public ImageComparison setRectangleLineWidth(int rectangleLineWidth) {
         this.rectangleLineWidth = rectangleLineWidth;
+        return this;
     }
 
     public Integer getMinimalRectangleSize() {
         return minimalRectangleSize;
     }
 
-    public void setMinimalRectangleSize(Integer minimalRectangleSize) {
+    public ImageComparison setMinimalRectangleSize(Integer minimalRectangleSize) {
         this.minimalRectangleSize = minimalRectangleSize;
+        return this;
     }
 
     public Integer getMaximalRectangleCount() {
         return maximalRectangleCount;
     }
 
-    public void setMaximalRectangleCount(Integer maximalRectangleCount) {
+    public ImageComparison setMaximalRectangleCount(Integer maximalRectangleCount) {
         this.maximalRectangleCount = maximalRectangleCount;
+        return this;
     }
 
-    public void setExcludedAreas(List<Rectangle> excludedAreas) {
+    public ImageComparison setExcludedAreas(List<Rectangle> excludedAreas) {
         this.excludedAreas = new ExcludedAreas(excludedAreas);
+        return this;
     }
 }

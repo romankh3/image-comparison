@@ -116,12 +116,22 @@ public class Rectangle {
         this.maxPoint = maxPoint;
     }
 
+    /**
+     * Count the width of the {@link Rectangle}.
+     *
+     * @return rectangle width.
+     */
     public int getWidth() {
-        return maxPoint.getY() - minPoint.getY();
+        return maxPoint.getX() - minPoint.getX();
     }
 
+    /**
+     * Count the height of the {@link Rectangle}.
+     *
+     * @return rectangle height.
+     */
     public int getHeight() {
-        return maxPoint.getX() - minPoint.getX();
+        return maxPoint.getY() - minPoint.getY();
     }
 
     boolean containsPoint(Point point) {

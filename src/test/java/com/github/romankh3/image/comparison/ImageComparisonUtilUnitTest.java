@@ -23,7 +23,7 @@ public class ImageComparisonUtilUnitTest {
 
     @Test
     public void testFrameMethod() throws IOException, URISyntaxException {
-        BufferedImage image = readImageFromResources("result1.png");
+        BufferedImage image = readImageFromResources("result.png");
         Frame resultFrame = createGUI(image);
         assertEquals(image.getHeight(), resultFrame.getHeight());
         assertEquals(image.getWidth(), resultFrame.getWidth());
@@ -44,7 +44,7 @@ public class ImageComparisonUtilUnitTest {
 
     @Test
     public void testSaveImage() throws IOException, URISyntaxException {
-        BufferedImage image = readImageFromResources("result1.png");
+        BufferedImage image = readImageFromResources("result.png");
         String path = "build/test/correct/save/image.png";
         ImageComparisonUtil.saveImage(new File(path), image);
         assertTrue(new File(path).exists());

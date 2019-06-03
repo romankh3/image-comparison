@@ -1,6 +1,9 @@
 package com.github.romankh3.image.comparison.model;
 
+import com.github.romankh3.image.comparison.ImageComparisonUtil;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 
 /**
  * Result of the comparison.
@@ -8,14 +11,14 @@ import java.awt.image.BufferedImage;
 public class ComparisonResult {
 
     /**
-     * {@link BufferedImage} object of the image1.
+     * {@link BufferedImage} object of the expected.
      */
-    private BufferedImage image1;
+    private BufferedImage expected;
 
     /**
-     * {@link BufferedImage} object of the image2.
+     * {@link BufferedImage} object of the actual.
      */
-    private BufferedImage image2;
+    private BufferedImage actual;
 
     /**
      * {@link BufferedImage} object of the comparison result.
@@ -28,46 +31,91 @@ public class ComparisonResult {
     private ComparisonState comparisonState;
 
     /**
-     * Create instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
+     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
+     *
+     * @param expected expected {@link BufferedImage} object.
+     * @param actual actual {@link BufferedImage} object.
      *
      * @return instance of the {@link ComparisonResult} object.
      */
-    public static ComparisonResult sizeMissMatchResult() {
-        ComparisonResult comparisonResult = new ComparisonResult();
-        comparisonResult.setComparisonState(ComparisonState.SIZE_MISMATCH);
-        return comparisonResult;
+    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual) {
+        return new ComparisonResult()
+                .setComparisonState(ComparisonState.SIZE_MISMATCH)
+                .setExpected(expected)
+                .setActual(actual)
+                .setResult(actual);
     }
 
-    public BufferedImage getImage1() {
-        return image1;
+    /**
+     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MISMATCH}.
+     *
+     * @param expected expected {@link BufferedImage} object.
+     * @param actual actual {@link BufferedImage} object.
+     * @return instance of the {@link ComparisonResult} object.
+     */
+    public static ComparisonResult defaultMisMatchResult(BufferedImage expected, BufferedImage actual) {
+        return new ComparisonResult()
+                .setComparisonState(ComparisonState.MISMATCH)
+                .setExpected(expected)
+                .setActual(actual)
+                .setResult(actual);
     }
 
-    public void setImage1(BufferedImage image1) {
-        this.image1 = image1;
+    /**
+     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MATCH}.
+     *
+     * @param expected expected {@link BufferedImage} object.
+     * @param actual actual {@link BufferedImage} object.
+     *
+     * @return instance of the {@link ComparisonResult} object.
+     */
+    public static ComparisonResult defaultMatchResult(BufferedImage expected, BufferedImage actual) {
+        return new ComparisonResult()
+                .setComparisonState(ComparisonState.MATCH)
+                .setExpected(expected)
+                .setActual(actual)
+                .setResult(actual);
     }
 
-    public BufferedImage getImage2() {
-        return image2;
+    public ComparisonResult writeResultTo(File file) throws IOException {
+        ImageComparisonUtil.saveImage(file, result);
+        return this;
     }
 
-    public void setImage2(BufferedImage image2) {
-        this.image2 = image2;
+    public BufferedImage getExpected() {
+        return expected;
+    }
+
+    public ComparisonResult setExpected(BufferedImage expected) {
+        this.expected = expected;
+        return this;
+    }
+
+    public BufferedImage getActual() {
+        return actual;
+    }
+
+    public ComparisonResult setActual(BufferedImage actual) {
+        this.actual = actual;
+        return this;
     }
 
     public BufferedImage getResult() {
         return result;
     }
 
-    public void setResult(BufferedImage result) {
+    public ComparisonResult setResult(BufferedImage result) {
         this.result = result;
+        return this;
     }
 
     public ComparisonState getComparisonState() {
         return comparisonState;
     }
 
-    public void setComparisonState(ComparisonState comparisonState) {
+    public ComparisonResult setComparisonState(ComparisonState comparisonState) {
         this.comparisonState = comparisonState;
+        return this;
     }
 
 
