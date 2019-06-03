@@ -139,12 +139,12 @@ public class ImageComparison {
         if (rectangles.isEmpty()) {
             ComparisonResult matchResult = ComparisonResult.defaultMatchResult(expected, actual);
             if (drawExcludedRectangles) {
-                matchResult.setResult(drawRectangles(excludedAreas.getExcluded(), Color.GREEN));
+                matchResult.setResult(drawRectangles(rectangles));
             }
             return matchResult;
         }
 
-        BufferedImage resultImage = drawRectangles(rectangles, Color.RED);
+        BufferedImage resultImage = drawRectangles(rectangles);
 
         return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
@@ -284,13 +284,12 @@ public class ImageComparison {
      * Draw the rectangles based on collection of the rectangles and result image.
      *
      * @param rectangles the collection of the {@link Rectangle} objects.
-     * @param color color which would be drawn rectangle.
      * @return result {@link BufferedImage} with drawn rectangles.
      */
-    private BufferedImage drawRectangles(List<Rectangle> rectangles, Color color) throws IOException {
+    private BufferedImage drawRectangles(List<Rectangle> rectangles) throws IOException {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
         Graphics2D graphics = resultImage.createGraphics();
-        graphics.setColor(color);
+        graphics.setColor(Color.RED);
 
         BasicStroke stroke = new BasicStroke(rectangleLineWidth);
         graphics.setStroke(stroke);
@@ -306,16 +305,31 @@ public class ImageComparison {
             rectanglesForDraw = new ArrayList<>(rectangles);
         }
 
-        rectanglesForDraw.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getX(),
-                rectangle.getMinPoint().getY(),
-                rectangle.getWidth(),
-                rectangle.getHeight()));
+        draw(graphics, rectanglesForDraw);
+
+        if (drawExcludedRectangles) {
+            graphics.setColor(Color.GREEN);
+            draw(graphics, excludedAreas.getExcluded());
+        }
 
         if (Objects.nonNull(destination)) {
             ImageComparisonUtil.saveImage(destination, resultImage);
         }
 
         return resultImage;
+    }
+
+    /**
+     * Draw rectangles based on collection of the {@link Rectangle} and {@link Graphics2D}.
+     *
+     * @param graphics the {@link Graphics2D} object for drawing.
+     * @param rectangles the collection of the {@link Rectangle}.
+     */
+    private void draw(Graphics2D graphics, List<Rectangle> rectangles) {
+        rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getX(),
+                rectangle.getMinPoint().getY(),
+                rectangle.getWidth(),
+                rectangle.getHeight()));
     }
 
     /**
