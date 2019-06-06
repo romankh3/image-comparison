@@ -26,7 +26,7 @@
 *   [Other Projects](#also-if-youre-interesting---see-my-other-repositories)
 
 ## About
-The program in Java that compares any 2 images and shows the differences visually by drawing rectangles. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
+Published on Maven Central Java Library that compares 2 images with the same sizes and shows the differences visually by drawing rectangles. Some parts of the image can be excluded from the comparison. Can be used for automation qa tests. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
 
 *   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
 
