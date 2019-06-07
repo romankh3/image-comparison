@@ -307,4 +307,21 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
         assertTrue(imageComparison.isDrawExcludedRectangles());
     }
+
+    @Test
+    public void testResearchJpegImages() throws IOException, URISyntaxException {
+        //given
+        BufferedImage expected = readImageFromResources("expected.jpg");
+        BufferedImage actual = readImageFromResources("actual.jpg");
+
+        BufferedImage expectedResult = readImageFromResources("result.jpg");
+
+        //when
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages()
+                .writeResultTo(new File("result.jpg"));
+
+        //then
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResult, comparisonResult.getResult());
+    }
 }
