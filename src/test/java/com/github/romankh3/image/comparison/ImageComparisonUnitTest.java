@@ -317,8 +317,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResult = readImageFromResources("result.jpg");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages()
-                .writeResultTo(new File("result.jpg"));
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
