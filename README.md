@@ -138,6 +138,10 @@ class Example {
                // by default it's 1.
                imageComparison.setMinimalRectangleSize(100);
                imageComparison.getMinimalRectangleSize();
+
+               //Change the level of the pixel tolerance:
+               imageComparison.setPixelToleranceLevel(0.2);
+               imageComparison.getPixelToleranceLevel();
        
                //After configuring the ImageComparison object, can be executed compare() method:
                ComparisonResult comparisonResult = imageComparison.compareImages();

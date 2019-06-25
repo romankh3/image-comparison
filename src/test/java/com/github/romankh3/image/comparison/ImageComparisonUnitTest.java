@@ -270,6 +270,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         ImageComparison imageComparison = new ImageComparison(expected, actual)
                 .setExcludedAreas(excludedAreas)
                 .setRectangleLineWidth(5)
+                .setPixelToleranceLevel(0.0)
                 .setDrawExcludedRectangles(true);
 
         //when
@@ -278,6 +279,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedImage, comparisonResult.getResult());
+        assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
     }
 
     @Test
@@ -298,6 +300,7 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setRectangleLineWidth(300)
                 .setExcludedAreas(asList(Rectangle.createZero(), Rectangle.createDefault()))
                 .setDrawExcludedRectangles(true)
+                .setPixelToleranceLevel(0.6)
                 .setThreshold(400);
 
         //then
@@ -305,6 +308,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(200), String.valueOf(imageComparison.getMaximalRectangleCount()));
         assertEquals(String.valueOf(300), String.valueOf(imageComparison.getRectangleLineWidth()));
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
+        assertEquals(0.6, imageComparison.getPixelToleranceLevel(), 0.0);
         assertTrue(imageComparison.isDrawExcludedRectangles());
     }
 
