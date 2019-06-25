@@ -190,23 +190,23 @@ public class ImageComparison {
      * Say if the two pixels equal or not. The rule is the difference between two pixels
      * need to be more then 10%.
      *
-     * @param rgb1 the RGB value of the Pixel of the Expected image.
-     * @param rgb2 the RGB value of the Pixel of the Actual image.
+     * @param expectedRgb the RGB value of the Pixel of the Expected image.
+     * @param actualRgb the RGB value of the Pixel of the Actual image.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
-    private boolean isDifferentPixels(int rgb1, int rgb2) {
-        if(rgb1 == rgb2) {
+    private boolean isDifferentPixels(int expectedRgb, int actualRgb) {
+        if(expectedRgb == actualRgb) {
             return false;
         } else if(pixelToleranceLevel == 0.0) {
             return true;
         }
 
-        int red1 = (rgb1 >> 16) & 0xff;
-        int green1 = (rgb1 >> 8) & 0xff;
-        int blue1 = (rgb1) & 0xff;
-        int red2 = (rgb2 >> 16) & 0xff;
-        int green2 = (rgb2 >> 8) & 0xff;
-        int blue2 = (rgb2) & 0xff;
+        int red1 = (expectedRgb >> 16) & 0xff;
+        int green1 = (expectedRgb >> 8) & 0xff;
+        int blue1 = (expectedRgb) & 0xff;
+        int red2 = (actualRgb >> 16) & 0xff;
+        int green2 = (actualRgb >> 8) & 0xff;
+        int blue2 = (actualRgb) & 0xff;
         double result = Math.sqrt(Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
                 /
                 differenceConstant;
@@ -412,10 +412,11 @@ public class ImageComparison {
         return pixelToleranceLevel;
     }
 
-    public void setPixelToleranceLevel(double pixelToleranceLevel) {
+    public ImageComparison setPixelToleranceLevel(double pixelToleranceLevel) {
         if(0.0 <= pixelToleranceLevel && pixelToleranceLevel <= 0.99) {
             this.pixelToleranceLevel = pixelToleranceLevel;
         }
+        return this;
     }
 
     public boolean isDrawExcludedRectangles() {
