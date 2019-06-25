@@ -4,6 +4,7 @@ import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
+import com.github.romankh3.image.comparison.model.SimpleComparisonResult;
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -158,6 +159,40 @@ public class ImageComparison {
         BufferedImage resultImage = drawRectangles(rectangles);
 
         return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
+    }
+
+    public SimpleComparisonResult simpleCompareImages() throws IOException {
+        // check images for valid
+        if (isImageSizesNotEqual(expected, actual)) {
+            return SimpleComparisonResult.defaultSizeMisMatchResult(expected, actual);
+        }
+
+        populateTheMatrixOfTheDifferences();
+
+        SimpleComparisonResult simpleComparisonResult;
+
+        if(isMatrixHasDifferences()) {
+            simpleComparisonResult = SimpleComparisonResult.defaultMisMatchResult(expected, actual);
+        } else {
+            simpleComparisonResult = SimpleComparisonResult.defaultMatchResult(expected, actual);
+        }
+
+        if (drawExcludedRectangles) {
+            simpleComparisonResult.setResult(drawRectangles(excludedAreas.getExcluded()));
+        }
+
+        return simpleComparisonResult;
+    }
+
+    private boolean isMatrixHasDifferences() {
+        for (int[] ints : matrix) {
+            for (int anInt : ints) {
+                if (anInt == 1) {
+                    return true;
+                }
+            }
+        }
+        return false;
     }
 
     /**
