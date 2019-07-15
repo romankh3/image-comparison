@@ -19,13 +19,7 @@ public class ExcludedAreas {
     }
 
     public boolean contains(Point point) {
-        for (Rectangle rectangle : excluded) {
-            if (rectangle.containsPoint(point)) {
-                return true;
-            }
-        }
-
-        return false;
+        return excluded.stream().anyMatch(rectangle -> rectangle.containsPoint(point));
     }
 
     public List<Rectangle> getExcluded() {

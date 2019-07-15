@@ -110,6 +110,14 @@ public class ImageComparison {
      */
     private boolean drawExcludedRectangles = false;
 
+    /**
+     * Create a new instance of {@link ImageComparison} that can compare the given images.
+     *
+     * @param expected expected image to be compared
+     * @param actual actual image to be compared
+     * @throws IOException due to saving result image.
+     * @throws URISyntaxException due to saving result image.
+     */
     public ImageComparison(String expected, String actual) throws IOException, URISyntaxException {
         this(ImageComparisonUtil.readImageFromResources(expected), ImageComparisonUtil.readImageFromResources(actual),
                 null);
@@ -195,9 +203,9 @@ public class ImageComparison {
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int expectedRgb, int actualRgb) {
-        if(expectedRgb == actualRgb) {
+        if (expectedRgb == actualRgb) {
             return false;
-        } else if(pixelToleranceLevel == 0.0) {
+        } else if (pixelToleranceLevel == 0.0) {
             return true;
         }
 
@@ -413,7 +421,7 @@ public class ImageComparison {
     }
 
     public ImageComparison setPixelToleranceLevel(double pixelToleranceLevel) {
-        if(0.0 <= pixelToleranceLevel && pixelToleranceLevel <= 0.99) {
+        if (0.0 <= pixelToleranceLevel && pixelToleranceLevel <= 0.99) {
             this.pixelToleranceLevel = pixelToleranceLevel;
         }
         return this;

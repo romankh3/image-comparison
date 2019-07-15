@@ -4,22 +4,46 @@ import java.io.File;
 import java.util.Optional;
 
 /**
- * Argument parser for commandline usage.
+ * Arguments parser for commandline usage.
  */
 final class ArgsParser {
 
+    /**
+     * {@link Runnable} for success exit.
+     */
     private final Runnable successExit;
+
+    /**
+     * {@link Runnable} for error exit.
+     */
     private final Runnable errorExit;
 
+    /**
+     * Create new instance of the {@link ArgsParser} with default {@link ArgsParser#successExit}
+     * and {@link ArgsParser#errorExit}.
+     */
     ArgsParser() {
         this(() -> System.exit(0), () -> System.exit(1));
     }
 
+    /**
+     * Create new instance of the {@link ArgsParser} with provided {@link ArgsParser#successExit}
+     * and {@link ArgsParser#errorExit}.
+     *
+     * @param successExit {@link Runnable} for success exit.
+     * @param errorExit {@link Runnable} for error exit.
+     */
     ArgsParser(Runnable successExit, Runnable errorExit) {
         this.successExit = successExit;
         this.errorExit = errorExit;
     }
 
+    /**
+     * Parse arguments provided by args.
+     *
+     * @param args arguments for parsing.
+     * @return {@link Optional<Arguments>} object.
+     */
     public Optional<Arguments> parseArgs(String... args) {
         switch (args.length) {
             case 0:
@@ -34,6 +58,12 @@ final class ArgsParser {
         }
     }
 
+    /**
+     * Execute help operation.
+     *
+     * @param args arguments for parsing.
+     * @return {@link Optional<Arguments>} object.
+     */
     private Optional<Arguments> help(String... args) {
         if (args[0].equals("-h") || args[0].equals("--help")) {
             System.out.println("Java ImageComparison Tool\n" +
