@@ -10,19 +10,42 @@ import java.util.Objects;
  */
 public class Rectangle {
 
+    /**
+     * Left Top {@link Point} on the {@link Rectangle}.
+     */
     private Point minPoint;
+
+    /**
+     * Right bottom {@link Point} on the {@link Rectangle}.
+     */
     private Point maxPoint;
 
+    /**
+     * Create empty instance of the {@link Rectangle}.
+     */
     private Rectangle() {
         minPoint = new Point();
         maxPoint = new Point();
     }
 
+    /**
+     * Create clone object based on the provided {@link Rectangle}.
+     *
+     * @param rectangle provided {@link Rectangle} object.
+     */
     public Rectangle(Rectangle rectangle) {
         this.minPoint = new Point(rectangle.getMinPoint().getX(), rectangle.getMinPoint().getY());
         this.maxPoint = new Point(rectangle.getMaxPoint().getX(), rectangle.getMaxPoint().getY());
     }
 
+    /**
+     * Create instance of the {@link Rectangle} based on the provided coordinates.
+     *
+     * @param minX minimal X-coordinate.
+     * @param minY minimal Y-coordinate.
+     * @param maxX maximal X-coordinate.
+     * @param maxY maximal Y-coordinate.
+     */
     public Rectangle(int minX, int minY, int maxX, int maxY) {
         this.minPoint = new Point(minX, minY);
         this.maxPoint = new Point(maxX, maxY);
@@ -41,6 +64,11 @@ public class Rectangle {
         return defaultRectangle;
     }
 
+    /**
+     * Create instance with zero points.
+     *
+     * @return created {@link Rectangle} instance.
+     */
     public static Rectangle createZero() {
         Rectangle rectangle = new Rectangle();
         rectangle.makeZeroRectangle();
@@ -64,7 +92,7 @@ public class Rectangle {
      * Check is that rectangle overlapp this.
      *
      * @param that {@link Rectangle} which checks with this.
-     * @return true if this overlapp that, false otherwise.
+     * @return true if this over lapp that, false otherwise.
      */
     public boolean isOverlapping(Rectangle that) {
         if (this.getMaxPoint().getY() < that.getMinPoint().getY() ||
@@ -100,22 +128,6 @@ public class Rectangle {
         return getWidth() * getHeight();
     }
 
-    public Point getMinPoint() {
-        return minPoint;
-    }
-
-    public void setMinPoint(Point minPoint) {
-        this.minPoint = minPoint;
-    }
-
-    public Point getMaxPoint() {
-        return maxPoint;
-    }
-
-    public void setMaxPoint(Point maxPoint) {
-        this.maxPoint = maxPoint;
-    }
-
     /**
      * Count the width of the {@link Rectangle}.
      *
@@ -134,11 +146,33 @@ public class Rectangle {
         return maxPoint.getY() - minPoint.getY();
     }
 
+    /**
+     * Check in the provided {@link Point} contains in the {@link Rectangle}.
+     *
+     * @param point provided {@link Point}.
+     * @return {@code true} if provided {@link Point} contains, {@code false} - otherwise.
+     */
     boolean containsPoint(Point point) {
         return  point.getX() >= minPoint.getX() &&
                 point.getX() <= maxPoint.getX() &&
                 point.getY() >= minPoint.getY() &&
                 point.getY() <= maxPoint.getY();
+    }
+
+    public Point getMinPoint() {
+        return minPoint;
+    }
+
+    public void setMinPoint(Point minPoint) {
+        this.minPoint = minPoint;
+    }
+
+    public Point getMaxPoint() {
+        return maxPoint;
+    }
+
+    public void setMaxPoint(Point maxPoint) {
+        this.maxPoint = maxPoint;
     }
 
     @Override

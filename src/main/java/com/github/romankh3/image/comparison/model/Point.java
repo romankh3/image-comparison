@@ -15,17 +15,29 @@ public class Point {
      */
     private int y;
 
-    public void makeZeroPoint() {
-        this.x = 0;
-        this.y = 0;
-    }
-
+    /**
+     * Create empty instance of the {@link Point}.
+     */
     public Point() {
     }
 
+    /**
+     * Create instance of the {@link Point} with defined {@link Point#x} and {@link Point#y}.
+     *
+     * @param x provided X-coordinate.
+     * @param y provided Y-coordinate.
+     */
     public Point(int x, int y) {
         this.x = x;
         this.y = y;
+    }
+
+    /**
+     * Set x = 0 and y = 0.
+     */
+    public void makeZeroPoint() {
+        this.x = 0;
+        this.y = 0;
     }
 
     public int getX() {

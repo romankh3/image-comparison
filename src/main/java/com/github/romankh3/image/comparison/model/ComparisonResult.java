@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Result of the comparison.
+ * Data transfer objects which contains all the needed data for result of the comparison.
  */
 public class ComparisonResult {
 
@@ -77,6 +77,13 @@ public class ComparisonResult {
                 .setResult(actual);
     }
 
+    /**
+     * Save the image to the provided {@link File} object.
+     *
+     * @param file the provided {@link File} object.
+     * @return this {@link ComparisonResult} object.
+     * @throws IOException due to save image.
+     */
     public ComparisonResult writeResultTo(File file) throws IOException {
         ImageComparisonUtil.saveImage(file, result);
         return this;
