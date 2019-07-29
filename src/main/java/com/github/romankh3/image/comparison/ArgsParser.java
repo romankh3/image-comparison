@@ -85,6 +85,12 @@ final class ArgsParser {
         }
     }
 
+    /**
+     * Execute main action, where all the needed data are provided.
+     *
+     * @param args arguments for parsing.
+     * @return {@link Optional<Arguments>} object.
+     */
     private Optional<Arguments> execute(String... args) {
         File expected = new File(args[0]);
         File actual = new File(args[1]);
@@ -95,16 +101,36 @@ final class ArgsParser {
         return Optional.of(new Arguments(expected, actual, result));
     }
 
+    /**
+     * Execute error action.
+     *
+     * @param errorMessage message of the error.
+     * @return {@link Optional#empty()} object.
+     */
     private Optional<Arguments> error(String errorMessage) {
         System.err.println(errorMessage);
         errorExit.run();
         return Optional.empty();
     }
 
+    /**
+     * Inner static final class for result of the parsing.
+     */
     public static final class Arguments {
 
+        /**
+         * Expected image for comparing
+         */
         private final File expected;
+
+        /**
+         * Actual image for comparing
+         */
         private final File actual;
+
+        /**
+         * Destination file for the result of the comparing.
+         */
         private final File destinationImage;
 
         Arguments(File expected, File actual, File destinationImage) {
