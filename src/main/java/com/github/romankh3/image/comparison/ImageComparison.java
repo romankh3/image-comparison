@@ -136,6 +136,12 @@ public class ImageComparison {
         this.destination = destination;
     }
 
+    /**
+     * Create a new instance of {@link ImageComparison} that can compare the given images.
+     *
+     * @param expected expected image to be compared
+     * @param actual actual image to be compared
+     */
     public ImageComparison(BufferedImage expected, BufferedImage actual) {
         this(expected, actual, null);
     }
@@ -278,7 +284,7 @@ public class ImageComparison {
     }
 
     /**
-     * Find overlapping rectangles and rmerge them.
+     * Find overlapping rectangles and merge them.
      */
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
         int position = 0;

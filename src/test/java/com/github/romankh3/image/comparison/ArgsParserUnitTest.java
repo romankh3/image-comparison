@@ -8,6 +8,9 @@ import java.io.File;
 import java.util.Optional;
 import org.junit.Test;
 
+/**
+ * Unit-level testing for {@link ArgsParser} object.
+ */
 public class ArgsParserUnitTest {
 
     private final KnowsIfRan successExitMock = new KnowsIfRan();
