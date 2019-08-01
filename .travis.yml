@@ -2,10 +2,6 @@ language: java
 
 sudo: false
 
-before_install:
-  - "export DISPLAY=:99.0"
-  - "sh -e /etc/init.d/xvfb start"
-
 script: ./gradlew clean build jacocoTestReport
 
 jdk:
@@ -13,8 +9,3 @@ jdk:
 
 after_success:
   - ./gradlew jacocoTestReport coveralls
-
-
-notifications:
-  email:
-    on_failure: change
