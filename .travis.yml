@@ -1,7 +1,5 @@
 language: java
 
-sudo: false
-
 script: ./gradlew clean build jacocoTestReport
 
 jdk:
