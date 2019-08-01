@@ -6,7 +6,8 @@ before_install:
 
 script: ./gradlew clean build jacocoTestReport
 
-jdk: openjdk8
+jdk:
+  - openjdk8
 
 after_success:
   - ./gradlew jacocoTestReport coveralls
