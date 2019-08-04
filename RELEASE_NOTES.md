@@ -1,5 +1,11 @@
 # Release Notes
 
+## 3.2.0
+*   Added ability to change pixel tolerance.
+*   Improved algorithm to make it faster.
+*   Improved JavaDocs.
+*   Researched JPEG images, all work as expected. 
+
 ## 3.1.1 
 *   Fixed bug #113: RED (not equals) and GREEN (ignored) areas are not shown at result image at the same time
 
