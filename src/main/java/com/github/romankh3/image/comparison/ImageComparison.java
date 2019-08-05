@@ -40,7 +40,7 @@ public class ImageComparison {
     private final BufferedImage actual;
 
     /**
-     * Width of the line that is drawn in the rectangle
+     * Width of the line that is drawn the rectangle
      */
     private int rectangleLineWidth = 1;
 
