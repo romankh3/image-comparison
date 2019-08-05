@@ -8,7 +8,7 @@
 
 *   [About](#about)
 
-*   [Building](#building)
+*   [Configurations](#configurations)
 
 *   [Release Notes](#release-notes)
 
@@ -16,6 +16,8 @@
     *   [Using the command-line](#using-the-command-line)
     
     *   [Using as a Java library](#using-as-a-java-library)
+*   [Building](#building)
+
 *   [Demo](#demo)
 
 *   [License](#license)
@@ -39,16 +41,17 @@ Published on Maven Central Java Library that compares 2 images with the same siz
 
 *   Some parts of the image can be excluded from the comparison and drawn in the result image.
 
-## Building
-To clone and build this project, run the following commands:
- 
-```bash
-git clone https://github.com/romankh3/image-comparison
-cd image-comparison
-./gradlew check jar
-```
-
-This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
+## Configurations
+| *Property* | *Description* |
+| --- | --- |
+| `threshold` | The threshold which means the max distance between non-equal pixels. Could be changed according size and requirements to the image. |
+| `rectangleLineWidth` | Width of the line that is drawn the rectangle. |
+| `destination` | File of the result destination. |
+| `minimalRectangleSize` | The number of the minimal rectangle size. Count as (width x height). By default it's 1. |
+| `maximalRectangleCount` | Maximal count of the Rectangles, which would be drawn. It means that would get first x biggest rectangles. Default value is -1, that means that all the rectangles would be drawn. |
+| `pixelToleranceLevel` | Level of the pixel tolerance. By default it's 0.1 -> 10% difference. The value can be set from 0.0 to 0.99. |
+| `excludedAreas` | ExcludedAreas contains a List of Rectangles to be ignored when comparing images. |
+| `drawExcludedRectangles` | Flag which says draw excluded rectangles or not. |
 
 ## Release Notes
 
@@ -157,6 +160,17 @@ class Example {
     }
 }
 ```
+
+## Building
+To clone and build this project, run the following commands:
+ 
+```bash
+git clone https://github.com/romankh3/image-comparison
+cd image-comparison
+./gradlew check jar
+```
+
+This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
 
 ## Demo
 
