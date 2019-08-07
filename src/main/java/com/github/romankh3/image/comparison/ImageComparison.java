@@ -37,7 +37,7 @@ public class ImageComparison {
     /**
      * Actual image for comparing
      */
-    private final BufferedImage actual;
+    private  BufferedImage actual;
 
     /**
      * Width of the line that is drawn the rectangle
@@ -157,6 +157,35 @@ public class ImageComparison {
         // check images for valid
         if (isImageSizesNotEqual(expected, actual)) {
             return ComparisonResult.defaultSizeMisMatchResult(expected, actual);
+        }
+
+        List<Rectangle> rectangles = populateRectangles();
+
+        if (rectangles.isEmpty()) {
+            ComparisonResult matchResult = ComparisonResult.defaultMatchResult(expected, actual);
+            if (drawExcludedRectangles) {
+                matchResult.setResult(drawRectangles(rectangles));
+            }
+            return matchResult;
+        }
+
+        BufferedImage resultImage = drawRectangles(rectangles);
+
+        return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
+    }
+    /**
+     * Draw rectangles which cover the regions of the difference pixels.
+     * @param resizeIfSizeMisMatch true if resizing is needed to match expected dimensions.
+     * @return the result of the drawing.
+     * @throws IOException due to saving result image.
+     */
+    public ComparisonResult compareImages(boolean resizeIfSizeMisMatch) throws IOException {
+
+        // check images for valid
+        if (isImageSizesNotEqual(expected, actual)&&resizeIfSizeMisMatch) {
+           System.out.println("Size MissMatch, resizing to match expected dimensions.");
+            this.actual=ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            compareImages();
         }
 
         List<Rectangle> rectangles = populateRectangles();
