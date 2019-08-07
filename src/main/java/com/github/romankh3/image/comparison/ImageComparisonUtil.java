@@ -1,8 +1,6 @@
 package com.github.romankh3.image.comparison;
 
-import java.awt.BorderLayout;
-import java.awt.Dimension;
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
@@ -98,5 +96,42 @@ public class ImageComparisonUtil {
             throw new FileNotFoundException("Unable to create directory " + dir);
         }
         ImageIO.write(image, "png", pathFile);
+    }
+
+    /**
+     * Resize image to new dimensions and return new image
+     *
+     * @param img the object of the image to be resized.
+     * @param newW the new width.
+     * @param newH the new height.
+     */
+
+    public static BufferedImage resize(BufferedImage img, int newW, int newH)  {
+        Image imgtmp = img;
+
+
+        BufferedImage newImage = toBufferedImage( imgtmp.getScaledInstance(newW, newH, Image.SCALE_SMOOTH));
+        return newImage;
+    }
+
+    /**
+     * convert image to Buffered Image.
+     *
+     * @param img the object of Image to be converted.
+     */
+
+    public static BufferedImage toBufferedImage(Image img)
+    {
+        if (img instanceof BufferedImage)
+        {
+            return (BufferedImage) img;
+        }
+
+        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D bGr = bimage.createGraphics();
+        bGr.drawImage(img, 0, 0, null);
+        bGr.dispose();
+
+        return bimage;
     }
 }
