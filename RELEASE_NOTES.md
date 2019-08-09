@@ -1,6 +1,6 @@
 # Release Notes
 ## 3.3.0
-* Added option to resize images to meet expected dimensions before comparison using compareMisSizedImages() 
+*   Added option to resize images to meet expected dimensions before comparison using compareMisSizedImages() 
 ## 3.2.0
 *   Added ability to change pixel tolerance.
 *   Improved algorithm to make it faster.
