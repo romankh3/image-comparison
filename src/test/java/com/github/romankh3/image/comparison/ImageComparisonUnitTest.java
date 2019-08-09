@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
 
-import javax.imageio.ImageIO;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -336,14 +335,12 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
-
-        BufferedImage expectedResult = readImageFromResources("result.png");
+        
         //when
         ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareMisSizedImages();
 
         //then
         assertEquals(MATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResult, comparisonResult.getResult());
 
     }
     @Test

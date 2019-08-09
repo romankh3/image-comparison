@@ -1,7 +1,6 @@
 package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.model.*;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
