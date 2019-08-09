@@ -11,6 +11,8 @@ import static org.junit.Assert.assertTrue;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +20,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
+
+import javax.imageio.ImageIO;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -326,5 +330,47 @@ public class ImageComparisonUnitTest extends BaseTest {
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResult, comparisonResult.getResult());
+    }
+    @Test
+    public void testCompareMisSizedImages() throws IOException, URISyntaxException {
+        //given
+        BufferedImage expected = readImageFromResources("expected.png");
+        BufferedImage actual = readImageFromResources("actualDifferentSize.png");
+
+        BufferedImage expectedResult = readImageFromResources("result.png");
+        //when
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareMisSizedImages();
+
+        //then
+        assertEquals(MATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedResult, comparisonResult.getResult());
+
+    }
+    @Test
+    public void testResize() throws IOException, URISyntaxException {
+        //given
+        BufferedImage actual = readImageFromResources("actualDifferentSize.png");
+
+        //when
+        BufferedImage resizedActual = ImageComparisonUtil.resize(actual,200,200);
+
+        //then
+        assertEquals(200,resizedActual.getHeight());
+        assertEquals(200,resizedActual.getWidth());
+
+    }
+    @Test
+    public void testToBufferedImage() throws IOException, URISyntaxException {
+        //given
+        Image imageInstance = readImageFromResources("actualDifferentSize.png");
+        BufferedImage bufferedImageInstance = readImageFromResources("actualDifferentSize.png");
+
+        //when
+       BufferedImage bufferedImage = ImageComparisonUtil.toBufferedImage(imageInstance);
+       BufferedImage bufferedImage1 = ImageComparisonUtil.toBufferedImage(bufferedImageInstance);
+
+       //then
+        assertTrue(bufferedImage instanceof BufferedImage);
+        assertTrue(bufferedImage1 instanceof BufferedImage);
     }
 }
