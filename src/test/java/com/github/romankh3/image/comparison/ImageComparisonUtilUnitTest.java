@@ -30,6 +30,7 @@ public class ImageComparisonUtilUnitTest {
 
     @Test(expected = IOException.class)
     public void testWrongPath() throws IOException {
+        //when-then
         readImageFromResources("wrong-file-name.png");
     }
 
