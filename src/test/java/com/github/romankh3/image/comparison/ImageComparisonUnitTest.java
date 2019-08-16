@@ -14,7 +14,6 @@ import com.github.romankh3.image.comparison.model.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
@@ -29,7 +28,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * don't break the main behaviour and result as expected.
      */
     @Test
-    public void testCorrectWorkingExpectedActual() throws IOException, URISyntaxException {
+    public void testCorrectWorkingExpectedActual() throws IOException {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result.png");
 
@@ -46,7 +45,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testMaximalRectangleCount() throws IOException, URISyntaxException {
+    public void testMaximalRectangleCount() throws IOException {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMaximalRectangleCount(3);
@@ -61,7 +60,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testImagesWithTotallyDifferentImages() throws IOException, URISyntaxException {
+    public void testImagesWithTotallyDifferentImages() throws IOException {
         //when
         BufferedImage expectedResult = readImageFromResources("totallyDifferentImageResult.png");
 
@@ -75,7 +74,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testDestinationGetting() throws IOException, URISyntaxException {
+    public void testDestinationGetting() throws IOException {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actual.png");
@@ -89,7 +88,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testMinimalRectangleSize() throws IOException, URISyntaxException {
+    public void testMinimalRectangleSize() throws IOException {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMinimalRectangleSize(10);
@@ -107,7 +106,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #17. It was StackOverFlowError.
      */
     @Test
-    public void testIssue17() throws IOException, URISyntaxException {
+    public void testIssue17() throws IOException {
         //when
         ComparisonResult comparisonResult = new ImageComparison("expected#17.png", "actual#17.png").compareImages();
 
@@ -120,7 +119,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #21. It was StackOverFlowError.
      */
     @Test
-    public void testIssue21() throws IOException, URISyntaxException {
+    public void testIssue21() throws IOException {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
@@ -136,7 +135,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #11.
      */
     @Test
-    public void testIssue11() throws IOException, URISyntaxException {
+    public void testIssue11() throws IOException {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#11.png");
 
@@ -155,7 +154,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Verify that it is possible to use a thick line in the rectangle
      */
     @Test
-    public void testRectangleWithLineWidth10() throws IOException, URISyntaxException {
+    public void testRectangleWithLineWidth10() throws IOException {
         //given
         BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
 
@@ -176,7 +175,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testShouldReturnARectangleList() throws IOException, URISyntaxException {
+    public void testShouldReturnARectangleList() throws IOException {
         //given
         BufferedImage original = readImageFromResources("expected#17.png");
         BufferedImage masked = readImageFromResources("actualMasked#58.png");
@@ -206,7 +205,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testShouldIgnoreExcludedArea() throws IOException, URISyntaxException {
+    public void testShouldIgnoreExcludedArea() throws IOException {
         //given
         BufferedImage expected = readImageFromResources("expected#17.png");
         BufferedImage actual = readImageFromResources("actualMaskedComparison#58.png");
@@ -225,7 +224,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #98 and #97 to see the drawn excluded areas.
      */
     @Test
-    public void testIssue98() throws IOException, URISyntaxException {
+    public void testIssue98() throws IOException {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -255,7 +254,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #113 to draw red and green rectangles.
      */
     @Test
-    public void testIssue113() throws IOException, URISyntaxException {
+    public void testIssue113() throws IOException {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -283,7 +282,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testMatchSize() throws IOException, URISyntaxException {
+    public void testMatchSize() throws IOException {
         //when
         ComparisonResult comparisonResult = new ImageComparison("expected.png", "expected.png").compareImages();
 
@@ -292,7 +291,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testGettersAnsSetters() throws IOException, URISyntaxException {
+    public void testGettersAnsSetters() throws IOException {
         //when
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png")
                 .setMinimalRectangleSize(100)
@@ -313,7 +312,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testResearchJpegImages() throws IOException, URISyntaxException {
+    public void testResearchJpegImages() throws IOException {
         //given
         BufferedImage expected = readImageFromResources("expected.jpg");
         BufferedImage actual = readImageFromResources("actual.jpg");

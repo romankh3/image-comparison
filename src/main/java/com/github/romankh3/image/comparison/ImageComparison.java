@@ -10,7 +10,6 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -116,9 +115,8 @@ public class ImageComparison {
      * @param expected expected image to be compared
      * @param actual actual image to be compared
      * @throws IOException due to saving result image.
-     * @throws URISyntaxException due to saving result image.
      */
-    public ImageComparison(String expected, String actual) throws IOException, URISyntaxException {
+    public ImageComparison(String expected, String actual) throws IOException {
         this(ImageComparisonUtil.readImageFromResources(expected), ImageComparisonUtil.readImageFromResources(actual),
                 null);
     }

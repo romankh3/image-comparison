@@ -20,7 +20,7 @@ public class CommandLineUsageTest extends BaseTest {
     private CommandLineUsage commandLineUsage = new CommandLineUsage();
 
     @Test
-    public void testCreateDefault() throws IOException, URISyntaxException {
+    public void testCreateDefault() throws IOException {
         //when
         ImageComparison comparison = commandLineUsage.create();
 
@@ -78,7 +78,7 @@ public class CommandLineUsageTest extends BaseTest {
     }
 
     @Test
-    public void resultIsHandledCorrectlyWhenItShouldShowUI() throws IOException, URISyntaxException {
+    public void resultIsHandledCorrectlyWhenItShouldShowUI() throws IOException {
         //given
         ImageComparison comparison = new ImageComparison("expected.png", "actual.png");
         AtomicBoolean savedToFile = new AtomicBoolean(false);

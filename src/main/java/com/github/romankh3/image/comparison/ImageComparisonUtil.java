@@ -9,7 +9,7 @@ import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
+import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
@@ -60,11 +60,15 @@ public class ImageComparisonUtil {
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
      *
-     * @throws IOException due to the saving result image
-     * @throws URISyntaxException due to the creating file based on simple string.
+     * @throws IOException due to read the image from resources.
      */
-    public static BufferedImage readImageFromResources(String path) throws IOException, URISyntaxException {
-        return ImageIO.read(new File(ImageComparisonUtil.class.getClassLoader().getResource(path).toURI().getPath()));
+    public static BufferedImage readImageFromResources(String path) throws IOException {
+        InputStream inputStream = ImageComparisonUtil.class.getClassLoader().getResourceAsStream(path);
+        if (inputStream != null) {
+            return ImageIO.read(inputStream);
+        } else {
+            throw new IOException("Image " + path + " not found");
+        }
     }
 
     /**
