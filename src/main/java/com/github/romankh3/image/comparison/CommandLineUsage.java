@@ -3,7 +3,6 @@ package com.github.romankh3.image.comparison;
 import com.github.romankh3.image.comparison.ArgsParser.Arguments;
 import java.io.File;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.util.Optional;
 
 /**
@@ -11,7 +10,7 @@ import java.util.Optional;
  */
 class CommandLineUsage {
 
-    public ImageComparison create(String... args) throws IOException, URISyntaxException {
+    public ImageComparison create(String... args) throws IOException {
         Optional<Arguments> arguments = new ArgsParser().parseArgs(args);
         return arguments.isPresent() ? create(arguments.get()) : createDefault();
     }
@@ -23,7 +22,7 @@ class CommandLineUsage {
                 args.getDestinationImage().orElse(null));
     }
 
-    private ImageComparison createDefault() throws IOException, URISyntaxException {
+    private ImageComparison createDefault() throws IOException {
         return new ImageComparison(
                 ImageComparisonUtil.readImageFromResources("expected.png"),
                 ImageComparisonUtil.readImageFromResources("actual.png"),
