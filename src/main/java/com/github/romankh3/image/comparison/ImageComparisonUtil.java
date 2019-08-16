@@ -21,6 +21,9 @@ import javax.swing.WindowConstants;
  */
 public class ImageComparisonUtil {
 
+    private ImageComparisonUtil(){
+    }
+
     /**
      * Create GUI for represents the resulting image.
      *
