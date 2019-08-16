@@ -5,7 +5,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 import org.junit.Test;
 
 /**
@@ -23,7 +22,7 @@ public class ComparisonResultUnitTest {
     }
 
     @Test
-    public void testGettersAndSetters() throws IOException, URISyntaxException {
+    public void testGettersAndSetters() throws IOException {
         //when
         ComparisonResult comparisonResult = new ComparisonResult().setComparisonState(ComparisonState.MATCH)
                 .setExpected(readImageFromResources("expected.png"))

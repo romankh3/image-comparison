@@ -13,7 +13,6 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import org.junit.Test;
 
 /**
@@ -22,7 +21,7 @@ import org.junit.Test;
 public class ImageComparisonUtilUnitTest {
 
     @Test
-    public void testFrameMethod() throws IOException, URISyntaxException {
+    public void testFrameMethod() throws IOException {
         BufferedImage image = readImageFromResources("result.png");
         Frame resultFrame = createGUI(image);
         assertEquals(image.getHeight(), resultFrame.getHeight());
@@ -43,7 +42,7 @@ public class ImageComparisonUtilUnitTest {
     }
 
     @Test
-    public void testSaveImage() throws IOException, URISyntaxException {
+    public void testSaveImage() throws IOException {
         BufferedImage image = readImageFromResources("result.png");
         String path = "build/test/correct/save/image.png";
         ImageComparisonUtil.saveImage(new File(path), image);
