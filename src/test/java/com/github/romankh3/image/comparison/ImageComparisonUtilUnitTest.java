@@ -28,6 +28,11 @@ public class ImageComparisonUtilUnitTest {
         assertEquals(image.getWidth(), resultFrame.getWidth());
     }
 
+    @Test(expected = IOException.class)
+    public void testWrongPath() throws IOException {
+        readImageFromResources("wrong-file-name.png");
+    }
+
     @Test(expected = FileNotFoundException.class)
     public void testNullParent() throws IOException {
         //given
