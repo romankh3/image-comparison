@@ -334,7 +334,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
-        
+
         //when
         ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareMisSizedImages();
 
