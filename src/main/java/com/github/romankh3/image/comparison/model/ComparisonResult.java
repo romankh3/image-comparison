@@ -29,6 +29,10 @@ public class ComparisonResult {
      * State of the comparison.
      */
     private ComparisonState comparisonState;
+    /**
+     * The difference percentage between two images.
+     */
+    private float differencePercent;
 
     /**
      * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
@@ -38,9 +42,10 @@ public class ComparisonResult {
      *
      * @return instance of the {@link ComparisonResult} object.
      */
-    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual) {
+    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,float differencePercent) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.SIZE_MISMATCH)
+                .setDifferencePercent(differencePercent)
                 .setExpected(expected)
                 .setActual(actual)
                 .setResult(actual);
@@ -60,7 +65,6 @@ public class ComparisonResult {
                 .setActual(actual)
                 .setResult(actual);
     }
-
     /**
      * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MATCH}.
      *
@@ -122,6 +126,15 @@ public class ComparisonResult {
 
     public ComparisonResult setComparisonState(ComparisonState comparisonState) {
         this.comparisonState = comparisonState;
+        return this;
+    }
+
+    public float getDifferencePercent() {
+        return differencePercent;
+    }
+
+    public ComparisonResult setDifferencePercent(float differencePercent) {
+        this.differencePercent = differencePercent;
         return this;
     }
 

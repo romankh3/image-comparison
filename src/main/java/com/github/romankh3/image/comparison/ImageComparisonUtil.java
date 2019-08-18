@@ -1,9 +1,7 @@
 package com.github.romankh3.image.comparison;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.WritableRaster;
+import java.awt.image.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -127,11 +125,62 @@ public class ImageComparisonUtil {
             return (BufferedImage) img;
         }
 
-        BufferedImage bimage = new BufferedImage(img.getWidth(null), img.getHeight(null), BufferedImage.TYPE_INT_ARGB);
-        Graphics2D bGr = bimage.createGraphics();
-        bGr.drawImage(img, 0, 0, null);
-        bGr.dispose();
+        float SOFTEN_FACTOR = 0.05f;
+        final Image temp = new ImageIcon(img).getImage();
+        final BufferedImage bufferedImage = new BufferedImage(
+                temp.getWidth(null),
+                temp.getHeight(null),
+                BufferedImage.TYPE_INT_RGB);
+        final Graphics g = bufferedImage.createGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, temp.getWidth(null), temp.getHeight(null));
+        g.drawImage(temp, 0, 0, null);
+        g.dispose();
 
-        return bimage;
+        final float[] softenArray = {0, SOFTEN_FACTOR, 0, SOFTEN_FACTOR, 1 - (SOFTEN_FACTOR * 4), SOFTEN_FACTOR, 0, SOFTEN_FACTOR, 0};
+        final Kernel kernel = new Kernel(3, 3, softenArray);
+        final ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
+        final BufferedImage filteredBufferedImage = cOp.filter(bufferedImage, null);
+
+        return filteredBufferedImage;
+    }
+
+    /**
+     * Return difference percent between two buffered images.
+     * @param img1 the first image.
+     * @param img2 the second image.
+     * @return difference percent.
+     */
+    public static float getDifferencePercent(BufferedImage img1, BufferedImage img2) {
+        int width = img1.getWidth();
+        int height = img1.getHeight();
+        int width2 = img2.getWidth();
+        int height2 = img2.getHeight();
+
+        long diff = 0;
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                diff += pixelDiff(img1.getRGB(x, y), img2.getRGB(x, y));
+            }
+        }
+        long maxDiff = 3L * 255 * width * height;
+
+        return (float) (100.0 * diff / maxDiff);
+    }
+
+    /**
+     * Compare to pixels
+     * @param rgb1 the first rgb
+     * @param rgb2 the second rgn
+     * @return the difference.
+     */
+    public static int pixelDiff(int rgb1, int rgb2) {
+        int r1 = (rgb1 >> 16) & 0xff;
+        int g1 = (rgb1 >>  8) & 0xff;
+        int b1 =  rgb1        & 0xff;
+        int r2 = (rgb2 >> 16) & 0xff;
+        int g2 = (rgb2 >>  8) & 0xff;
+        int b2 =  rgb2        & 0xff;
+        return Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
     }
 }

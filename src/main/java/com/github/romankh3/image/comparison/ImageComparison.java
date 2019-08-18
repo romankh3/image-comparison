@@ -105,6 +105,10 @@ public class ImageComparison {
      * Flag which says draw excluded rectangles or not.
      */
     private boolean drawExcludedRectangles = false;
+    /**
+     * The difference percentage between two images.
+     */
+    private float differencePercent;
 
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
@@ -151,7 +155,9 @@ public class ImageComparison {
 
         // check images for valid
         if (isImageSizesNotEqual(expected, actual)) {
-            return ComparisonResult.defaultSizeMisMatchResult(expected, actual);
+            BufferedImage actualResized=ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            differencePercent=ImageComparisonUtil.getDifferencePercent(actualResized,expected);
+            return ComparisonResult.defaultSizeMisMatchResult(expected, actual,differencePercent);
         }
 
         List<Rectangle> rectangles = populateRectangles();
@@ -168,20 +174,6 @@ public class ImageComparison {
 
         return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
-    /**
-     * Draw rectangles which cover the regions of the difference pixels with the option of resizing actual image to match expected dimensions.
-     * @return the result of the drawing.
-     */
-    public ComparisonResult  compareMisSizedImages() throws IOException {
-
-        // Resizing actual image if its diffrent from expected dimensions.
-        if (isImageSizesNotEqual(expected, actual)) {
-            this.actual=ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
-        }
-
-        return compareImages();
-    }
-
     /**
      * Check images for equals their widths and heights.
      *

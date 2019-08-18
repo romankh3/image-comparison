@@ -12,7 +12,6 @@ import static org.junit.Assert.assertTrue;
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
 
-import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -330,43 +329,19 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResult, comparisonResult.getResult());
     }
     @Test
-    public void testCompareMisSizedImages() throws IOException, URISyntaxException {
+    public void testCompareMisSizedImages() throws IOException {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareMisSizedImages();
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
-        assertEquals(MATCH, comparisonResult.getComparisonState());
+        assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
+        boolean differenceLessThan2 = comparisonResult.getDifferencePercent()<2;
+        assertTrue(differenceLessThan2);
 
     }
-    @Test
-    public void testResize() throws IOException, URISyntaxException {
-        //given
-        BufferedImage actual = readImageFromResources("actualDifferentSize.png");
 
-        //when
-        BufferedImage resizedActual = ImageComparisonUtil.resize(actual,200,200);
-
-        //then
-        assertEquals(200,resizedActual.getHeight());
-        assertEquals(200,resizedActual.getWidth());
-
-    }
-    @Test
-    public void testToBufferedImage() throws IOException, URISyntaxException {
-        //given
-        Image imageInstance = readImageFromResources("actualDifferentSize.png");
-        BufferedImage bufferedImageInstance = readImageFromResources("actualDifferentSize.png");
-
-        //when
-       BufferedImage bufferedImage = ImageComparisonUtil.toBufferedImage(imageInstance);
-       BufferedImage bufferedImage1 = ImageComparisonUtil.toBufferedImage(bufferedImageInstance);
-
-       //then
-        assertTrue(bufferedImage instanceof BufferedImage);
-        assertTrue(bufferedImage1 instanceof BufferedImage);
-    }
 }
