@@ -1,6 +1,10 @@
 package com.github.romankh3.image.comparison;
 
-import com.github.romankh3.image.comparison.model.*;
+import com.github.romankh3.image.comparison.model.ComparisonResult;
+import com.github.romankh3.image.comparison.model.ExcludedAreas;
+import com.github.romankh3.image.comparison.model.Point;
+import com.github.romankh3.image.comparison.model.Rectangle;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;

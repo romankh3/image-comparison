@@ -125,7 +125,7 @@ public class ImageComparisonUtil {
             return (BufferedImage) img;
         }
 
-        float SOFTEN_FACTOR = 0.05f;
+        float softenFactor = 0.05f;
         final Image temp = new ImageIcon(img).getImage();
         final BufferedImage bufferedImage = new BufferedImage(
                 temp.getWidth(null),
@@ -137,7 +137,7 @@ public class ImageComparisonUtil {
         g.drawImage(temp, 0, 0, null);
         g.dispose();
 
-        final float[] softenArray = {0, SOFTEN_FACTOR, 0, SOFTEN_FACTOR, 1 - (SOFTEN_FACTOR * 4), SOFTEN_FACTOR, 0, SOFTEN_FACTOR, 0};
+        final float[] softenArray = {0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0};
         final Kernel kernel = new Kernel(3, 3, softenArray);
         final ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         final BufferedImage filteredBufferedImage = cOp.filter(bufferedImage, null);
@@ -154,8 +154,6 @@ public class ImageComparisonUtil {
     public static float getDifferencePercent(BufferedImage img1, BufferedImage img2) {
         int width = img1.getWidth();
         int height = img1.getHeight();
-        int width2 = img2.getWidth();
-        int height2 = img2.getHeight();
 
         long diff = 0;
         for (int y = 0; y < height; y++) {
