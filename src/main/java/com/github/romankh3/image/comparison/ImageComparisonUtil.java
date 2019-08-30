@@ -103,21 +103,17 @@ public class ImageComparisonUtil {
      * @param newW the new width.
      * @param newH the new height.
      */
-
     public static BufferedImage resize(BufferedImage img, int newW, int newH)  {
         Image imgtmp = img;
-
-
         BufferedImage newImage = toBufferedImage( imgtmp.getScaledInstance(newW, newH, Image.SCALE_SMOOTH));
         return newImage;
     }
 
     /**
-     * convert image to Buffered Image.
      *
-     * @param img the object of Image to be converted.
+     * @param img the object of the image to be converted to buffered image.
+     * @return the converted buffered image.
      */
-
     public static BufferedImage toBufferedImage(Image img)
     {
         if (img instanceof BufferedImage)
