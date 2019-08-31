@@ -109,7 +109,7 @@ public class ImageComparisonUtil {
         return newImage;
     }
 
-    /**
+    /** Convert image to buffered image.
      *
      * @param img the object of the image to be converted to buffered image.
      * @return the converted buffered image.
@@ -143,6 +143,7 @@ public class ImageComparisonUtil {
 
     /**
      * Return difference percent between two buffered images.
+     *
      * @param img1 the first image.
      * @param img2 the second image.
      * @return difference percent.
@@ -163,7 +164,8 @@ public class ImageComparisonUtil {
     }
 
     /**
-     * Compare to pixels
+     * Compare two pixels
+     *
      * @param rgb1 the first rgb
      * @param rgb2 the second rgn
      * @return the difference.
