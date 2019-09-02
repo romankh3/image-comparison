@@ -4,6 +4,7 @@ import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
+
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -36,7 +37,7 @@ public class ImageComparison {
     /**
      * Actual image for comparing
      */
-    private final BufferedImage actual;
+    private final  BufferedImage actual;
 
     /**
      * Width of the line that is drawn the rectangle
@@ -108,6 +109,10 @@ public class ImageComparison {
      * Flag which says draw excluded rectangles or not.
      */
     private boolean drawExcludedRectangles = false;
+    /**
+     * The difference percentage between two images.
+     */
+    private float differencePercent;
 
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
@@ -154,7 +159,9 @@ public class ImageComparison {
 
         // check images for valid
         if (isImageSizesNotEqual(expected, actual)) {
-            return ComparisonResult.defaultSizeMisMatchResult(expected, actual);
+            BufferedImage actualResized=ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            differencePercent=ImageComparisonUtil.getDifferencePercent(actualResized,expected);
+            return ComparisonResult.defaultSizeMisMatchResult(expected, actual,differencePercent);
         }
 
         List<Rectangle> rectangles = populateRectangles();
@@ -171,7 +178,6 @@ public class ImageComparison {
 
         return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
-
     /**
      * Check images for equals their widths and heights.
      *
@@ -200,10 +206,11 @@ public class ImageComparison {
 
     /**
      * Say if the two pixels equal or not. The rule is the difference between two pixels
-     * need to be more then 10%.
+     * need to be more than {@link #pixelToleranceLevel}.
      *
      * @param expectedRgb the RGB value of the Pixel of the Expected image.
      * @param actualRgb the RGB value of the Pixel of the Actual image.
+     *
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int expectedRgb, int actualRgb) {

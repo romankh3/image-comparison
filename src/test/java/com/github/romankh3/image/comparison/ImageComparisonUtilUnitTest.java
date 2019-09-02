@@ -8,7 +8,7 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.awt.Frame;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -71,5 +71,58 @@ public class ImageComparisonUtilUnitTest {
 
         //then
         assertNotNull(commandLineUtil);
+    }
+
+    @Test
+    public void testResize() throws IOException {
+        //given
+        BufferedImage actual = readImageFromResources("actualDifferentSize.png");
+
+        //when
+        BufferedImage resizedActual = ImageComparisonUtil.resize(actual,200,200);
+
+        //then
+        assertEquals(200,resizedActual.getHeight());
+        assertEquals(200,resizedActual.getWidth());
+
+    }
+    @Test
+    public void testToBufferedImage() throws IOException {
+        //given
+        Image imageInstance = readImageFromResources("actualDifferentSize.png");
+        BufferedImage bufferedImageInstance = readImageFromResources("actualDifferentSize.png");
+
+        //when
+        BufferedImage bufferedImage = ImageComparisonUtil.toBufferedImage(imageInstance);
+        BufferedImage bufferedImage1 = ImageComparisonUtil.toBufferedImage(bufferedImageInstance);
+
+        //then
+        assertTrue(bufferedImage instanceof BufferedImage);
+        assertTrue(bufferedImage1 instanceof BufferedImage);
+    }
+    @Test
+    public void testGetDifferencePercent()throws IOException{
+        //given
+        BufferedImage bufferedImage = readImageFromResources("actualDifferentSize.png");
+
+        //when
+        float differentPercent = ImageComparisonUtil.getDifferencePercent(bufferedImage,bufferedImage);
+
+        //then
+        assertEquals(0,(int)differentPercent);
+
+    }
+
+    @Test
+    public void testPixelDiff(){
+        //given
+        int Pixel1 = 2;
+        int Pixel2 = 2;
+
+        //when
+        int pixelDiff = ImageComparisonUtil.pixelDiff(Pixel1,Pixel2);
+
+        //then
+        assertEquals(0,pixelDiff);
     }
 }
