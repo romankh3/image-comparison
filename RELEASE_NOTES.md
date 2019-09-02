@@ -1,6 +1,6 @@
 # Release Notes
 ## 3.3.0
-*   Added option to get the pixels difference percentage between images in case of SIZE_MISMATCH 
+*   Added option to get the pixels difference percentage between images in case of SIZE_MISMATCH.
 ## 3.2.0
 *   Added ability to change pixel tolerance.
 *   Improved algorithm to make it faster.

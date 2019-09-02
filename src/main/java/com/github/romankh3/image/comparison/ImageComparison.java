@@ -37,7 +37,7 @@ public class ImageComparison {
     /**
      * Actual image for comparing
      */
-    private  BufferedImage actual;
+    private final  BufferedImage actual;
 
     /**
      * Width of the line that is drawn the rectangle
@@ -206,10 +206,11 @@ public class ImageComparison {
 
     /**
      * Say if the two pixels equal or not. The rule is the difference between two pixels
-     * need to be more then 10%.
+     * need to be more than {@link #pixelToleranceLevel}.
      *
      * @param expectedRgb the RGB value of the Pixel of the Expected image.
      * @param actualRgb the RGB value of the Pixel of the Actual image.
+     *
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int expectedRgb, int actualRgb) {

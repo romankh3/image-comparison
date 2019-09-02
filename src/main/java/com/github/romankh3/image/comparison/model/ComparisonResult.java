@@ -39,10 +39,12 @@ public class ComparisonResult {
      *
      * @param expected expected {@link BufferedImage} object.
      * @param actual actual {@link BufferedImage} object.
+     * @param differencePercent the percent of the differences between images.
      *
      * @return instance of the {@link ComparisonResult} object.
      */
-    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,float differencePercent) {
+    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,
+            float differencePercent) {
         return new ComparisonResult()
                 .setComparisonState(ComparisonState.SIZE_MISMATCH)
                 .setDifferencePercent(differencePercent)
@@ -65,12 +67,12 @@ public class ComparisonResult {
                 .setActual(actual)
                 .setResult(actual);
     }
+
     /**
      * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MATCH}.
      *
      * @param expected expected {@link BufferedImage} object.
      * @param actual actual {@link BufferedImage} object.
-     *
      * @return instance of the {@link ComparisonResult} object.
      */
     public static ComparisonResult defaultMatchResult(BufferedImage expected, BufferedImage actual) {

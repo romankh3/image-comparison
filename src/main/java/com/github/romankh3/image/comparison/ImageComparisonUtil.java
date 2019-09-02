@@ -1,7 +1,16 @@
 package com.github.romankh3.image.comparison;
 
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -21,7 +30,6 @@ public class ImageComparisonUtil {
      * Create GUI for represents the resulting image.
      *
      * @param image resulting image.
-     *
      * @return {@link Frame} for running GUI.
      */
     public static Frame createGUI(BufferedImage image) {
@@ -55,7 +63,6 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
-     *
      * @throws IOException due to read the image from resources.
      */
     public static BufferedImage readImageFromResources(String path) throws IOException {
@@ -72,7 +79,6 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
-     *
      * @throws IOException due to read the image from FS.
      */
     public static BufferedImage readImageFromFile(File path) throws IOException {
@@ -97,27 +103,26 @@ public class ImageComparisonUtil {
     }
 
     /**
-     * Resize image to new dimensions and return new image
+     * Resize image to new dimensions and return new image.
      *
      * @param img the object of the image to be resized.
      * @param newW the new width.
      * @param newH the new height.
+     *
+     * @return resized {@link BufferedImage} object.
      */
-    public static BufferedImage resize(BufferedImage img, int newW, int newH)  {
-        Image imgtmp = img;
-        BufferedImage newImage = toBufferedImage( imgtmp.getScaledInstance(newW, newH, Image.SCALE_SMOOTH));
-        return newImage;
+    public static BufferedImage resize(BufferedImage img, int newW, int newH) {
+        return toBufferedImage(img.getScaledInstance(newW, newH, Image.SCALE_SMOOTH));
     }
 
-    /** Convert image to buffered image.
+    /**
+     * Convert image to buffered image.
      *
      * @param img the object of the image to be converted to buffered image.
      * @return the converted buffered image.
      */
-    public static BufferedImage toBufferedImage(Image img)
-    {
-        if (img instanceof BufferedImage)
-        {
+    public static BufferedImage toBufferedImage(Image img) {
+        if (img instanceof BufferedImage) {
             return (BufferedImage) img;
         }
 
@@ -133,7 +138,8 @@ public class ImageComparisonUtil {
         g.drawImage(temp, 0, 0, null);
         g.dispose();
 
-        final float[] softenArray = {0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0, softenFactor, 0};
+        final float[] softenArray = {0, softenFactor, 0, softenFactor, 1 - (softenFactor * 4), softenFactor, 0,
+                softenFactor, 0};
         final Kernel kernel = new Kernel(3, 3, softenArray);
         final ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
         final BufferedImage filteredBufferedImage = cOp.filter(bufferedImage, null);
