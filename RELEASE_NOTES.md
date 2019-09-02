@@ -1,6 +1,8 @@
 # Release Notes
 ## 3.3.0
 *   Added option to get the pixels difference percentage between images in case of SIZE_MISMATCH.
+*   Fixed NPE for default run from commandLine(#131)
+*   Added configuration part to README.md.
 ## 3.2.0
 *   Added ability to change pixel tolerance.
 *   Improved algorithm to make it faster.
