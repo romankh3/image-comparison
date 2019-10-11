@@ -4,8 +4,6 @@ on: [push]
 
 jobs:
   build:
-    before_install:
-      - "export DISPLAY=:99.0"
 
     runs-on: ubuntu-latest
 
