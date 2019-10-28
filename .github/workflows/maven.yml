@@ -13,7 +13,5 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.8
-    - name: export display
-      run: "export DISPLAY=local:0.0"
     - name: Build with Maven
       run: mvn package --file pom.xml

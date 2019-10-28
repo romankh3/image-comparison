@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import org.junit.Ignore;
 import org.junit.Test;
 
 /**
@@ -21,6 +22,7 @@ import org.junit.Test;
 public class ImageComparisonUtilUnitTest {
 
     @Test
+    @Ignore
     public void testFrameMethod() throws IOException {
         BufferedImage image = readImageFromResources("result.png");
         Frame resultFrame = createGUI(image);
