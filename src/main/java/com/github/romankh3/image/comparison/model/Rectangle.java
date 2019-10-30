@@ -134,7 +134,7 @@ public class Rectangle {
      * @return rectangle width.
      */
     public int getWidth() {
-        return maxPoint.getX() - minPoint.getX();
+        return maxPoint.getX() - minPoint.getX() + 1; // min and max point are included, so real width is +1px
     }
 
     /**
@@ -143,7 +143,7 @@ public class Rectangle {
      * @return rectangle height.
      */
     public int getHeight() {
-        return maxPoint.getY() - minPoint.getY();
+        return maxPoint.getY() - minPoint.getY() + 1; // min and max point are included, so real width is +1px
     }
 
     /**
