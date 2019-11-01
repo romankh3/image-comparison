@@ -284,13 +284,13 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     /**
-     * Test issue #114 If image is different in a line in 1 px, ComparisonState is always MATCH.
+     * Test issue #134 If image is different in a line in 1 px, ComparisonState is always MATCH.
      */
     @Test
     public void testIssue134() throws IOException {
         //given
-        ImageComparison imageComparison = new ImageComparison("expected#114.png", "actual#114.png");
-        BufferedImage expectedImage = readImageFromResources("result#114.png");
+        ImageComparison imageComparison = new ImageComparison("expected#134.png", "actual#134.png");
+        BufferedImage expectedImage = readImageFromResources("result#134.png");
 
         //when
         ComparisonResult comparisonResult = imageComparison.compareImages();
