@@ -4,6 +4,7 @@ import static com.github.romankh3.image.comparison.ImageComparisonUtil.createGUI
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -126,5 +127,28 @@ public class ImageComparisonUtilUnitTest {
 
         //then
         assertEquals(0,pixelDiff);
+    }
+
+    /**
+     * Test issue #136 IllegalArgumentException on deepCopy.
+     */
+    @Test
+    public void testIssue136() throws IOException {
+        //given
+        BufferedImage image = readImageFromResources("actual#136.png");
+        BufferedImage subimage = image.getSubimage(1, 1, image.getWidth() - 2, image.getHeight() - 2);
+
+        //when
+        Throwable ex = getException(() -> ImageComparisonUtil.deepCopy(subimage));
+        assertNull("There is no exception:", ex);
+    }
+
+    private Throwable getException(Runnable action) {
+        try {
+            action.run();
+            return null;
+        } catch (Throwable ex) {
+            return ex;
+        }
     }
 }
