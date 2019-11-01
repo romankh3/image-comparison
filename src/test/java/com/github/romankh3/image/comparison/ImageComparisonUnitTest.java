@@ -47,20 +47,6 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testImageWithAdditional1pxLine() throws IOException {
-        //given
-        ImageComparison imageComparison = new ImageComparison("onePxLineNo.png", "onePxLineYes.png");
-        BufferedImage expectedImage = readImageFromResources("onePxLineDiff.png");
-
-        //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
-
-        //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedImage, comparisonResult.getResult());
-    }
-
-    @Test
     public void testMaximalRectangleCount() throws IOException {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
@@ -295,6 +281,23 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedImage, comparisonResult.getResult());
         assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
+    }
+
+    /**
+     * Test issue #114 If image is different in a line in 1 px, ComparisonState is always MATCH.
+     */
+    @Test
+    public void testIssue134() throws IOException {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected#114.png", "actual#114.png");
+        BufferedImage expectedImage = readImageFromResources("result#114.png");
+
+        //when
+        ComparisonResult comparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
     }
 
     @Test
