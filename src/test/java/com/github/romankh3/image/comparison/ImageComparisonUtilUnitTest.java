@@ -127,4 +127,17 @@ public class ImageComparisonUtilUnitTest {
         //then
         assertEquals(0,pixelDiff);
     }
+
+    /**
+     * Test issue #136 IllegalArgumentException on deepCopy.
+     */
+    @Test
+    public void testIssue136() throws IOException {
+        //given
+        BufferedImage image = readImageFromResources("actual#136.png");
+        BufferedImage subimage = image.getSubimage(1, 1, image.getWidth() - 2, image.getHeight() - 2);
+
+        //when
+        ImageComparisonUtil.deepCopy(subimage);
+    }
 }
