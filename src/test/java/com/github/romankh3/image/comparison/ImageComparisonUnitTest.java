@@ -93,7 +93,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     public void testMinimalRectangleSize() throws IOException {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
-        imageComparison.setMinimalRectangleSize(10);
+        imageComparison.setMinimalRectangleSize(4 * 4 + 1);
         BufferedImage expectedImage = readImageFromResources("minimalRectangleSizeResult.png");
 
         //when
@@ -283,6 +283,23 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
     }
 
+    /**
+     * Test issue #134 If image is different in a line in 1 px, ComparisonState is always MATCH.
+     */
+    @Test
+    public void testIssue134() throws IOException {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected#134.png", "actual#134.png");
+        BufferedImage expectedImage = readImageFromResources("result#134.png");
+
+        //when
+        ComparisonResult comparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, comparisonResult.getComparisonState());
+        assertImagesEqual(expectedImage, comparisonResult.getResult());
+    }
+
     @Test
     public void testMatchSize() throws IOException {
         //when
@@ -322,12 +339,15 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResult = readImageFromResources("result.jpg");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
+        ComparisonResult comparisonResult = new ImageComparison(expected, actual)
+                .setMinimalRectangleSize(4)
+                .compareImages();
 
         //then
         assertEquals(MISMATCH, comparisonResult.getComparisonState());
         assertImagesEqual(expectedResult, comparisonResult.getResult());
     }
+
     @Test
     public void testCompareMisSizedImages() throws IOException {
         //given
@@ -341,7 +361,5 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
         boolean differenceLessThan2 = comparisonResult.getDifferencePercent()<2;
         assertTrue(differenceLessThan2);
-
     }
-
 }
