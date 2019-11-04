@@ -355,13 +355,13 @@ public class ImageComparison {
 
     /**
      * Draw rectangles based on collection of the {@link Rectangle} and {@link Graphics2D}.
+     * getWidth/getHeight return real width/height,
+     * so need to draw rectangle on one px smaller because minpoint + width/height is point on excluded pixel.
      *
      * @param graphics the {@link Graphics2D} object for drawing.
      * @param rectangles the collection of the {@link Rectangle}.
      */
     private void draw(Graphics2D graphics, List<Rectangle> rectangles) {
-        // getWidth/getHeight return real width/height,
-        // so need to draw rectangle on one px smaller because minpoint + width/height is point on excluded pixel
         rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getX(),
                 rectangle.getMinPoint().getY(),
                 rectangle.getWidth() - 1,

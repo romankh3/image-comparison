@@ -1,4 +1,9 @@
 # Release Notes
+## 3.3.1
+*   Fixed bug #134: If image is different in a line in 1 px, ComparisonState is always MATCH
+*   Fixed bug #136: deepCopy method throws IllegalArgumentException on shared BufferedImage
+*   added GitHub workflow to the project.
+
 ## 3.3.0
 *   Added option to get the pixels difference percentage between images in case of SIZE_MISMATCH.
 *   Fixed NPE for default run from commandLine(#131)
