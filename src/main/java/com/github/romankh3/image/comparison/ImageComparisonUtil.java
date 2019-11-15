@@ -23,7 +23,7 @@ import javax.swing.WindowConstants;
 /**
  * Tools for the {@link ImageComparison} object.
  */
-public class ImageComparisonUtil {
+public final class ImageComparisonUtil {
 
     /**
      * Create GUI for represents the resulting image.
@@ -70,10 +70,10 @@ public class ImageComparisonUtil {
             try {
                 return ImageIO.read(inputStream);
             } catch (IOException e) {
-                throw new ImageComparisonException("Can not read image from the file, path=" + path, e);
+                throw new ImageComparisonException(String.format("Can not read image from the file, path=%s", path), e);
             }
         } else {
-            throw new ImageComparisonException("Image " + path + " not found");
+            throw new ImageComparisonException(String.format("Image %s not found", path));
         }
     }
 
@@ -88,7 +88,7 @@ public class ImageComparisonUtil {
         try {
             return ImageIO.read(path);
         } catch (IOException e) {
-            throw new ImageComparisonException("Can not read file from path=" + path.getAbsolutePath(), e);
+            throw new ImageComparisonException(String.format("Can not read file from path=%s", path.getAbsolutePath()), e);
         }
     }
 
@@ -109,7 +109,7 @@ public class ImageComparisonUtil {
         try {
             ImageIO.write(image, "png", pathFile);
         } catch (IOException e) {
-            throw new ImageComparisonException("Can not save image to path=" + pathFile.getAbsolutePath(), e);
+            throw new ImageComparisonException(String.format("Can not save image to path=%s", pathFile.getAbsolutePath()), e);
         }
     }
 

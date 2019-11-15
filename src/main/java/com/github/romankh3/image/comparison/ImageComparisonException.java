@@ -1,9 +1,9 @@
 package com.github.romankh3.image.comparison;
 
 /**
- * {@link RuntimeException} exception, created due to reason to avoid rethrowing checked exceptions.
+ * A {@link RuntimeException} that is thrown in case of an image comparison failures.
  */
-public class ImageComparisonException  extends RuntimeException {
+public final class ImageComparisonException  extends RuntimeException {
 
     public ImageComparisonException(String message) {
         super(message);
