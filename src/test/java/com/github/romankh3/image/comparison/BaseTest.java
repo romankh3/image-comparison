@@ -26,4 +26,13 @@ class BaseTest {
         }
     }
 
+    protected Throwable getException(Runnable action) {
+        try {
+            action.run();
+            return null;
+        } catch (Throwable ex) {
+            return ex;
+        }
+    }
+
 }

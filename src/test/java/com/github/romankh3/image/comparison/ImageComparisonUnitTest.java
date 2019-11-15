@@ -11,14 +11,11 @@ import static org.junit.Assert.assertTrue;
 
 import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.Test;
-
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -30,7 +27,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * don't break the main behaviour and result as expected.
      */
     @Test
-    public void testCorrectWorkingExpectedActual() throws IOException {
+    public void testCorrectWorkingExpectedActual() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result.png");
 
@@ -47,7 +44,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testMaximalRectangleCount() throws IOException {
+    public void testMaximalRectangleCount() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMaximalRectangleCount(3);
@@ -62,7 +59,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testImagesWithTotallyDifferentImages() throws IOException {
+    public void testImagesWithTotallyDifferentImages() {
         //when
         BufferedImage expectedResult = readImageFromResources("totallyDifferentImageResult.png");
 
@@ -76,7 +73,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testDestinationGetting() throws IOException {
+    public void testDestinationGetting() {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actual.png");
@@ -90,7 +87,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testMinimalRectangleSize() throws IOException {
+    public void testMinimalRectangleSize() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMinimalRectangleSize(4 * 4 + 1);
@@ -108,7 +105,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #17. It was StackOverFlowError.
      */
     @Test
-    public void testIssue17() throws IOException {
+    public void testIssue17() {
         //when
         ComparisonResult comparisonResult = new ImageComparison("expected#17.png", "actual#17.png").compareImages();
 
@@ -121,7 +118,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #21. It was StackOverFlowError.
      */
     @Test
-    public void testIssue21() throws IOException {
+    public void testIssue21() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
@@ -137,7 +134,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #11.
      */
     @Test
-    public void testIssue11() throws IOException {
+    public void testIssue11() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#11.png");
 
@@ -156,7 +153,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Verify that it is possible to use a thick line in the rectangle
      */
     @Test
-    public void testRectangleWithLineWidth10() throws IOException {
+    public void testRectangleWithLineWidth10() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
 
@@ -177,7 +174,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testShouldReturnARectangleList() throws IOException {
+    public void testShouldReturnARectangleList() {
         //given
         BufferedImage original = readImageFromResources("expected#17.png");
         BufferedImage masked = readImageFromResources("actualMasked#58.png");
@@ -194,7 +191,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testSizeMissMatch() throws IOException {
+    public void testSizeMissMatch() {
         //given
         BufferedImage expected = new BufferedImage(10, 10, 10);
         BufferedImage actual = new BufferedImage(12, 12, 10);
@@ -207,7 +204,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testShouldIgnoreExcludedArea() throws IOException {
+    public void testShouldIgnoreExcludedArea() {
         //given
         BufferedImage expected = readImageFromResources("expected#17.png");
         BufferedImage actual = readImageFromResources("actualMaskedComparison#58.png");
@@ -226,7 +223,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #98 and #97 to see the drawn excluded areas.
      */
     @Test
-    public void testIssue98() throws IOException {
+    public void testIssue98() {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -256,7 +253,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #113 to draw red and green rectangles.
      */
     @Test
-    public void testIssue113() throws IOException {
+    public void testIssue113() {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -287,7 +284,7 @@ public class ImageComparisonUnitTest extends BaseTest {
      * Test issue #134 If image is different in a line in 1 px, ComparisonState is always MATCH.
      */
     @Test
-    public void testIssue134() throws IOException {
+    public void testIssue134() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected#134.png", "actual#134.png");
         BufferedImage expectedImage = readImageFromResources("result#134.png");
@@ -301,7 +298,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testMatchSize() throws IOException {
+    public void testMatchSize() {
         //when
         ComparisonResult comparisonResult = new ImageComparison("expected.png", "expected.png").compareImages();
 
@@ -310,7 +307,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testGettersAnsSetters() throws IOException {
+    public void testGettersAnsSetters() {
         //when
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png")
                 .setMinimalRectangleSize(100)
@@ -331,7 +328,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testResearchJpegImages() throws IOException {
+    public void testResearchJpegImages() {
         //given
         BufferedImage expected = readImageFromResources("expected.jpg");
         BufferedImage actual = readImageFromResources("actual.jpg");
@@ -349,7 +346,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testCompareMisSizedImages() throws IOException {
+    public void testCompareMisSizedImages() {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
@@ -359,7 +356,7 @@ public class ImageComparisonUnitTest extends BaseTest {
 
         //then
         assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
-        boolean differenceLessThan2 = comparisonResult.getDifferencePercent()<2;
+        boolean differenceLessThan2 = comparisonResult.getDifferencePercent() < 2;
         assertTrue(differenceLessThan2);
     }
 }

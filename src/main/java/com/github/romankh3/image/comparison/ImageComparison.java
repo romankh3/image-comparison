@@ -4,13 +4,11 @@ import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -37,7 +35,7 @@ public class ImageComparison {
     /**
      * Actual image for comparing
      */
-    private final  BufferedImage actual;
+    private final BufferedImage actual;
 
     /**
      * Width of the line that is drawn the rectangle
@@ -119,10 +117,10 @@ public class ImageComparison {
      *
      * @param expected expected image to be compared
      * @param actual actual image to be compared
-     * @throws IOException due to saving result image.
      */
-    public ImageComparison(String expected, String actual) throws IOException {
-        this(ImageComparisonUtil.readImageFromResources(expected), ImageComparisonUtil.readImageFromResources(actual),
+    public ImageComparison(String expected, String actual) {
+        this(ImageComparisonUtil.readImageFromResources(expected),
+                ImageComparisonUtil.readImageFromResources(actual),
                 null);
     }
 
@@ -153,15 +151,14 @@ public class ImageComparison {
      * Draw rectangles which cover the regions of the difference pixels.
      *
      * @return the result of the drawing.
-     * @throws IOException due to saving result image.
      */
-    public ComparisonResult compareImages() throws IOException {
+    public ComparisonResult compareImages() {
 
         // check images for valid
         if (isImageSizesNotEqual(expected, actual)) {
-            BufferedImage actualResized=ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
-            differencePercent=ImageComparisonUtil.getDifferencePercent(actualResized,expected);
-            return ComparisonResult.defaultSizeMisMatchResult(expected, actual,differencePercent);
+            BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            differencePercent = ImageComparisonUtil.getDifferencePercent(actualResized, expected);
+            return ComparisonResult.defaultSizeMisMatchResult(expected, actual, differencePercent);
         }
 
         List<Rectangle> rectangles = populateRectangles();
@@ -178,6 +175,7 @@ public class ImageComparison {
 
         return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
+
     /**
      * Check images for equals their widths and heights.
      *
@@ -210,7 +208,6 @@ public class ImageComparison {
      *
      * @param expectedRgb the RGB value of the Pixel of the Expected image.
      * @param actualRgb the RGB value of the Pixel of the Actual image.
-     *
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int expectedRgb, int actualRgb) {
@@ -320,7 +317,7 @@ public class ImageComparison {
      * @param rectangles the collection of the {@link Rectangle} objects.
      * @return result {@link BufferedImage} with drawn rectangles.
      */
-    private BufferedImage drawRectangles(List<Rectangle> rectangles) throws IOException {
+    private BufferedImage drawRectangles(List<Rectangle> rectangles) {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
         Graphics2D graphics = resultImage.createGraphics();
         graphics.setColor(Color.RED);

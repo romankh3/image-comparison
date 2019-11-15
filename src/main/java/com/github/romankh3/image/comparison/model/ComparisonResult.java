@@ -3,7 +3,6 @@ package com.github.romankh3.image.comparison.model;
 import com.github.romankh3.image.comparison.ImageComparisonUtil;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 
 /**
  * Data transfer objects which contains all the needed data for result of the comparison.
@@ -40,7 +39,6 @@ public class ComparisonResult {
      * @param expected expected {@link BufferedImage} object.
      * @param actual actual {@link BufferedImage} object.
      * @param differencePercent the percent of the differences between images.
-     *
      * @return instance of the {@link ComparisonResult} object.
      */
     public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,
@@ -88,9 +86,8 @@ public class ComparisonResult {
      *
      * @param file the provided {@link File} object.
      * @return this {@link ComparisonResult} object.
-     * @throws IOException due to save image.
      */
-    public ComparisonResult writeResultTo(File file) throws IOException {
+    public ComparisonResult writeResultTo(File file) {
         ImageComparisonUtil.saveImage(file, result);
         return this;
     }

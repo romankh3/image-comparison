@@ -12,7 +12,6 @@ import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
 import java.awt.image.WritableRaster;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
@@ -63,14 +62,18 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
-     * @throws IOException due to read the image from resources.
+     * @throws ImageComparisonException due to read the image from resources.
      */
-    public static BufferedImage readImageFromResources(String path) throws IOException {
+    public static BufferedImage readImageFromResources(String path) throws ImageComparisonException {
         InputStream inputStream = ImageComparisonUtil.class.getClassLoader().getResourceAsStream(path);
         if (inputStream != null) {
-            return ImageIO.read(inputStream);
+            try {
+                return ImageIO.read(inputStream);
+            } catch (IOException e) {
+                throw new ImageComparisonException("Can not read image from the file, path=" + path, e);
+            }
         } else {
-            throw new IOException("Image " + path + " not found");
+            throw new ImageComparisonException("Image " + path + " not found");
         }
     }
 
@@ -79,10 +82,14 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
-     * @throws IOException due to read the image from FS.
+     * @throws ImageComparisonException due to read the image from FS.
      */
-    public static BufferedImage readImageFromFile(File path) throws IOException {
-        return ImageIO.read(path);
+    public static BufferedImage readImageFromFile(File path) throws ImageComparisonException {
+        try {
+            return ImageIO.read(path);
+        } catch (IOException e) {
+            throw new ImageComparisonException("Can not read file from path=" + path.getAbsolutePath(), e);
+        }
     }
 
     /**
@@ -90,16 +97,20 @@ public class ImageComparisonUtil {
      *
      * @param pathFile the path to the saving image.
      * @param image the {@link BufferedImage} object of this specific image.
-     * @throws IOException due to save image.
+     * @throws ImageComparisonException due to save image.
      */
-    public static void saveImage(File pathFile, BufferedImage image) throws IOException {
+    public static void saveImage(File pathFile, BufferedImage image) throws ImageComparisonException {
         File dir = pathFile.getParentFile();
         // make dir if it's not using from Gradle.
         boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
         if (!dirExists) {
-            throw new FileNotFoundException("Unable to create directory " + dir);
+            throw new ImageComparisonException("Unable to create directory " + dir);
         }
-        ImageIO.write(image, "png", pathFile);
+        try {
+            ImageIO.write(image, "png", pathFile);
+        } catch (IOException e) {
+            throw new ImageComparisonException("Can not save image to path=" + pathFile.getAbsolutePath(), e);
+        }
     }
 
     /**
