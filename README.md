@@ -148,13 +148,13 @@ class Example {
                imageComparison.getPixelToleranceLevel();
        
                //After configuring the ImageComparison object, can be executed compare() method:
-               ComparisonResult comparisonResult = imageComparison.compareImages();
+               ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
        
                //Can be found ComparisonState.
-               ComparisonState comparisonState = comparisonResult.getComparisonState();
+               ImageComparisonState imageComparisonState = imageComparisonResult.getComparisonState();
                
                //And Result Image
-               BufferedImage resultImage = comparisonResult.getResult();
+               BufferedImage resultImage = imageComparisonResult.getResult();
        
                //Image can be saved after comparison, using ImageComparisonUtil.
                ImageComparisonUtil.saveImage(resultDestination, resultImage); 

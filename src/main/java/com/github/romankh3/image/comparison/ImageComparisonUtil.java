@@ -1,24 +1,15 @@
 package com.github.romankh3.image.comparison;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.awt.image.WritableRaster;
+import com.github.romankh3.image.comparison.exception.ImageComparisonException;
+import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.WindowConstants;
 
 /**
  * Tools for the {@link ImageComparison} object.
@@ -73,7 +64,7 @@ public final class ImageComparisonUtil {
                 throw new ImageComparisonException(String.format("Can not read image from the file, path=%s", path), e);
             }
         } else {
-            throw new ImageComparisonException(String.format("Image %s not found", path));
+            throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
         }
     }
 
@@ -153,9 +144,8 @@ public final class ImageComparisonUtil {
                 softenFactor, 0};
         final Kernel kernel = new Kernel(3, 3, softenArray);
         final ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-        final BufferedImage filteredBufferedImage = cOp.filter(bufferedImage, null);
 
-        return filteredBufferedImage;
+        return cOp.filter(bufferedImage, null);
     }
 
     /**

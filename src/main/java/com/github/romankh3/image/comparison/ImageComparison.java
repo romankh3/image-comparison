@@ -1,19 +1,15 @@
 package com.github.romankh3.image.comparison;
 
-import com.github.romankh3.image.comparison.model.ComparisonResult;
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
+import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -152,19 +148,19 @@ public class ImageComparison {
      *
      * @return the result of the drawing.
      */
-    public ComparisonResult compareImages() {
+    public ImageComparisonResult compareImages() {
 
         // check images for valid
         if (isImageSizesNotEqual(expected, actual)) {
             BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
             differencePercent = ImageComparisonUtil.getDifferencePercent(actualResized, expected);
-            return ComparisonResult.defaultSizeMisMatchResult(expected, actual, differencePercent);
+            return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, differencePercent);
         }
 
         List<Rectangle> rectangles = populateRectangles();
 
         if (rectangles.isEmpty()) {
-            ComparisonResult matchResult = ComparisonResult.defaultMatchResult(expected, actual);
+            ImageComparisonResult matchResult = ImageComparisonResult.defaultMatchResult(expected, actual);
             if (drawExcludedRectangles) {
                 matchResult.setResult(drawRectangles(rectangles));
             }
@@ -173,7 +169,7 @@ public class ImageComparison {
 
         BufferedImage resultImage = drawRectangles(rectangles);
 
-        return ComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
+        return ImageComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
 
     /**

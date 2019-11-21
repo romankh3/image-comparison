@@ -2,9 +2,9 @@ package com.github.romankh3.image.comparison.model;
 
 /**
  * Enum for telling the result of the Comparison.
- * For example {@link ComparisonState#MATCH} - means that the images are equal.
+ * For example {@link ImageComparisonState#MATCH} - means that the images are equal.
  */
-public enum ComparisonState {
+public enum ImageComparisonState {
 
     /**
      * Result state of the comparison, where mismatch of the image sizes.

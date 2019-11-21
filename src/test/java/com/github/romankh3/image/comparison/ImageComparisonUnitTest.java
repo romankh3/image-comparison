@@ -1,21 +1,18 @@
 package com.github.romankh3.image.comparison;
 
-import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
-import static com.github.romankh3.image.comparison.model.ComparisonState.MATCH;
-import static com.github.romankh3.image.comparison.model.ComparisonState.MISMATCH;
-import static com.github.romankh3.image.comparison.model.ComparisonState.SIZE_MISMATCH;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import com.github.romankh3.image.comparison.model.ComparisonResult;
+import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
+import org.junit.Test;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-import org.junit.Test;
+
+import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.*;
+import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -34,13 +31,13 @@ public class ImageComparisonUnitTest extends BaseTest {
         File file = new File("build/test-images/result.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison("expected.png", "actual.png")
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "actual.png")
                 .compareImages()
                 .writeResultTo(file);
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
     @Test
@@ -51,11 +48,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedImage = readImageFromResources("maximalRectangleCountResult.png");
 
         //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
     @Test
@@ -64,12 +61,12 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResult = readImageFromResources("totallyDifferentImageResult.png");
 
         //when
-        ComparisonResult comparisonResult =
+        ImageComparisonResult imageComparisonResult =
                 new ImageComparison("expected.png", "actualTotallyDifferent.png").compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResult, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResult, imageComparisonResult.getResult());
     }
 
     @Test
@@ -94,11 +91,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedImage = readImageFromResources("minimalRectangleSizeResult.png");
 
         //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
     /**
@@ -107,11 +104,11 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testIssue17() {
         //when
-        ComparisonResult comparisonResult = new ImageComparison("expected#17.png", "actual#17.png").compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected#17.png", "actual#17.png").compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertNotNull(comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertNotNull(imageComparisonResult.getResult());
     }
 
     /**
@@ -123,11 +120,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison("expected#21.png", "actual#21.png").compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected#21.png", "actual#21.png").compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
     /**
@@ -142,11 +139,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage actual = readImageFromResources("actual#11.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
     /**
@@ -165,11 +162,11 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setRectangleLineWidth(10);
 
         //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResultImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
         assertEquals(10, imageComparison.getRectangleLineWidth());
     }
 
@@ -197,10 +194,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage actual = new BufferedImage(12, 12, 10);
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
-        assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
+        assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
     }
 
     @Test
@@ -213,10 +210,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         ImageComparison imageComparison = new ImageComparison(expected, actual).setExcludedAreas(excludedAreas);
 
         //when
-        ComparisonResult result = imageComparison.compareImages();
+        ImageComparisonResult result = imageComparison.compareImages();
 
         //then
-        assertEquals(result.getComparisonState(), MATCH);
+        assertEquals(result.getImageComparisonState(), MATCH);
     }
 
     /**
@@ -242,11 +239,11 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setDrawExcludedRectangles(true);
 
         //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedImage, comparisonResult.getResult());
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
     /**
@@ -272,11 +269,11 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setDrawExcludedRectangles(true);
 
         //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
         assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
     }
 
@@ -290,20 +287,20 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedImage = readImageFromResources("result#134.png");
 
         //when
-        ComparisonResult comparisonResult = imageComparison.compareImages();
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedImage, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
     @Test
     public void testMatchSize() {
         //when
-        ComparisonResult comparisonResult = new ImageComparison("expected.png", "expected.png").compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "expected.png").compareImages();
 
         //then
-        assertEquals(MATCH, comparisonResult.getComparisonState());
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
     }
 
     @Test
@@ -336,13 +333,13 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResult = readImageFromResources("result.jpg");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual)
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expected, actual)
                 .setMinimalRectangleSize(4)
                 .compareImages();
 
         //then
-        assertEquals(MISMATCH, comparisonResult.getComparisonState());
-        assertImagesEqual(expectedResult, comparisonResult.getResult());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResult, imageComparisonResult.getResult());
     }
 
     @Test
@@ -352,11 +349,11 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
 
         //when
-        ComparisonResult comparisonResult = new ImageComparison(expected, actual).compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expected, actual).compareImages();
 
         //then
-        assertEquals(SIZE_MISMATCH, comparisonResult.getComparisonState());
-        boolean differenceLessThan2 = comparisonResult.getDifferencePercent() < 2;
+        assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
+        boolean differenceLessThan2 = imageComparisonResult.getDifferencePercent() < 2;
         assertTrue(differenceLessThan2);
     }
 }

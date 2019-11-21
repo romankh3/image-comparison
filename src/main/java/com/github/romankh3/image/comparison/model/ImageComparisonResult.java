@@ -1,13 +1,14 @@
 package com.github.romankh3.image.comparison.model;
 
 import com.github.romankh3.image.comparison.ImageComparisonUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 
 /**
  * Data transfer objects which contains all the needed data for result of the comparison.
  */
-public class ComparisonResult {
+public class ImageComparisonResult {
 
     /**
      * {@link BufferedImage} object of the expected.
@@ -27,24 +28,24 @@ public class ComparisonResult {
     /**
      * State of the comparison.
      */
-    private ComparisonState comparisonState;
+    private ImageComparisonState imageComparisonState;
     /**
      * The difference percentage between two images.
      */
     private float differencePercent;
 
     /**
-     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#SIZE_MISMATCH}.
+     * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#SIZE_MISMATCH}.
      *
      * @param expected expected {@link BufferedImage} object.
      * @param actual actual {@link BufferedImage} object.
      * @param differencePercent the percent of the differences between images.
-     * @return instance of the {@link ComparisonResult} object.
+     * @return instance of the {@link ImageComparisonResult} object.
      */
-    public static ComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,
-            float differencePercent) {
-        return new ComparisonResult()
-                .setComparisonState(ComparisonState.SIZE_MISMATCH)
+    public static ImageComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,
+                                                                  float differencePercent) {
+        return new ImageComparisonResult()
+                .setImageComparisonState(ImageComparisonState.SIZE_MISMATCH)
                 .setDifferencePercent(differencePercent)
                 .setExpected(expected)
                 .setActual(actual)
@@ -52,30 +53,30 @@ public class ComparisonResult {
     }
 
     /**
-     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MISMATCH}.
+     * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#MISMATCH}.
      *
      * @param expected expected {@link BufferedImage} object.
      * @param actual actual {@link BufferedImage} object.
-     * @return instance of the {@link ComparisonResult} object.
+     * @return instance of the {@link ImageComparisonResult} object.
      */
-    public static ComparisonResult defaultMisMatchResult(BufferedImage expected, BufferedImage actual) {
-        return new ComparisonResult()
-                .setComparisonState(ComparisonState.MISMATCH)
+    public static ImageComparisonResult defaultMisMatchResult(BufferedImage expected, BufferedImage actual) {
+        return new ImageComparisonResult()
+                .setImageComparisonState(ImageComparisonState.MISMATCH)
                 .setExpected(expected)
                 .setActual(actual)
                 .setResult(actual);
     }
 
     /**
-     * Create default instance of the {@link ComparisonResult} with {@link ComparisonState#MATCH}.
+     * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#MATCH}.
      *
      * @param expected expected {@link BufferedImage} object.
      * @param actual actual {@link BufferedImage} object.
-     * @return instance of the {@link ComparisonResult} object.
+     * @return instance of the {@link ImageComparisonResult} object.
      */
-    public static ComparisonResult defaultMatchResult(BufferedImage expected, BufferedImage actual) {
-        return new ComparisonResult()
-                .setComparisonState(ComparisonState.MATCH)
+    public static ImageComparisonResult defaultMatchResult(BufferedImage expected, BufferedImage actual) {
+        return new ImageComparisonResult()
+                .setImageComparisonState(ImageComparisonState.MATCH)
                 .setExpected(expected)
                 .setActual(actual)
                 .setResult(actual);
@@ -85,9 +86,9 @@ public class ComparisonResult {
      * Save the image to the provided {@link File} object.
      *
      * @param file the provided {@link File} object.
-     * @return this {@link ComparisonResult} object.
+     * @return this {@link ImageComparisonResult} object.
      */
-    public ComparisonResult writeResultTo(File file) {
+    public ImageComparisonResult writeResultTo(File file) {
         ImageComparisonUtil.saveImage(file, result);
         return this;
     }
@@ -96,7 +97,7 @@ public class ComparisonResult {
         return expected;
     }
 
-    public ComparisonResult setExpected(BufferedImage expected) {
+    public ImageComparisonResult setExpected(BufferedImage expected) {
         this.expected = expected;
         return this;
     }
@@ -105,7 +106,7 @@ public class ComparisonResult {
         return actual;
     }
 
-    public ComparisonResult setActual(BufferedImage actual) {
+    public ImageComparisonResult setActual(BufferedImage actual) {
         this.actual = actual;
         return this;
     }
@@ -114,17 +115,17 @@ public class ComparisonResult {
         return result;
     }
 
-    public ComparisonResult setResult(BufferedImage result) {
+    public ImageComparisonResult setResult(BufferedImage result) {
         this.result = result;
         return this;
     }
 
-    public ComparisonState getComparisonState() {
-        return comparisonState;
+    public ImageComparisonState getImageComparisonState() {
+        return imageComparisonState;
     }
 
-    public ComparisonResult setComparisonState(ComparisonState comparisonState) {
-        this.comparisonState = comparisonState;
+    public ImageComparisonResult setImageComparisonState(ImageComparisonState imageComparisonState) {
+        this.imageComparisonState = imageComparisonState;
         return this;
     }
 
@@ -132,7 +133,7 @@ public class ComparisonResult {
         return differencePercent;
     }
 
-    public ComparisonResult setDifferencePercent(float differencePercent) {
+    ImageComparisonResult setDifferencePercent(float differencePercent) {
         this.differencePercent = differencePercent;
         return this;
     }
