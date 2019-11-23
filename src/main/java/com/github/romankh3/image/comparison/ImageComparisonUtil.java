@@ -1,30 +1,20 @@
 package com.github.romankh3.image.comparison;
 
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Frame;
-import java.awt.Graphics;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.awt.image.ColorModel;
-import java.awt.image.ConvolveOp;
-import java.awt.image.Kernel;
-import java.awt.image.WritableRaster;
+import com.github.romankh3.image.comparison.exception.ImageComparisonException;
+import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
+
+import javax.imageio.ImageIO;
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.*;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.WindowConstants;
 
 /**
  * Tools for the {@link ImageComparison} object.
  */
-public class ImageComparisonUtil {
+public final class ImageComparisonUtil {
 
     /**
      * Create GUI for represents the resulting image.
@@ -63,14 +53,18 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
-     * @throws IOException due to read the image from resources.
+     * @throws ImageComparisonException due to read the image from resources.
      */
-    public static BufferedImage readImageFromResources(String path) throws IOException {
+    public static BufferedImage readImageFromResources(String path) throws ImageComparisonException {
         InputStream inputStream = ImageComparisonUtil.class.getClassLoader().getResourceAsStream(path);
         if (inputStream != null) {
-            return ImageIO.read(inputStream);
+            try {
+                return ImageIO.read(inputStream);
+            } catch (IOException e) {
+                throw new ImageComparisonException(String.format("Can not read image from the file, path=%s", path), e);
+            }
         } else {
-            throw new IOException("Image " + path + " not found");
+            throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
         }
     }
 
@@ -79,10 +73,14 @@ public class ImageComparisonUtil {
      *
      * @param path the path where contains image.
      * @return the {@link BufferedImage} object of this specific image.
-     * @throws IOException due to read the image from FS.
+     * @throws ImageComparisonException due to read the image from FS.
      */
-    public static BufferedImage readImageFromFile(File path) throws IOException {
-        return ImageIO.read(path);
+    public static BufferedImage readImageFromFile(File path) throws ImageComparisonException {
+        try {
+            return ImageIO.read(path);
+        } catch (IOException e) {
+            throw new ImageComparisonException(String.format("Can not read file from path=%s", path.getAbsolutePath()), e);
+        }
     }
 
     /**
@@ -90,16 +88,20 @@ public class ImageComparisonUtil {
      *
      * @param pathFile the path to the saving image.
      * @param image the {@link BufferedImage} object of this specific image.
-     * @throws IOException due to save image.
+     * @throws ImageComparisonException due to save image.
      */
-    public static void saveImage(File pathFile, BufferedImage image) throws IOException {
+    public static void saveImage(File pathFile, BufferedImage image) throws ImageComparisonException {
         File dir = pathFile.getParentFile();
         // make dir if it's not using from Gradle.
         boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
         if (!dirExists) {
-            throw new FileNotFoundException("Unable to create directory " + dir);
+            throw new ImageComparisonException("Unable to create directory " + dir);
         }
-        ImageIO.write(image, "png", pathFile);
+        try {
+            ImageIO.write(image, "png", pathFile);
+        } catch (IOException e) {
+            throw new ImageComparisonException(String.format("Can not save image to path=%s", pathFile.getAbsolutePath()), e);
+        }
     }
 
     /**
@@ -142,9 +144,8 @@ public class ImageComparisonUtil {
                 softenFactor, 0};
         final Kernel kernel = new Kernel(3, 3, softenArray);
         final ConvolveOp cOp = new ConvolveOp(kernel, ConvolveOp.EDGE_NO_OP, null);
-        final BufferedImage filteredBufferedImage = cOp.filter(bufferedImage, null);
 
-        return filteredBufferedImage;
+        return cOp.filter(bufferedImage, null);
     }
 
     /**

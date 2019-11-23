@@ -9,10 +9,10 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.awt.*;
+import java.awt.Frame;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -20,25 +20,26 @@ import org.junit.Test;
 /**
  * Unit-level testing for {@link ImageComparisonUtil} object.
  */
-public class ImageComparisonUtilUnitTest {
+public class ImageComparisonUtilUnitTest extends BaseTest {
 
     @Test
     @Ignore
-    public void testFrameMethod() throws IOException {
+    public void testFrameMethod() {
         BufferedImage image = readImageFromResources("result.png");
         Frame resultFrame = createGUI(image);
         assertEquals(image.getHeight(), resultFrame.getHeight());
         assertEquals(image.getWidth(), resultFrame.getWidth());
     }
 
-    @Test(expected = IOException.class)
-    public void testWrongPath() throws IOException {
+    @Test
+    public void testWrongPath() {
         //when-then
-        readImageFromResources("wrong-file-name.png");
+        Throwable ex = getException(() -> readImageFromResources("wrong-file-name.png"));
+        assertTrue(ex.getMessage().startsWith("Image with path = wrong-file-name.png not found"));
     }
 
-    @Test(expected = FileNotFoundException.class)
-    public void testNullParent() throws IOException {
+    @Test
+    public void testNullParent() {
         //given
         File path = mock(File.class);
         File parent = mock(File.class);
@@ -47,11 +48,12 @@ public class ImageComparisonUtilUnitTest {
         when(path.getParentFile()).thenReturn(parent);
 
         //when-then
-        ImageComparisonUtil.saveImage(path, null);
+        Throwable ex = getException(() -> ImageComparisonUtil.saveImage(path, null));
+        assertTrue(ex.getMessage().startsWith("Unable to create directory "));
     }
 
     @Test
-    public void testSaveImage() throws IOException {
+    public void testSaveImage() {
         BufferedImage image = readImageFromResources("result.png");
         String path = "build/test/correct/save/image.png";
         ImageComparisonUtil.saveImage(new File(path), image);
@@ -77,20 +79,21 @@ public class ImageComparisonUtilUnitTest {
     }
 
     @Test
-    public void testResize() throws IOException {
+    public void testResize() {
         //given
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
 
         //when
-        BufferedImage resizedActual = ImageComparisonUtil.resize(actual,200,200);
+        BufferedImage resizedActual = ImageComparisonUtil.resize(actual, 200, 200);
 
         //then
-        assertEquals(200,resizedActual.getHeight());
-        assertEquals(200,resizedActual.getWidth());
+        assertEquals(200, resizedActual.getHeight());
+        assertEquals(200, resizedActual.getWidth());
 
     }
+
     @Test
-    public void testToBufferedImage() throws IOException {
+    public void testToBufferedImage() {
         //given
         Image imageInstance = readImageFromResources("actualDifferentSize.png");
         BufferedImage bufferedImageInstance = readImageFromResources("actualDifferentSize.png");
@@ -103,37 +106,38 @@ public class ImageComparisonUtilUnitTest {
         assertTrue(bufferedImage instanceof BufferedImage);
         assertTrue(bufferedImage1 instanceof BufferedImage);
     }
+
     @Test
-    public void testGetDifferencePercent()throws IOException{
+    public void testGetDifferencePercent() throws IOException {
         //given
         BufferedImage bufferedImage = readImageFromResources("actualDifferentSize.png");
 
         //when
-        float differentPercent = ImageComparisonUtil.getDifferencePercent(bufferedImage,bufferedImage);
+        float differentPercent = ImageComparisonUtil.getDifferencePercent(bufferedImage, bufferedImage);
 
         //then
-        assertEquals(0,(int)differentPercent);
+        assertEquals(0, (int) differentPercent);
 
     }
 
     @Test
-    public void testPixelDiff(){
+    public void testPixelDiff() {
         //given
         int Pixel1 = 2;
         int Pixel2 = 2;
 
         //when
-        int pixelDiff = ImageComparisonUtil.pixelDiff(Pixel1,Pixel2);
+        int pixelDiff = ImageComparisonUtil.pixelDiff(Pixel1, Pixel2);
 
         //then
-        assertEquals(0,pixelDiff);
+        assertEquals(0, pixelDiff);
     }
 
     /**
      * Test issue #136 IllegalArgumentException on deepCopy.
      */
     @Test
-    public void testIssue136() throws IOException {
+    public void testIssue136() {
         //given
         BufferedImage image = readImageFromResources("actual#136.png");
         BufferedImage subimage = image.getSubimage(1, 1, image.getWidth() - 2, image.getHeight() - 2);
@@ -141,14 +145,5 @@ public class ImageComparisonUtilUnitTest {
         //when
         Throwable ex = getException(() -> ImageComparisonUtil.deepCopy(subimage));
         assertNull("There is no exception:", ex);
-    }
-
-    private Throwable getException(Runnable action) {
-        try {
-            action.run();
-            return null;
-        } catch (Throwable ex) {
-            return ex;
-        }
     }
 }
