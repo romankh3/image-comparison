@@ -50,21 +50,6 @@ public final class ImageComparisonUtil {
     }
 
     /**
-     * Read image from the provided file path.
-     *
-     * @param path the path where contains image.
-     * @return the {@link BufferedImage} object of this specific image.
-     * @throws ImageComparisonException due to read the image from FS.
-     */
-    public static BufferedImage readImageFromFile(File path) throws ImageComparisonException {
-        try {
-            return ImageIO.read(path);
-        } catch (IOException e) {
-            throw new ImageComparisonException(String.format("Can not read file from path=%s", path.getAbsolutePath()), e);
-        }
-    }
-
-    /**
      * Save image to the provided path.
      *
      * @param pathFile the path to the saving image.
