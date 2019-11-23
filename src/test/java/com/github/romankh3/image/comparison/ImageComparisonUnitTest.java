@@ -35,11 +35,12 @@ public class ImageComparisonUnitTest extends BaseTest {
         File file = new File("build/test-images/result.png");
 
         //when
-        ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "actual.png")
-                .compareImages()
-                .writeResultTo(file);
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages().writeResultTo(file);
 
         //then
+        assertNotNull(imageComparison.getActual());
+        assertNotNull(imageComparison.getExpected());
         assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
         assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }

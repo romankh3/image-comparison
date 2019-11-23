@@ -123,7 +123,7 @@ class Example {
        
                //Threshold - it's the max distance between non-equal pixels. By default it's 5.
                imageComparison.setThreshold(10);
-               imageComparison.getThreshold();
+               imageComparison.getThreshold();a
        
                //RectangleListWidth - Width of the line that is drawn in the rectangle. By default it's 1.
                imageComparison.setRectangleLineWidth(5);

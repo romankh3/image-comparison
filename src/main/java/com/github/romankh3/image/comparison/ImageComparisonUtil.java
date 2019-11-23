@@ -17,25 +17,6 @@ import java.io.InputStream;
 public final class ImageComparisonUtil {
 
     /**
-     * Create GUI for represents the resulting image.
-     *
-     * @param image resulting image.
-     * @return {@link Frame} for running GUI.
-     */
-    public static Frame createGUI(BufferedImage image) {
-        JFrame frame = new JFrame("The result of the comparison");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JLabel label = new JLabel();
-        label.setIcon(new ImageIcon(image, "Result"));
-        frame.getContentPane().add(label, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        return frame;
-    }
-
-    /**
      * Make a copy of the {@link BufferedImage} object.
      *
      * @param image the provided image.
@@ -65,21 +46,6 @@ public final class ImageComparisonUtil {
             }
         } else {
             throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
-        }
-    }
-
-    /**
-     * Read image from the provided file path.
-     *
-     * @param path the path where contains image.
-     * @return the {@link BufferedImage} object of this specific image.
-     * @throws ImageComparisonException due to read the image from FS.
-     */
-    public static BufferedImage readImageFromFile(File path) throws ImageComparisonException {
-        try {
-            return ImageIO.read(path);
-        } catch (IOException e) {
-            throw new ImageComparisonException(String.format("Can not read file from path=%s", path.getAbsolutePath()), e);
         }
     }
 
