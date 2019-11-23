@@ -10,9 +10,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
-import static com.github.romankh3.image.comparison.model.ImageComparisonState.*;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.MISMATCH;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.MATCH;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.SIZE_MISMATCH;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
