@@ -35,7 +35,7 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
     public void testWrongPath() {
         //when-then
         Throwable ex = getException(() -> readImageFromResources("wrong-file-name.png"));
-        assertTrue(ex.getMessage().startsWith("Image wrong-file-name.png not found"));
+        assertTrue(ex.getMessage().startsWith("Image with path = wrong-file-name.png not found"));
     }
 
     @Test
