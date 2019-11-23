@@ -1,6 +1,5 @@
 package com.github.romankh3.image.comparison;
 
-import static com.github.romankh3.image.comparison.ImageComparisonUtil.createGUI;
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -9,27 +8,16 @@ import static org.junit.Assert.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.awt.Frame;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import org.junit.Ignore;
 import org.junit.Test;
 
 /**
  * Unit-level testing for {@link ImageComparisonUtil} object.
  */
 public class ImageComparisonUtilUnitTest extends BaseTest {
-
-    @Test
-    @Ignore
-    public void testFrameMethod() {
-        BufferedImage image = readImageFromResources("result.png");
-        Frame resultFrame = createGUI(image);
-        assertEquals(image.getHeight(), resultFrame.getHeight());
-        assertEquals(image.getWidth(), resultFrame.getWidth());
-    }
 
     @Test
     public void testWrongPath() {
@@ -67,15 +55,6 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
 
         //then
         assertNotNull(imageComparisonUtil);
-    }
-
-    @Test
-    public void testCommanlineUtilCreation() {
-        //when
-        CommandLineUsage commandLineUtil = new CommandLineUsage();
-
-        //then
-        assertNotNull(commandLineUtil);
     }
 
     @Test

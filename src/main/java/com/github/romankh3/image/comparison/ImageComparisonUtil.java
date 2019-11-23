@@ -17,25 +17,6 @@ import java.io.InputStream;
 public final class ImageComparisonUtil {
 
     /**
-     * Create GUI for represents the resulting image.
-     *
-     * @param image resulting image.
-     * @return {@link Frame} for running GUI.
-     */
-    public static Frame createGUI(BufferedImage image) {
-        JFrame frame = new JFrame("The result of the comparison");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        JLabel label = new JLabel();
-        label.setIcon(new ImageIcon(image, "Result"));
-        frame.getContentPane().add(label, BorderLayout.CENTER);
-        frame.setPreferredSize(new Dimension(image.getWidth(), image.getHeight()));
-        frame.pack();
-        frame.setLocationRelativeTo(null);
-        frame.setVisible(true);
-        return frame;
-    }
-
-    /**
      * Make a copy of the {@link BufferedImage} object.
      *
      * @param image the provided image.
