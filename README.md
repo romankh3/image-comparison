@@ -175,10 +175,7 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 
 ## Demo
 
-Run the `./run.sh` script to run the demo.
-
-You will get the result of comparing two images.
-The images, which are using:
+Demo shows how `image-comparison` works.
 
 ### Expected Image(ex image1)
 
@@ -204,6 +201,7 @@ This project is unlicense - see the [LICENSE](LICENSE) file for details
 #### Thanks [@dee-y](https://github.com/dee-y) for designing this logo
 
 #### Also if you're interesting - see my other repositories
+*   [Flights Monitoring](https://github.com/romankh3/flights-monitoring) - app for monitoring flights cost based on Skyscanner API
 *   [Raspberry home ecosystem](https://github.com/romankh3/raspberrypi-home-ecosystem) - home ecosystem based on raspberry pi.
 *   [Movie Tracking](https://github.com/romankh3/movietracking) - Simple API for tracking movies with favorite actors for the specific time.
 *   [Tic Tac Toe NxM](https://github.com/romankh3/tictactoe) - Own implementation. For any rectangle and any winner line count. 
