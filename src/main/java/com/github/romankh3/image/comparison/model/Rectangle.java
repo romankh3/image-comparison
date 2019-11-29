@@ -3,6 +3,7 @@ package com.github.romankh3.image.comparison.model;
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
+import java.awt.Point;
 import java.util.Objects;
 
 /**
@@ -34,8 +35,8 @@ public class Rectangle {
      * @param rectangle provided {@link Rectangle} object.
      */
     public Rectangle(Rectangle rectangle) {
-        this.minPoint = new Point(rectangle.getMinPoint().getX(), rectangle.getMinPoint().getY());
-        this.maxPoint = new Point(rectangle.getMaxPoint().getX(), rectangle.getMaxPoint().getY());
+        this.minPoint = new Point(rectangle.getMinPoint().x, rectangle.getMinPoint().y);
+        this.maxPoint = new Point(rectangle.getMaxPoint().x, rectangle.getMaxPoint().y);
     }
 
     /**
@@ -82,10 +83,10 @@ public class Rectangle {
      * @return new merged {@link Rectangle}.
      */
     public Rectangle merge(Rectangle that) {
-        return new Rectangle(min(this.getMinPoint().getX(), that.getMinPoint().getX()),
-                min(this.getMinPoint().getY(), that.getMinPoint().getY()),
-                max(this.getMaxPoint().getX(), that.getMaxPoint().getX()),
-                max(this.getMaxPoint().getY(), that.getMaxPoint().getY()));
+        return new Rectangle(min(this.getMinPoint().x, that.getMinPoint().x),
+                min(this.getMinPoint().y, that.getMinPoint().y),
+                max(this.getMaxPoint().x, that.getMaxPoint().x),
+                max(this.getMaxPoint().y, that.getMaxPoint().y));
     }
 
     /**
@@ -115,8 +116,8 @@ public class Rectangle {
      * Make zero rectagle.
      */
     public void makeZeroRectangle() {
-        this.minPoint.makeZeroPoint();
-        this.maxPoint.makeZeroPoint();
+        this.minPoint = new Point();
+        this.maxPoint = new Point();
     }
 
     /**
@@ -135,7 +136,7 @@ public class Rectangle {
      * @return rectangle width.
      */
     public int getWidth() {
-        return maxPoint.getX() - minPoint.getX() + 1;
+        return maxPoint.x - minPoint.x + 1;
     }
 
     /**
@@ -145,7 +146,7 @@ public class Rectangle {
      * @return rectangle height.
      */
     public int getHeight() {
-        return maxPoint.getY() - minPoint.getY() + 1;
+        return maxPoint.y - minPoint.y + 1;
     }
 
     /**
@@ -155,10 +156,7 @@ public class Rectangle {
      * @return {@code true} if provided {@link Point} contains, {@code false} - otherwise.
      */
     boolean containsPoint(Point point) {
-        return  point.getX() >= minPoint.getX() &&
-                point.getX() <= maxPoint.getX() &&
-                point.getY() >= minPoint.getY() &&
-                point.getY() <= maxPoint.getY();
+        return  point.x >= minPoint.x && point.x<= maxPoint.x && point.y >= minPoint.y && point.y <= maxPoint.y;
     }
 
     public Point getMinPoint() {

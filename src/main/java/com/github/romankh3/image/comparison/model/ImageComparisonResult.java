@@ -1,7 +1,6 @@
 package com.github.romankh3.image.comparison.model;
 
 import com.github.romankh3.image.comparison.ImageComparisonUtil;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 
@@ -43,7 +42,7 @@ public class ImageComparisonResult {
      * @return instance of the {@link ImageComparisonResult} object.
      */
     public static ImageComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,
-                                                                  float differencePercent) {
+            float differencePercent) {
         return new ImageComparisonResult()
                 .setImageComparisonState(ImageComparisonState.SIZE_MISMATCH)
                 .setDifferencePercent(differencePercent)

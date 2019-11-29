@@ -1,5 +1,6 @@
 package com.github.romankh3.image.comparison.model;
 
+import java.awt.Point;
 import java.util.ArrayList;
 import java.util.List;
 
