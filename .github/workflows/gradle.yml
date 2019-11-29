@@ -17,6 +17,7 @@ jobs:
         run: ./gradlew clean build jacocoTestReport coveralls
       - name: Coveralls GitHub Action
         if: success()
+        run: ./gradlew jacocoTestReport coveralls
         uses: coverallsapp/github-action@v1.0.1
         with:
           github-token: Dfu3VTactOoDa37sV3c5zypj6y7YfWJ6v
