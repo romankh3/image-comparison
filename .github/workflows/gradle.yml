@@ -1,6 +1,6 @@
 name: Java CI
 
-on: ["push", "pull_request"]
+on: ["push"]
 
 jobs:
   build:
@@ -18,4 +18,4 @@ jobs:
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v1.0.1
         with:
-          github-token: Dfu3VTactOoDa37sV3c5zypj6y7YfWJ6v
+          github-token: FHYjeoZ7aU95UhWD63d4GgOXDFfXfhp5d
