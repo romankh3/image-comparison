@@ -2,14 +2,18 @@ package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
-import com.github.romankh3.image.comparison.model.Point;
 import com.github.romankh3.image.comparison.model.Rectangle;
-
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
-import java.util.*;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -267,17 +271,17 @@ public class ImageComparison {
      */
     private void updateRectangleCreation(Rectangle rectangle, int x, int y) {
         if (x < rectangle.getMinPoint().getX()) {
-            rectangle.getMinPoint().setX(x);
+            rectangle.getMinPoint().x = x;
         }
         if (x > rectangle.getMaxPoint().getX()) {
-            rectangle.getMaxPoint().setX(x);
+            rectangle.getMaxPoint().x = x;
         }
 
         if (y < rectangle.getMinPoint().getY()) {
-            rectangle.getMinPoint().setY(y);
+            rectangle.getMinPoint().y = y;
         }
         if (y > rectangle.getMaxPoint().getY()) {
-            rectangle.getMaxPoint().setY(y);
+            rectangle.getMaxPoint().y = y;
         }
     }
 
@@ -355,10 +359,12 @@ public class ImageComparison {
      * @param rectangles the collection of the {@link Rectangle}.
      */
     private void draw(Graphics2D graphics, List<Rectangle> rectangles) {
-        rectangles.forEach(rectangle -> graphics.drawRect(rectangle.getMinPoint().getX(),
-                rectangle.getMinPoint().getY(),
+        rectangles.forEach(rectangle -> graphics.drawRect(
+                rectangle.getMinPoint().x,
+                rectangle.getMinPoint().y,
                 rectangle.getWidth() - 1,
-                rectangle.getHeight() - 1));
+                rectangle.getHeight() - 1)
+        );
     }
 
     /**

@@ -2,14 +2,19 @@ package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.exception.ImageComparisonException;
 import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
-
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import java.awt.*;
-import java.awt.image.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
+import java.awt.image.WritableRaster;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 
 /**
  * Tools for the {@link ImageComparison} object.
@@ -66,7 +71,8 @@ public final class ImageComparisonUtil {
         try {
             ImageIO.write(image, "png", pathFile);
         } catch (IOException e) {
-            throw new ImageComparisonException(String.format("Can not save image to path=%s", pathFile.getAbsolutePath()), e);
+            throw new ImageComparisonException(
+                    String.format("Can not save image to path=%s", pathFile.getAbsolutePath()), e);
         }
     }
 
@@ -76,7 +82,6 @@ public final class ImageComparisonUtil {
      * @param img the object of the image to be resized.
      * @param newW the new width.
      * @param newH the new height.
-     *
      * @return resized {@link BufferedImage} object.
      */
     public static BufferedImage resize(BufferedImage img, int newW, int newH) {
@@ -145,11 +150,11 @@ public final class ImageComparisonUtil {
      */
     public static int pixelDiff(int rgb1, int rgb2) {
         int r1 = (rgb1 >> 16) & 0xff;
-        int g1 = (rgb1 >>  8) & 0xff;
-        int b1 =  rgb1        & 0xff;
+        int g1 = (rgb1 >> 8) & 0xff;
+        int b1 = rgb1 & 0xff;
         int r2 = (rgb2 >> 16) & 0xff;
-        int g2 = (rgb2 >>  8) & 0xff;
-        int b2 =  rgb2        & 0xff;
+        int g2 = (rgb2 >> 8) & 0xff;
+        int b2 = rgb2 & 0xff;
         return Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
     }
 }

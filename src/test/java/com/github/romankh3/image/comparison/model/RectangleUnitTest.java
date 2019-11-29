@@ -6,6 +6,7 @@ import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotSame;
 import static org.junit.Assert.assertTrue;
 
+import java.awt.Point;
 import org.junit.Test;
 
 /**
@@ -17,10 +18,10 @@ public class RectangleUnitTest {
     public void testDefaultRectangle() {
         Rectangle rectangle = Rectangle.createDefault();
 
-        assertEquals(rectangle.getMinPoint().getX(), Integer.MAX_VALUE);
-        assertEquals(rectangle.getMinPoint().getY(), Integer.MAX_VALUE);
-        assertEquals(rectangle.getMaxPoint().getX(), Integer.MIN_VALUE);
-        assertEquals(rectangle.getMaxPoint().getY(), Integer.MIN_VALUE);
+        assertEquals(rectangle.getMinPoint().x, Integer.MAX_VALUE);
+        assertEquals(rectangle.getMinPoint().y, Integer.MAX_VALUE);
+        assertEquals(rectangle.getMaxPoint().x, Integer.MIN_VALUE);
+        assertEquals(rectangle.getMaxPoint().y, Integer.MIN_VALUE);
     }
 
     @Test
@@ -30,10 +31,10 @@ public class RectangleUnitTest {
         rectangle.setMinPoint(new Point(10, 20));
         rectangle.setMaxPoint(new Point(30, 40));
 
-        assertEquals(rectangle.getMinPoint().getX(), 10);
-        assertEquals(rectangle.getMinPoint().getY(), 20);
-        assertEquals(rectangle.getMaxPoint().getX(), 30);
-        assertEquals(rectangle.getMaxPoint().getY(), 40);
+        assertEquals(rectangle.getMinPoint().x, 10);
+        assertEquals(rectangle.getMinPoint().y, 20);
+        assertEquals(rectangle.getMaxPoint().x, 30);
+        assertEquals(rectangle.getMaxPoint().y, 40);
     }
 
     /**
