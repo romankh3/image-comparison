@@ -70,15 +70,15 @@ public class ImageComparison {
     private Integer maximalRectangleCount = -1;
 
     /**
-     * Constant using for counting the level of the difference.
-     */
-    private final double differenceConstant = Math.sqrt(Math.pow(255, 2) * 3);
-
-    /**
      * Level of the pixel tolerance. By default it's 0.1 -> 10% difference.
      * The value can be set from 0.0 to 0.99.
      */
     private double pixelToleranceLevel = 0.1;
+
+    /**
+     * Constant using for counting the level of the difference.
+     */
+    private double differenceConstant = Math.pow(pixelToleranceLevel * Math.sqrt(Math.pow(255, 2) * 3), 2);
 
     /**
      * Matrix YxX => int[y][x].
@@ -223,10 +223,9 @@ public class ImageComparison {
         int red2 = (actualRgb >> 16) & 0xff;
         int green2 = (actualRgb >> 8) & 0xff;
         int blue2 = (actualRgb) & 0xff;
-        double result = Math.sqrt(Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
-                /
-                differenceConstant;
-        return result > pixelToleranceLevel;
+
+        return (Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
+                > differenceConstant;
     }
 
     /**
@@ -435,6 +434,7 @@ public class ImageComparison {
     public ImageComparison setPixelToleranceLevel(double pixelToleranceLevel) {
         if (0.0 <= pixelToleranceLevel && pixelToleranceLevel <= 0.99) {
             this.pixelToleranceLevel = pixelToleranceLevel;
+            differenceConstant = Math.pow(pixelToleranceLevel * Math.sqrt(Math.pow(255, 2) * 3), 2);
         }
         return this;
     }
