@@ -8,7 +8,7 @@ plugins {
 }
 
 group 'com.github.romankh3'
-version '3.4.0-SNAPSHOT'
+version '4.0-beta'
 description 'A library and utility to compare different images.'
 sourceCompatibility = 1.8
 
@@ -76,8 +76,8 @@ configure(install.repositories.mavenInstaller) {
 
         licenses {
             license {
-                name 'The Unlicense'
-                url 'http://unlicense.org/'
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
             }
         }
 
@@ -103,7 +103,7 @@ bintray {
     pkg {
         repo = 'image-comparison'
         name = 'image-comparison'
-        licenses = ['unlicense']
+        licenses = ['Apache-2.0']
         labels = ['java', 'image', 'image-comparison']
         publicDownloadNumbers = true
 

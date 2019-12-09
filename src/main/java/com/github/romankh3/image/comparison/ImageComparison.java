@@ -70,15 +70,15 @@ public class ImageComparison {
     private Integer maximalRectangleCount = -1;
 
     /**
-     * Constant using for counting the level of the difference.
-     */
-    private final double differenceConstant = Math.sqrt(Math.pow(255, 2) * 3);
-
-    /**
      * Level of the pixel tolerance. By default it's 0.1 -> 10% difference.
      * The value can be set from 0.0 to 0.99.
      */
     private double pixelToleranceLevel = 0.1;
+
+    /**
+     * Constant using for counting the level of the difference.
+     */
+    private double differenceConstant;
 
     /**
      * Matrix YxX => int[y][x].
@@ -135,6 +135,7 @@ public class ImageComparison {
         this.expected = expected;
         this.actual = actual;
         this.destination = destination;
+       differenceConstant = calculateDifferenceConstant();
     }
 
     /**
@@ -167,12 +168,13 @@ public class ImageComparison {
             ImageComparisonResult matchResult = ImageComparisonResult.defaultMatchResult(expected, actual);
             if (drawExcludedRectangles) {
                 matchResult.setResult(drawRectangles(rectangles));
+                saveImageForDestination(matchResult.getResult());
             }
             return matchResult;
         }
 
         BufferedImage resultImage = drawRectangles(rectangles);
-
+        saveImageForDestination(resultImage);
         return ImageComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
 
@@ -223,10 +225,9 @@ public class ImageComparison {
         int red2 = (actualRgb >> 16) & 0xff;
         int green2 = (actualRgb >> 8) & 0xff;
         int blue2 = (actualRgb) & 0xff;
-        double result = Math.sqrt(Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
-                /
-                differenceConstant;
-        return result > pixelToleranceLevel;
+
+        return (Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
+                > differenceConstant;
     }
 
     /**
@@ -319,13 +320,35 @@ public class ImageComparison {
      */
     private BufferedImage drawRectangles(List<Rectangle> rectangles) {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
-        Graphics2D graphics = resultImage.createGraphics();
-        graphics.setColor(Color.RED);
+        Graphics2D graphics = preparedGraphics2D(resultImage);
 
-        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
-        graphics.setStroke(stroke);
+        drawExcludedRectangles(graphics);
+        drawRectanglesOfDifferences(rectangles, graphics);
 
+        return resultImage;
+    }
+
+    /**
+     * Draw excluded rectangles.
+     *
+     * @param graphics prepared {@link Graphics2D}object.
+     */
+    private void drawExcludedRectangles(Graphics2D graphics) {
+        if (drawExcludedRectangles) {
+            graphics.setColor(Color.GREEN);
+            draw(graphics, excludedAreas.getExcluded());
+        }
+    }
+
+    /**
+     * Draw rectangles with the differences.
+     *
+     * @param rectangles the collection of the {@link Rectangle} of differences.
+     * @param graphics prepared {@link Graphics2D}object.
+     */
+    private void drawRectanglesOfDifferences(List<Rectangle> rectangles, Graphics2D graphics) {
         List<Rectangle> rectanglesForDraw;
+        graphics.setColor(Color.RED);
 
         if (maximalRectangleCount > 0) {
             rectanglesForDraw = rectangles.stream()
@@ -337,17 +360,30 @@ public class ImageComparison {
         }
 
         draw(graphics, rectanglesForDraw);
+    }
 
-        if (drawExcludedRectangles) {
-            graphics.setColor(Color.GREEN);
-            draw(graphics, excludedAreas.getExcluded());
-        }
+    /**
+     * Prepare {@link Graphics2D} based on resultImage and rectangleLineWidth
+     *
+     * @param image image based on created {@link Graphics2D}.
+     *
+     * @return prepared {@link Graphics2D} object.
+     */
+    private Graphics2D preparedGraphics2D(BufferedImage image) {
+        Graphics2D graphics = image.createGraphics();
+        graphics.setStroke(new BasicStroke(rectangleLineWidth));
+        return graphics;
+    }
 
+    /**
+     * Save image to destination object if exists.
+     *
+     * @param image {@link BufferedImage} to be saved.
+     */
+    private void saveImageForDestination(BufferedImage image) {
         if (Objects.nonNull(destination)) {
-            ImageComparisonUtil.saveImage(destination, resultImage);
+            ImageComparisonUtil.saveImage(destination, image);
         }
-
-        return resultImage;
     }
 
     /**
@@ -433,10 +469,15 @@ public class ImageComparison {
     }
 
     public ImageComparison setPixelToleranceLevel(double pixelToleranceLevel) {
-        if (0.0 <= pixelToleranceLevel && pixelToleranceLevel <= 0.99) {
+        if (0.0 <= pixelToleranceLevel && pixelToleranceLevel < 1) {
             this.pixelToleranceLevel = pixelToleranceLevel;
+            differenceConstant = calculateDifferenceConstant();
         }
         return this;
+    }
+
+    private double calculateDifferenceConstant() {
+        return Math.pow(pixelToleranceLevel * Math.sqrt(Math.pow(255, 2) * 3), 2);
     }
 
     public boolean isDrawExcludedRectangles() {
