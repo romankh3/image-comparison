@@ -168,12 +168,13 @@ public class ImageComparison {
             ImageComparisonResult matchResult = ImageComparisonResult.defaultMatchResult(expected, actual);
             if (drawExcludedRectangles) {
                 matchResult.setResult(drawRectangles(rectangles));
+                saveImageForDestination(matchResult.getResult());
             }
             return matchResult;
         }
 
         BufferedImage resultImage = drawRectangles(rectangles);
-
+        saveImageForDestination(resultImage);
         return ImageComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
     }
 
@@ -319,13 +320,35 @@ public class ImageComparison {
      */
     private BufferedImage drawRectangles(List<Rectangle> rectangles) {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
-        Graphics2D graphics = resultImage.createGraphics();
-        graphics.setColor(Color.RED);
+        Graphics2D graphics = preparedGraphics2D(resultImage);
 
-        BasicStroke stroke = new BasicStroke(rectangleLineWidth);
-        graphics.setStroke(stroke);
+        drawExcludedRectangles(graphics);
+        drawRectanglesOfDifferences(rectangles, graphics);
 
+        return resultImage;
+    }
+
+    /**
+     * Draw excluded rectangles.
+     *
+     * @param graphics prepared {@link Graphics2D}object.
+     */
+    private void drawExcludedRectangles(Graphics2D graphics) {
+        if (drawExcludedRectangles) {
+            graphics.setColor(Color.GREEN);
+            draw(graphics, excludedAreas.getExcluded());
+        }
+    }
+
+    /**
+     * Draw rectangles with the differences.
+     *
+     * @param rectangles the collection of the {@link Rectangle} of differences.
+     * @param graphics prepared {@link Graphics2D}object.
+     */
+    private void drawRectanglesOfDifferences(List<Rectangle> rectangles, Graphics2D graphics) {
         List<Rectangle> rectanglesForDraw;
+        graphics.setColor(Color.RED);
 
         if (maximalRectangleCount > 0) {
             rectanglesForDraw = rectangles.stream()
@@ -337,17 +360,30 @@ public class ImageComparison {
         }
 
         draw(graphics, rectanglesForDraw);
+    }
 
-        if (drawExcludedRectangles) {
-            graphics.setColor(Color.GREEN);
-            draw(graphics, excludedAreas.getExcluded());
-        }
+    /**
+     * Prepare {@link Graphics2D} based on resultImage and rectangleLineWidth
+     *
+     * @param image image based on created {@link Graphics2D}.
+     *
+     * @return prepared {@link Graphics2D} object.
+     */
+    private Graphics2D preparedGraphics2D(BufferedImage image) {
+        Graphics2D graphics = image.createGraphics();
+        graphics.setStroke(new BasicStroke(rectangleLineWidth));
+        return graphics;
+    }
 
+    /**
+     * Save image to destination object if exists.
+     *
+     * @param image {@link BufferedImage} to be saved.
+     */
+    private void saveImageForDestination(BufferedImage image) {
         if (Objects.nonNull(destination)) {
-            ImageComparisonUtil.saveImage(destination, resultImage);
+            ImageComparisonUtil.saveImage(destination, image);
         }
-
-        return resultImage;
     }
 
     /**
