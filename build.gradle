@@ -76,8 +76,8 @@ configure(install.repositories.mavenInstaller) {
 
         licenses {
             license {
-                name 'The Unlicense'
-                url 'http://unlicense.org/'
+                name 'The Apache Software License, Version 2.0'
+                url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
             }
         }
 
@@ -103,7 +103,7 @@ bintray {
     pkg {
         repo = 'image-comparison'
         name = 'image-comparison'
-        licenses = ['unlicense']
+        licenses = ['Apache-2.0']
         labels = ['java', 'image', 'image-comparison']
         publicDownloadNumbers = true
 
