@@ -60,44 +60,17 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 
 ## Usage
 
-### Using the command-line
-
-This library can be used as a command-line utility to compare two images.
-
-After building with `./gradlew jar`, you will find the runnable jar at `${projectDir}/build/libs`.
-
-To compare two images in files `a.png` and `b.png`, for example, run:
-
-```bash
-java -jar image-comparison.jar a.png b.png
-```
-
-To save the result image in a third file, say `comparison.png`, just give that file as a third argument:
-
-```bash
-java -jar image-comparison.jar a.png b.png comparison.png
-```
-
-To show more usage details, run:
-
-```bash
-java -jar image-comparison.jar -h
-```
-
-### Using as a Java library
-
-#### Dependency
-##### Maven
+#### Maven
 ```xml
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>3.3.1</version>
+    <version>4.0.0</version>
 </dependency>
 ```
-##### Gradle
+#### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:3.3.1'
+compile 'com.github.romankh3:image-comparison:4.0.0'
 ```
 
 #### To compare two images programmatically
@@ -177,11 +150,11 @@ This will compile, run the tests, and create a runnable jar at `${projectDir}/bu
 
 Demo shows how `image-comparison` works.
 
-### Expected Image(ex image1)
+### Expected Image
 
 ![expected](https://user-images.githubusercontent.com/16310793/28955567-52edeabe-78f0-11e7-8bb2-d435c8df23ff.png)
 
-### Actual Image(ex image 2)
+### Actual Image
 
 ![actual](https://user-images.githubusercontent.com/16310793/28955566-52ead892-78f0-11e7-993c-847350da0bf8.png)
 
@@ -196,11 +169,12 @@ Please, follow [Contributing](CONTRIBUTING.md) page.
 Please, follow [Code of Conduct](CODE_OF_CONDUCT.md) page.
 
 ## License
-This project is unlicense - see the [LICENSE](LICENSE) file for details
+This project is Apache License 2.0 - see the [LICENSE](LICENSE) file for details
 
 #### Thanks [@dee-y](https://github.com/dee-y) for designing this logo
 
 #### Also if you're interesting - see my other repositories
+*   [skyscanner-flight-api-clinet](https://github.com/romankh3/skyscanner-flight-api-client) - Client for a Skyscanner Flight Search API hosted in Rapid API
 *   [Flights Monitoring](https://github.com/romankh3/flights-monitoring) - app for monitoring flights cost based on Skyscanner API
 *   [Raspberry home ecosystem](https://github.com/romankh3/raspberrypi-home-ecosystem) - home ecosystem based on raspberry pi.
 *   [Movie Tracking](https://github.com/romankh3/movietracking) - Simple API for tracking movies with favorite actors for the specific time.

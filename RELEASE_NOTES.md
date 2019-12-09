@@ -1,4 +1,17 @@
 # Release Notes
+
+## 4.0.0
+*   refactored drawRectangles method due to SRP.
+*   optimized isDifferentPixels to improve algorithm.
+*   moved to Apache License 2.0
+*   removed Point and used java.awt.Point instead
+*   added Gradle.yml for GitHub actions
+*   removed commandLine usage
+*   renamed ComparisonResult to ImageComparisonResult
+*   renamed ComparisonState to ImageComparisonState
+*   added own RuntimeException for wrapping checked exception
+*   added Gitter chat for communication.
+
 ## 3.3.1
 *   Fixed bug #134: If image is different in a line in 1 px, ComparisonState is always MATCH
 *   Fixed bug #136: deepCopy method throws IllegalArgumentException on shared BufferedImage

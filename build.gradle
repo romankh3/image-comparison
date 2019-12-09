@@ -8,11 +8,11 @@ plugins {
 }
 
 group 'com.github.romankh3'
-version '4.0-beta'
+version '4.0.0'
 description 'A library and utility to compare different images.'
 sourceCompatibility = 1.8
 
-mainClassName = "com.github.romankh3.image.comparison.Main"
+mainClassName = "com.github.romankh3.image.comparison.ImageComparison"
 
 repositories {
     mavenCentral()
