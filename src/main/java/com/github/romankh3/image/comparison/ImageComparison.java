@@ -78,7 +78,7 @@ public class ImageComparison {
     /**
      * Constant using for counting the level of the difference.
      */
-    private double differenceConstant = Math.pow(pixelToleranceLevel * Math.sqrt(Math.pow(255, 2) * 3), 2);
+    private double differenceConstant;
 
     /**
      * Matrix YxX => int[y][x].
@@ -135,6 +135,7 @@ public class ImageComparison {
         this.expected = expected;
         this.actual = actual;
         this.destination = destination;
+       differenceConstant = calculateDifferenceConstant();
     }
 
     /**
@@ -432,11 +433,15 @@ public class ImageComparison {
     }
 
     public ImageComparison setPixelToleranceLevel(double pixelToleranceLevel) {
-        if (0.0 <= pixelToleranceLevel && pixelToleranceLevel <= 0.99) {
+        if (0.0 <= pixelToleranceLevel && pixelToleranceLevel < 1) {
             this.pixelToleranceLevel = pixelToleranceLevel;
-            differenceConstant = Math.pow(pixelToleranceLevel * Math.sqrt(Math.pow(255, 2) * 3), 2);
+            differenceConstant = calculateDifferenceConstant();
         }
         return this;
+    }
+
+    private double calculateDifferenceConstant() {
+        return Math.pow(pixelToleranceLevel * Math.sqrt(Math.pow(255, 2) * 3), 2);
     }
 
     public boolean isDrawExcludedRectangles() {
