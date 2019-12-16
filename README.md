@@ -14,9 +14,7 @@
 *   [Release Notes](#release-notes)
 
 *   [Usage](#usage)
-    *   [Using the command-line](#using-the-command-line)
-    
-    *   [Using as a Java library](#using-as-a-java-library)
+
 *   [Building](#building)
 
 *   [Demo](#demo)
