@@ -1,18 +1,22 @@
 package com.github.romankh3.image.comparison;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import com.github.romankh3.image.comparison.exception.ImageComparisonException;
+import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
 
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit-level testing for {@link ImageComparisonUtil} object.
@@ -22,7 +26,8 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
     @Test
     public void testWrongPath() {
         //when-then
-        Throwable ex = getException(() -> readImageFromResources("wrong-file-name.png"));
+        ImageNotFoundException ex = assertThrows(ImageNotFoundException.class,
+                () -> readImageFromResources("wrong-file-name.png"));
         assertTrue(ex.getMessage().startsWith("Image with path = wrong-file-name.png not found"));
     }
 
@@ -36,7 +41,8 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         when(path.getParentFile()).thenReturn(parent);
 
         //when-then
-        Throwable ex = getException(() -> ImageComparisonUtil.saveImage(path, null));
+        ImageComparisonException ex = assertThrows(ImageComparisonException.class,
+                () -> ImageComparisonUtil.saveImage(path, null));
         assertTrue(ex.getMessage().startsWith("Unable to create directory "));
     }
 
@@ -82,12 +88,12 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         BufferedImage bufferedImage1 = ImageComparisonUtil.toBufferedImage(bufferedImageInstance);
 
         //then
-        assertTrue(bufferedImage instanceof BufferedImage);
-        assertTrue(bufferedImage1 instanceof BufferedImage);
+        assertNotNull(bufferedImage);
+        assertNotNull(bufferedImage1);
     }
 
     @Test
-    public void testGetDifferencePercent() throws IOException {
+    public void testGetDifferencePercent() {
         //given
         BufferedImage bufferedImage = readImageFromResources("actualDifferentSize.png");
 
@@ -102,11 +108,11 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
     @Test
     public void testPixelDiff() {
         //given
-        int Pixel1 = 2;
-        int Pixel2 = 2;
+        int pixel1 = 2;
+        int pixel2 = 2;
 
         //when
-        int pixelDiff = ImageComparisonUtil.pixelDiff(Pixel1, Pixel2);
+        int pixelDiff = ImageComparisonUtil.pixelDiff(pixel1, pixel2);
 
         //then
         assertEquals(0, pixelDiff);
@@ -122,7 +128,6 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         BufferedImage subimage = image.getSubimage(1, 1, image.getWidth() - 2, image.getHeight() - 2);
 
         //when
-        Throwable ex = getException(() -> ImageComparisonUtil.deepCopy(subimage));
-        assertNull("There is no exception:", ex);
+        assertDoesNotThrow(() -> ImageComparisonUtil.deepCopy(subimage));
     }
 }

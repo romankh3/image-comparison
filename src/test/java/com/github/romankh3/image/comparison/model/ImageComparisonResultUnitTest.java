@@ -1,10 +1,10 @@
 package com.github.romankh3.image.comparison.model;
 
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Unit-level testing for {@link ImageComparisonResult} object.
@@ -17,7 +17,7 @@ public class ImageComparisonResultUnitTest {
         ImageComparisonResult imageComparisonResult = new ImageComparisonResult();
 
         //then
-        assertNotNull("ComparisonResult object is not null", imageComparisonResult);
+        assertNotNull(imageComparisonResult);
     }
 
     @Test

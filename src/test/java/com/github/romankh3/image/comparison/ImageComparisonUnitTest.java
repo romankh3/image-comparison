@@ -2,7 +2,7 @@ package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -14,9 +14,9 @@ import static com.github.romankh3.image.comparison.model.ImageComparisonState.MI
 import static com.github.romankh3.image.comparison.model.ImageComparisonState.MATCH;
 import static com.github.romankh3.image.comparison.model.ImageComparisonState.SIZE_MISMATCH;
 import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -309,7 +309,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testGettersAnsSetters() {
+    public void testGettersAndSetters() {
         //when
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png")
                 .setMinimalRectangleSize(100)

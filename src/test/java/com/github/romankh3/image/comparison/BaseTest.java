@@ -1,6 +1,6 @@
 package com.github.romankh3.image.comparison;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.image.BufferedImage;
 
@@ -25,14 +25,4 @@ class BaseTest {
             }
         }
     }
-
-    protected Throwable getException(Runnable action) {
-        try {
-            action.run();
-            return null;
-        } catch (Throwable ex) {
-            return ex;
-        }
-    }
-
 }
