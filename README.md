@@ -133,17 +133,6 @@ class Example {
 }
 ```
 
-## Building
-To clone and build this project, run the following commands:
- 
-```bash
-git clone https://github.com/romankh3/image-comparison
-cd image-comparison
-./gradlew check jar
-```
-
-This will compile, run the tests, and create a runnable jar at `${projectDir}/build/libs`.
-
 ## Demo
 
 Demo shows how `image-comparison` works.
