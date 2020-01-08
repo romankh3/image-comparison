@@ -47,7 +47,7 @@ public final class ImageComparisonUtil {
             try {
                 return ImageIO.read(inputStream);
             } catch (IOException e) {
-                throw new ImageComparisonException(String.format("Can not read image from the file, path=%s", path), e);
+                throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
             }
         } else {
             throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
@@ -72,7 +72,7 @@ public final class ImageComparisonUtil {
             ImageIO.write(image, "png", pathFile);
         } catch (IOException e) {
             throw new ImageComparisonException(
-                    String.format("Can not save image to path=%s", pathFile.getAbsolutePath()), e);
+                    String.format("Cannot save image to path=%s", pathFile.getAbsolutePath()), e);
         }
     }
 
@@ -120,7 +120,7 @@ public final class ImageComparisonUtil {
     }
 
     /**
-     * Return difference percent between two buffered images.
+     * Return the difference in percent between two buffered images.
      *
      * @param img1 the first image.
      * @param img2 the second image.

@@ -1,6 +1,6 @@
 package com.github.romankh3.image.comparison;
 
-import static org.junit.Assert.fail;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import java.awt.image.BufferedImage;
 
@@ -20,19 +20,9 @@ class BaseTest {
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
                 if (expected.getRGB(x, y) != actual.getRGB(x, y)) {
-                    fail("Images are different, found different pixel at: x = " + x + ", y = " + y);
+                    fail("Images are different, found a different pixel at: x = " + x + ", y = " + y);
                 }
             }
         }
     }
-
-    protected Throwable getException(Runnable action) {
-        try {
-            action.run();
-            return null;
-        } catch (Throwable ex) {
-            return ex;
-        }
-    }
-
 }

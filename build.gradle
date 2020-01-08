@@ -19,8 +19,13 @@ repositories {
 }
 
 dependencies {
-    testCompile 'junit:junit:4.12'
+    testCompile  'org.junit.jupiter:junit-jupiter-api:5.5.2'
+    testCompile  'org.junit.jupiter:junit-jupiter-engine:5.5.2'
     testCompile 'org.mockito:mockito-core:2.26.0'
+}
+
+test {
+    useJUnitPlatform()
 }
 
 jar {

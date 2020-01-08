@@ -23,17 +23,17 @@ public class ImageComparison {
 
     /**
      * The threshold which means the max distance between non-equal pixels.
-     * Could be changed according size and requirements to the image.
+     * Could be changed according to the size and requirements of the image.
      */
     private int threshold = 5;
 
     /**
-     * Expected image for comparing
+     * Expected image for comparison
      */
     private final BufferedImage expected;
 
     /**
-     * Actual image for comparing
+     * Actual image for comparison
      */
     private final BufferedImage actual;
 
@@ -64,13 +64,13 @@ public class ImageComparison {
 
     /**
      * Maximal count of the {@link Rectangle}s.
-     * It means that would get first x biggest rectangles.
-     * Default value is -1, that means that all the rectagles would be drawn.
+     * It means that would get the first x biggest rectangles.
+     * Default value is -1, that means that all the rectangles would be drawn.
      */
     private Integer maximalRectangleCount = -1;
 
     /**
-     * Level of the pixel tolerance. By default it's 0.1 -> 10% difference.
+     * Level of the pixel tolerance. By default, it's 0.1 -> 10% difference.
      * The value can be set from 0.0 to 0.99.
      */
     private double pixelToleranceLevel = 0.1;
@@ -107,8 +107,9 @@ public class ImageComparison {
      * Flag which says draw excluded rectangles or not.
      */
     private boolean drawExcludedRectangles = false;
+
     /**
-     * The difference percentage between two images.
+     * The difference in percent between two images.
      */
     private float differencePercent;
 
@@ -155,7 +156,7 @@ public class ImageComparison {
      */
     public ImageComparisonResult compareImages() {
 
-        // check images for valid
+        // check that the images have the same size
         if (isImageSizesNotEqual(expected, actual)) {
             BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
             differencePercent = ImageComparisonUtil.getDifferencePercent(actualResized, expected);
@@ -190,7 +191,7 @@ public class ImageComparison {
     }
 
     /**
-     * Populate binary matrix by "0" and "1". If the pixels are difference set it as "1", otherwise "0".
+     * Populate binary matrix with "0" and "1". If the pixels are different set it as "1", otherwise "0".
      */
     private void populateTheMatrixOfTheDifferences() {
         matrix = new int[expected.getHeight()][expected.getWidth()];
