@@ -94,7 +94,7 @@ class Example {
        
                //Threshold - it's the max distance between non-equal pixels. By default it's 5.
                imageComparison.setThreshold(10);
-               imageComparison.getThreshold();a
+               imageComparison.getThreshold();
        
                //RectangleListWidth - Width of the line that is drawn in the rectangle. By default it's 1.
                imageComparison.setRectangleLineWidth(5);
@@ -122,7 +122,7 @@ class Example {
                ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
        
                //Can be found ComparisonState.
-               ImageComparisonState imageComparisonState = imageComparisonResult.getComparisonState();
+               ImageComparisonState imageComparisonState = imageComparisonResult.getImageComparisonState();
                
                //And Result Image
                BufferedImage resultImage = imageComparisonResult.getResult();
