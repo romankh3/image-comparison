@@ -351,7 +351,7 @@ public class ImageComparison {
         List<Rectangle> rectanglesForDraw;
         graphics.setColor(Color.RED);
 
-        if (maximalRectangleCount > 0) {
+        if (maximalRectangleCount > 0 && maximalRectangleCount < rectangles.size()) {
             rectanglesForDraw = rectangles.stream()
                     .sorted(Comparator.comparing(Rectangle::size))
                     .skip(rectangles.size() - maximalRectangleCount)

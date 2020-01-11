@@ -61,6 +61,21 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
+    public void testIssue165(){
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
+        imageComparison.setMaximalRectangleCount(5);
+        BufferedImage expectedImage = readImageFromResources("result.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
+    }
+
+    @Test
     public void testImagesWithTotallyDifferentImages() {
         //when
         BufferedImage expectedResult = readImageFromResources("totallyDifferentImageResult.png");
