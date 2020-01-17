@@ -296,6 +296,68 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
         assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
     }
+    
+    /**
+     * Test issue #167(a). Fill difference rectangles in transparent red.
+     */
+    @Test
+    public void testIssue167a() {
+        //given
+        BufferedImage expected = readImageFromResources("expected#98.png");
+        BufferedImage actual = readImageFromResources("actual#98.png");
+        
+        List<Rectangle> excludedAreas = asList(
+                new Rectangle(410, 514, 900, 565),
+                new Rectangle(410, 636, 900, 754)
+        );
+        
+        BufferedImage expectedImage = readImageFromResources("result#167a.png");
+        
+        ImageComparison imageComparison = new ImageComparison(expected, actual)
+                .setExcludedAreas(excludedAreas)
+                .setRectangleLineWidth(5)
+                .setPixelToleranceLevel(0.0)
+                .setDrawExcludedRectangles(true)
+                .setDifferenceRectangleFilling(true, 30.0);
+        
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+        
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
+    }
+    
+    /**
+     * Test issue #167(b). Fill excluded rectangles in transparent green.
+     */
+    @Test
+    public void testIssue167b() {
+        //given
+        BufferedImage expected = readImageFromResources("expected#98.png");
+        BufferedImage actual = readImageFromResources("actual#98.png");
+        
+        List<Rectangle> excludedAreas = asList(
+                new Rectangle(410, 514, 900, 565),
+                new Rectangle(410, 636, 900, 754)
+        );
+        
+        BufferedImage expectedImage = readImageFromResources("result#167b.png");
+        
+        ImageComparison imageComparison = new ImageComparison(expected, actual)
+                .setExcludedAreas(excludedAreas)
+                .setRectangleLineWidth(5)
+                .setPixelToleranceLevel(0.0)
+                .setDrawExcludedRectangles(true)
+                .setExcludedRectangleFilling(true, 30.0);
+        
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+        
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
+    }
 
     /**
      * Test issue #134 If image is different in a line in 1 px, ComparisonState is always MATCH.
@@ -333,7 +395,9 @@ public class ImageComparisonUnitTest extends BaseTest {
                 .setExcludedAreas(asList(Rectangle.createZero(), Rectangle.createDefault()))
                 .setDrawExcludedRectangles(true)
                 .setPixelToleranceLevel(0.6)
-                .setThreshold(400);
+                .setThreshold(400)
+                .setDifferenceRectangleFilling(true, 35.1)
+                .setExcludedRectangleFilling(true, 45.1);
 
         //then
         assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
@@ -342,6 +406,10 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(String.valueOf(400), String.valueOf(imageComparison.getThreshold()));
         assertEquals(0.6, imageComparison.getPixelToleranceLevel(), 0.0);
         assertTrue(imageComparison.isDrawExcludedRectangles());
+        assertEquals(35.1, imageComparison.getPercentOpacityDifferenceRectangles(), 0.0);
+        assertEquals(45.1, imageComparison.getPercentOpacityExcludedRectangles(), 0.0);
+        assertTrue(imageComparison.isFillDifferenceRectangles());
+        assertTrue(imageComparison.isFillExcludedRectangles());
     }
 
     @Test

@@ -112,6 +112,26 @@ public class ImageComparison {
      * The difference in percent between two images.
      */
     private float differencePercent;
+    
+    /**
+     * Flag for filling comparison difference rectangles.
+     */
+    private boolean fillDifferenceRectangles = false;
+    
+    /**
+     * Sets the opacity percentage of the fill of comparison difference rectangles. 0.0 means completely transparent and 100.0 means completely opaque.
+     */
+    private double percentOpacityDifferenceRectangles = 20.0;
+    
+    /**
+     * Flag for filling excluded rectangles.
+     */
+    private boolean fillExcludedRectangles = false;
+    
+    /**
+     * Sets the opacity percentage of the fill of excluded rectangles. 0.0 means completely transparent and 100.0 means completely opaque.
+     */
+    private double percentOpacityExcludedRectangles = 20.0;
 
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
@@ -338,6 +358,10 @@ public class ImageComparison {
         if (drawExcludedRectangles) {
             graphics.setColor(Color.GREEN);
             draw(graphics, excludedAreas.getExcluded());
+            
+            if (fillExcludedRectangles) {
+                fill(graphics, excludedAreas.getExcluded(), percentOpacityExcludedRectangles);
+            }
         }
     }
 
@@ -361,6 +385,10 @@ public class ImageComparison {
         }
 
         draw(graphics, rectanglesForDraw);
+    
+        if (fillDifferenceRectangles) {
+            fill(graphics, rectanglesForDraw, percentOpacityDifferenceRectangles);
+        }
     }
 
     /**
@@ -403,6 +431,32 @@ public class ImageComparison {
                 rectangle.getHeight() - 1)
         );
     }
+    
+    /**
+     * Fill rectangles based on collection of the {@link Rectangle} and {@link Graphics2D}.
+     * getWidth/getHeight return real width/height,
+     * so need to draw rectangle fill two px smaller to fit inside rectangle borders.
+     *
+     * @param graphics the {@link Graphics2D} object for drawing.
+     * @param rectangles rectangles the collection of the {@link Rectangle}.
+     * @param percentOpacity the opacity of the fill.
+     */
+    private void fill(Graphics2D graphics, List<Rectangle> rectangles, double percentOpacity) {
+        
+        graphics.setColor(new Color(graphics.getColor().getRed(),
+                graphics.getColor().getGreen(),
+                graphics.getColor().getBlue(),
+                (int) (percentOpacity / 100 * 255)
+        ));
+        rectangles.forEach(rectangle -> graphics.fillRect(
+                rectangle.getMinPoint().x - 1,
+                rectangle.getMinPoint().y - 1,
+                rectangle.getWidth() - 2,
+                rectangle.getHeight() - 2)
+            );
+    }
+    
+    
 
     /**
      * Group rectangle regions in matrix.
@@ -547,4 +601,34 @@ public class ImageComparison {
         this.excludedAreas = new ExcludedAreas(excludedAreas);
         return this;
     }
+    
+    public boolean isFillDifferenceRectangles() {
+        return this.fillDifferenceRectangles;
+    }
+    
+    public double getPercentOpacityDifferenceRectangles() {
+        return this.percentOpacityDifferenceRectangles;
+    }
+    
+    public ImageComparison setDifferenceRectangleFilling(boolean fillRectangles, double percentOpacity) {
+        this.fillDifferenceRectangles = fillRectangles;
+        this.percentOpacityDifferenceRectangles = percentOpacity;
+        return this;
+    }
+    
+    public boolean isFillExcludedRectangles() {
+        return this.fillExcludedRectangles;
+    }
+    
+    public double getPercentOpacityExcludedRectangles() {
+        return this.percentOpacityExcludedRectangles;
+    }
+    
+    public ImageComparison setExcludedRectangleFilling(boolean fillRectangles, double percentOpacity) {
+        this.fillExcludedRectangles = fillRectangles;
+        this.percentOpacityExcludedRectangles = percentOpacity;
+        return this;
+    }
+    
+    
 }
