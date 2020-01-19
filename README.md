@@ -51,6 +51,10 @@ Published on Maven Central and jCenter Java Library that compares 2 images with 
 | `pixelToleranceLevel` | Level of the pixel tolerance. By default it's 0.1 -> 10% difference. The value can be set from 0.0 to 0.99. |
 | `excludedAreas` | ExcludedAreas contains a List of Rectangles to be ignored when comparing images. |
 | `drawExcludedRectangles` | Flag which says draw excluded rectangles or not. |
+| `fillExcludedRectangles` | Flag which says fill excluded rectangles or not. |
+| `percentOpacityExcludedRectangles` | The desired opacity of the excluded rectangle fill. |
+| `fillDifferenceRectangles` | Flag which says fill difference rectangles or not. |
+| `percentOpacityDifferenceRectangles` | The desired opacity of the difference rectangle fill. |
 
 ## Release Notes
 
@@ -63,12 +67,12 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>4.0.0</version>
+    <version>4.0.1</version>
 </dependency>
 ```
 #### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:4.0.0'
+compile 'com.github.romankh3:image-comparison:4.0.1'
 ```
 
 #### To compare two images programmatically
@@ -99,6 +103,16 @@ class Example {
                //RectangleListWidth - Width of the line that is drawn in the rectangle. By default it's 1.
                imageComparison.setRectangleLineWidth(5);
                imageComparison.getRectangleLineWidth();
+       
+               //DifferenceRectangleFilling - Fill the inside the difference rectangles with a transparent fill. By default it's false and 20.0% opacity.
+               imageComparison.setDifferenceRectangleFilling(true, 30.0);
+               imageComparison.isFillDifferenceRectangles();
+               imageComparison.getPercentOpacityDifferenceRectangles();
+       
+               //ExcludedRectangleFilling - Fill the inside the excluded rectangles with a transparent fill. By default it's false and 20.0% opacity.
+               imageComparison.setExcludedRectangleFilling(true, 30.0);
+               imageComparison.isFillExcludedRectangles();
+               imageComparison.getPercentOpacityExcludedRectangles();
        
                //Destination. Before comparing also can be added destination file for result image.
                imageComparison.setDestination(resultDestination);
