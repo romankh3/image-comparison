@@ -360,7 +360,7 @@ public class ImageComparison {
             draw(graphics, excludedAreas.getExcluded());
             
             if (fillExcludedRectangles) {
-                fill(graphics, excludedAreas.getExcluded(), percentOpacityExcludedRectangles);
+                fillRectangles(graphics, excludedAreas.getExcluded(), percentOpacityExcludedRectangles);
             }
         }
     }
@@ -387,7 +387,7 @@ public class ImageComparison {
         draw(graphics, rectanglesForDraw);
     
         if (fillDifferenceRectangles) {
-            fill(graphics, rectanglesForDraw, percentOpacityDifferenceRectangles);
+            fillRectangles(graphics, rectanglesForDraw, percentOpacityDifferenceRectangles);
         }
     }
 
@@ -441,7 +441,7 @@ public class ImageComparison {
      * @param rectangles rectangles the collection of the {@link Rectangle}.
      * @param percentOpacity the opacity of the fill.
      */
-    private void fill(Graphics2D graphics, List<Rectangle> rectangles, double percentOpacity) {
+    private void fillRectangles(Graphics2D graphics, List<Rectangle> rectangles, double percentOpacity) {
         
         graphics.setColor(new Color(graphics.getColor().getRed(),
                 graphics.getColor().getGreen(),
