@@ -1,5 +1,8 @@
 # Release Notes
 
+## 4.1.0
+*   added option to fill rectangles(167 issue)
+
 ## 4.0.0
 *   refactored drawRectangles method due to SRP.
 *   optimized isDifferentPixels to improve algorithm.
