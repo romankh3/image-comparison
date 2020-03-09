@@ -10,13 +10,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
-import static com.github.romankh3.image.comparison.model.ImageComparisonState.MISMATCH;
-import static com.github.romankh3.image.comparison.model.ImageComparisonState.MATCH;
-import static com.github.romankh3.image.comparison.model.ImageComparisonState.SIZE_MISMATCH;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.*;
 import static java.util.Arrays.asList;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -61,7 +58,7 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
-    public void testIssue165(){
+    public void testIssue165() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMaximalRectangleCount(5);
@@ -266,6 +263,27 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
+    @Test
+    public void shouldProperlyCompare171issue() {
+        //given
+        BufferedImage actual = readImageFromResources("actual#171.png");
+        BufferedImage expected = readImageFromResources("expected#171.png");
+
+        BufferedImage expectedResultImage = readImageFromResources("result#171.png");
+
+        ImageComparison imageComparison = new ImageComparison(expected, actual)
+                .setExcludedAreas(singletonList(new Rectangle(325, 50, 650, 80)))
+                .setDrawExcludedRectangles(true)
+                .setRectangleLineWidth(3);
+
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
+    }
+
     /**
      * Test issue #113 to draw red and green rectangles.
      */
@@ -296,7 +314,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
         assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
     }
-    
+
     /**
      * Test issue #167(a). Fill difference rectangles in transparent red.
      */
@@ -305,29 +323,29 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
-        
+
         List<Rectangle> excludedAreas = asList(
                 new Rectangle(410, 514, 900, 565),
                 new Rectangle(410, 636, 900, 754)
         );
-        
+
         BufferedImage expectedImage = readImageFromResources("result#167a.png");
-        
+
         ImageComparison imageComparison = new ImageComparison(expected, actual)
                 .setExcludedAreas(excludedAreas)
                 .setRectangleLineWidth(5)
                 .setPixelToleranceLevel(0.0)
                 .setDrawExcludedRectangles(true)
                 .setDifferenceRectangleFilling(true, 30.0);
-        
+
         //when
         ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
-        
+
         //then
         assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
-    
+
     /**
      * Test issue #167(b). Fill excluded rectangles in transparent green.
      */
@@ -336,24 +354,24 @@ public class ImageComparisonUnitTest extends BaseTest {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
-        
+
         List<Rectangle> excludedAreas = asList(
                 new Rectangle(410, 514, 900, 565),
                 new Rectangle(410, 636, 900, 754)
         );
-        
+
         BufferedImage expectedImage = readImageFromResources("result#167b.png");
-        
+
         ImageComparison imageComparison = new ImageComparison(expected, actual)
                 .setExcludedAreas(excludedAreas)
                 .setRectangleLineWidth(5)
                 .setPixelToleranceLevel(0.0)
                 .setDrawExcludedRectangles(true)
                 .setExcludedRectangleFilling(true, 30.0);
-        
+
         //when
         ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
-        
+
         //then
         assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
