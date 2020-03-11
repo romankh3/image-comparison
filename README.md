@@ -55,7 +55,7 @@ Published on Maven Central and jCenter Java Library that compares 2 images with 
 | `percentOpacityExcludedRectangles` | The desired opacity of the excluded rectangle fill. |
 | `fillDifferenceRectangles` | Flag which says fill difference rectangles or not. |
 | `percentOpacityDifferenceRectangles` | The desired opacity of the difference rectangle fill. |
-| `allowingPercentOfDifferentPixels` | The percent of the allowing pixels to be different to stay {@link ImageComparisonState#MATCH} for comparison. E.g. percent of the pixels, which would ignore in comparison. |
+| `allowingPercentOfDifferentPixels` | The percent of the allowing pixels to be different to stay MATCH for comparison. E.g. percent of the pixels, which would ignore in comparison. Value can be from 0.0 to 100.00 |
 
 ## Release Notes
 
@@ -68,12 +68,12 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>4.1.0</version>
+    <version>4.2.0</version>
 </dependency>
 ```
 #### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:4.1.0'
+compile 'com.github.romankh3:image-comparison:4.2.0'
 ```
 
 #### To compare two images programmatically
