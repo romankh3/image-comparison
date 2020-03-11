@@ -43,6 +43,25 @@ public class ImageComparisonUnitTest extends BaseTest {
     }
 
     @Test
+    public void shouldAllowLessThanOnePercentDifference() {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png")
+                .setAllowingPercentOfDifferentPixels(1);
+
+        //when
+        ImageComparisonResult result = imageComparison.compareImages();
+
+        //then
+        assertEquals(MATCH, result.getImageComparisonState());
+
+        //when
+        result = imageComparison.setAllowingPercentOfDifferentPixels(0).compareImages();
+
+        //then
+        assertEquals(MISMATCH, result.getImageComparisonState());
+    }
+
+    @Test
     public void testMaximalRectangleCount() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");

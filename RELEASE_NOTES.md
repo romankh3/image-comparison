@@ -1,5 +1,8 @@
 # Release Notes
 
+## 4.2.0
+*   added the ability to ignore some percent of differences for comparison.
+
 ## 4.1.0
 *   added option to fill rectangles(167 issue)
 
