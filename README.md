@@ -55,6 +55,7 @@ Published on Maven Central and jCenter Java Library that compares 2 images with 
 | `percentOpacityExcludedRectangles` | The desired opacity of the excluded rectangle fill. |
 | `fillDifferenceRectangles` | Flag which says fill difference rectangles or not. |
 | `percentOpacityDifferenceRectangles` | The desired opacity of the difference rectangle fill. |
+| `allowingPercentOfDifferentPixels` | The percent of the allowing pixels to be different to stay {@link ImageComparisonState#MATCH} for comparison. E.g. percent of the pixels, which would ignore in comparison. |
 
 ## Release Notes
 

@@ -2,19 +2,17 @@ package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.model.ExcludedAreas;
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
+import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.github.romankh3.image.comparison.model.Rectangle;
-import java.awt.BasicStroke;
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Point;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 import java.util.stream.Collectors;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Main class for comparison images.
@@ -112,32 +110,38 @@ public class ImageComparison {
      * The difference in percent between two images.
      */
     private float differencePercent;
-    
+
     /**
      * Flag for filling comparison difference rectangles.
      */
     private boolean fillDifferenceRectangles = false;
-    
+
     /**
      * Sets the opacity percentage of the fill of comparison difference rectangles. 0.0 means completely transparent and 100.0 means completely opaque.
      */
     private double percentOpacityDifferenceRectangles = 20.0;
-    
+
     /**
      * Flag for filling excluded rectangles.
      */
     private boolean fillExcludedRectangles = false;
-    
+
     /**
      * Sets the opacity percentage of the fill of excluded rectangles. 0.0 means completely transparent and 100.0 means completely opaque.
      */
     private double percentOpacityExcludedRectangles = 20.0;
 
     /**
+     * The percent of the allowing pixels to be different to stay {@link ImageComparisonState#MATCH} for comparison.
+     * E.g. percent of the pixels, which would ignore in comparison.
+     */
+    private double allowingPercentOfDifferentPixels = 0.0;
+
+    /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
      * @param expected expected image to be compared
-     * @param actual actual image to be compared
+     * @param actual   actual image to be compared
      */
     public ImageComparison(String expected, String actual) {
         this(ImageComparisonUtil.readImageFromResources(expected),
@@ -148,22 +152,22 @@ public class ImageComparison {
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
-     * @param expected expected image to be compared
-     * @param actual actual image to be compared
+     * @param expected    expected image to be compared
+     * @param actual      actual image to be compared
      * @param destination destination to save the result. If null, the result is shown in the UI.
      */
     public ImageComparison(BufferedImage expected, BufferedImage actual, File destination) {
         this.expected = expected;
         this.actual = actual;
         this.destination = destination;
-       differenceConstant = calculateDifferenceConstant();
+        differenceConstant = calculateDifferenceConstant();
     }
 
     /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
      * @param expected expected image to be compared
-     * @param actual actual image to be compared
+     * @param actual   actual image to be compared
      */
     public ImageComparison(BufferedImage expected, BufferedImage actual) {
         this(expected, actual, null);
@@ -203,7 +207,7 @@ public class ImageComparison {
      * Check images for equals their widths and heights.
      *
      * @param expected {@link BufferedImage} object of the expected image.
-     * @param actual {@link BufferedImage} object of the actual image.
+     * @param actual   {@link BufferedImage} object of the actual image.
      * @return true if image size are not equal, false otherwise.
      */
     private boolean isImageSizesNotEqual(BufferedImage expected, BufferedImage actual) {
@@ -212,17 +216,23 @@ public class ImageComparison {
 
     /**
      * Populate binary matrix with "0" and "1". If the pixels are different set it as "1", otherwise "0".
+     *
+     * @return the count of different pixels
      */
-    private void populateTheMatrixOfTheDifferences() {
+    private long populateTheMatrixOfTheDifferences() {
+        long countOfDifferentPixels = 0;
         matrix = new int[expected.getHeight()][expected.getWidth()];
         for (int y = 0; y < expected.getHeight(); y++) {
             for (int x = 0; x < expected.getWidth(); x++) {
-                Point point = new Point(x, y);
-                if (!excludedAreas.contains(point)) {
-                    matrix[y][x] = isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y)) ? 1 : 0;
+                if (!excludedAreas.contains(new Point(x, y))) {
+                    if (isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y))) {
+                        matrix[y][x] = 1;
+                        countOfDifferentPixels++;
+                    }
                 }
             }
         }
+        return countOfDifferentPixels;
     }
 
     /**
@@ -230,7 +240,7 @@ public class ImageComparison {
      * need to be more than {@link #pixelToleranceLevel}.
      *
      * @param expectedRgb the RGB value of the Pixel of the Expected image.
-     * @param actualRgb the RGB value of the Pixel of the Actual image.
+     * @param actualRgb   the RGB value of the Pixel of the Actual image.
      * @return {@code true} if they' are difference, {@code false} otherwise.
      */
     private boolean isDifferentPixels(int expectedRgb, int actualRgb) {
@@ -257,7 +267,15 @@ public class ImageComparison {
      * @return the collection of the populated {@link Rectangle} objects.
      */
     private List<Rectangle> populateRectangles() {
-        populateTheMatrixOfTheDifferences();
+        long countOfDifferentPixels = populateTheMatrixOfTheDifferences();
+
+        if (countOfDifferentPixels == 0) {
+            return emptyList();
+        }
+
+        if (isAllowedPercentOfDifferentPixels(countOfDifferentPixels)) {
+            return emptyList();
+        }
         groupRegions();
         List<Rectangle> rectangles = new ArrayList<>();
         while (counter <= regionCount) {
@@ -269,6 +287,19 @@ public class ImageComparison {
         }
 
         return mergeRectangles(rectangles);
+    }
+
+    /**
+     * Say if provided {@param countOfDifferentPixels} is allowed for {@link ImageComparisonState#MATCH} state.
+     *
+     * @param countOfDifferentPixels the count of the different pixels in comparison.
+     * @return true, if percent of different pixels lower or equal {@link ImageComparison#allowingPercentOfDifferentPixels},
+     * false - otherwise.
+     */
+    private boolean isAllowedPercentOfDifferentPixels(long countOfDifferentPixels) {
+        long totalPixelCount = matrix.length * matrix[0].length;
+        double actualPercentOfDifferentPixels = ((double) countOfDifferentPixels / (double) totalPixelCount) * 100;
+        return actualPercentOfDifferentPixels <= allowingPercentOfDifferentPixels;
     }
 
     /**
@@ -358,7 +389,7 @@ public class ImageComparison {
         if (drawExcludedRectangles) {
             graphics.setColor(Color.GREEN);
             draw(graphics, excludedAreas.getExcluded());
-            
+
             if (fillExcludedRectangles) {
                 fillRectangles(graphics, excludedAreas.getExcluded(), percentOpacityExcludedRectangles);
             }
@@ -369,7 +400,7 @@ public class ImageComparison {
      * Draw rectangles with the differences.
      *
      * @param rectangles the collection of the {@link Rectangle} of differences.
-     * @param graphics prepared {@link Graphics2D}object.
+     * @param graphics   prepared {@link Graphics2D}object.
      */
     private void drawRectanglesOfDifferences(List<Rectangle> rectangles, Graphics2D graphics) {
         List<Rectangle> rectanglesForDraw;
@@ -385,7 +416,7 @@ public class ImageComparison {
         }
 
         draw(graphics, rectanglesForDraw);
-    
+
         if (fillDifferenceRectangles) {
             fillRectangles(graphics, rectanglesForDraw, percentOpacityDifferenceRectangles);
         }
@@ -395,7 +426,6 @@ public class ImageComparison {
      * Prepare {@link Graphics2D} based on resultImage and rectangleLineWidth
      *
      * @param image image based on created {@link Graphics2D}.
-     *
      * @return prepared {@link Graphics2D} object.
      */
     private Graphics2D preparedGraphics2D(BufferedImage image) {
@@ -420,7 +450,7 @@ public class ImageComparison {
      * getWidth/getHeight return real width/height,
      * so need to draw rectangle on one px smaller because minpoint + width/height is point on excluded pixel.
      *
-     * @param graphics the {@link Graphics2D} object for drawing.
+     * @param graphics   the {@link Graphics2D} object for drawing.
      * @param rectangles the collection of the {@link Rectangle}.
      */
     private void draw(Graphics2D graphics, List<Rectangle> rectangles) {
@@ -431,18 +461,18 @@ public class ImageComparison {
                 rectangle.getHeight() - 1)
         );
     }
-    
+
     /**
      * Fill rectangles based on collection of the {@link Rectangle} and {@link Graphics2D}.
      * getWidth/getHeight return real width/height,
      * so need to draw rectangle fill two px smaller to fit inside rectangle borders.
      *
-     * @param graphics the {@link Graphics2D} object for drawing.
-     * @param rectangles rectangles the collection of the {@link Rectangle}.
+     * @param graphics       the {@link Graphics2D} object for drawing.
+     * @param rectangles     rectangles the collection of the {@link Rectangle}.
      * @param percentOpacity the opacity of the fill.
      */
     private void fillRectangles(Graphics2D graphics, List<Rectangle> rectangles, double percentOpacity) {
-        
+
         graphics.setColor(new Color(graphics.getColor().getRed(),
                 graphics.getColor().getGreen(),
                 graphics.getColor().getBlue(),
@@ -453,10 +483,9 @@ public class ImageComparison {
                 rectangle.getMinPoint().y - 1,
                 rectangle.getWidth() - 2,
                 rectangle.getHeight() - 2)
-            );
+        );
     }
-    
-    
+
 
     /**
      * Group rectangle regions in matrix.
@@ -601,34 +630,46 @@ public class ImageComparison {
         this.excludedAreas = new ExcludedAreas(excludedAreas);
         return this;
     }
-    
+
     public boolean isFillDifferenceRectangles() {
         return this.fillDifferenceRectangles;
     }
-    
+
     public double getPercentOpacityDifferenceRectangles() {
         return this.percentOpacityDifferenceRectangles;
     }
-    
+
     public ImageComparison setDifferenceRectangleFilling(boolean fillRectangles, double percentOpacity) {
         this.fillDifferenceRectangles = fillRectangles;
         this.percentOpacityDifferenceRectangles = percentOpacity;
         return this;
     }
-    
+
     public boolean isFillExcludedRectangles() {
         return this.fillExcludedRectangles;
     }
-    
+
     public double getPercentOpacityExcludedRectangles() {
         return this.percentOpacityExcludedRectangles;
     }
-    
+
     public ImageComparison setExcludedRectangleFilling(boolean fillRectangles, double percentOpacity) {
         this.fillExcludedRectangles = fillRectangles;
         this.percentOpacityExcludedRectangles = percentOpacity;
         return this;
     }
-    
-    
+
+    public double getAllowingPercentOfDifferentPixels() {
+        return allowingPercentOfDifferentPixels;
+    }
+
+    public ImageComparison setAllowingPercentOfDifferentPixels(double allowingPercentOfDifferentPixels) {
+        if(0.0 <= allowingPercentOfDifferentPixels && allowingPercentOfDifferentPixels <= 100) {
+            this.allowingPercentOfDifferentPixels = allowingPercentOfDifferentPixels;
+        } else {
+            //todo add warning here
+        }
+
+        return this;
+    }
 }
