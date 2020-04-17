@@ -42,15 +42,24 @@ public final class ImageComparisonUtil {
      * @throws ImageComparisonException due to read the image from resources.
      */
     public static BufferedImage readImageFromResources(String path) throws ImageComparisonException {
-        InputStream inputStream = ImageComparisonUtil.class.getClassLoader().getResourceAsStream(path);
-        if (inputStream != null) {
+        File imageFile = new File(path);
+        if (imageFile.exists()) {
             try {
-                return ImageIO.read(inputStream);
+                return ImageIO.read(imageFile);
             } catch (IOException e) {
                 throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
             }
         } else {
-            throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
+            InputStream inputStream = ImageComparisonUtil.class.getClassLoader().getResourceAsStream(path);
+            if (inputStream != null) {
+                try {
+                    return ImageIO.read(inputStream);
+                } catch (IOException e) {
+                    throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
+                }
+            } else {
+                throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
+            }
         }
     }
 
