@@ -8,8 +8,9 @@ plugins {
 }
 
 group 'com.github.romankh3'
-version '4.2.0'
-description 'A library and utility to compare different images.'
+version '4.2.1'
+description 'Library that compares 2 images with the same sizes and shows the differences visually by drawing rectangles. ' +
+        'Some parts of the image can be excluded from the comparison. Can be used for automation qa tests.'
 sourceCompatibility = 1.8
 
 mainClassName = "com.github.romankh3.image.comparison.ImageComparison"
@@ -66,7 +67,7 @@ artifacts {
 // add all the info required by Maven Central to the pom
 configure(install.repositories.mavenInstaller) {
     pom.project {
-        inceptionYear '2019'
+        inceptionYear '2020'
         name project.name
         packaging 'jar'
         description project.description

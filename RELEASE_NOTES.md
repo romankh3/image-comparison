@@ -1,5 +1,8 @@
 # Release Notes
 
+## 4.2.1 
+*   Fixed bug #180 - problem with ImageComparisonUtil.readFromResources method.
+
 ## 4.2.0
 *   added the ability to ignore some percent of differences for comparison.
 
