@@ -11,11 +11,9 @@ import static org.mockito.Mockito.when;
 
 import com.github.romankh3.image.comparison.exception.ImageComparisonException;
 import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
-
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import org.junit.jupiter.api.Test;
 
 /**
@@ -129,5 +127,37 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
 
         //when
         assertDoesNotThrow(() -> ImageComparisonUtil.deepCopy(subimage));
+    }
+
+    /**
+     * Test issue #180. It was a problem with {@link ImageComparisonUtil#readImageFromResources(String)}
+     * from non test/resources.
+     */
+    @Test
+    public void shouldProperlyHandleBug180FromRoot() {
+        //given
+        String imagePath = "build/resources/test/result.png";
+
+        //when
+        BufferedImage result = ImageComparisonUtil.readImageFromResources(imagePath);
+
+        //then
+        assertNotNull(result);
+    }
+
+    /**
+     * Test issue #180. It was a problem with {@link ImageComparisonUtil#readImageFromResources(String)}
+     * from non test/resources.
+     */
+    @Test
+    public void shouldProperlyHandleBug180FromTestResources() {
+        //given
+        String imagePath = "actual.png";
+
+        //when
+        BufferedImage result = ImageComparisonUtil.readImageFromResources(imagePath);
+
+        //then
+        assertNotNull(result);
     }
 }

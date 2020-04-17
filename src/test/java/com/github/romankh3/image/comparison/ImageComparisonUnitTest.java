@@ -1,19 +1,22 @@
 package com.github.romankh3.image.comparison;
 
+import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.MATCH;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.MISMATCH;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.SIZE_MISMATCH;
+import static java.util.Arrays.asList;
+import static java.util.Collections.singletonList;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
-import org.junit.jupiter.api.Test;
-
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
-import static com.github.romankh3.image.comparison.model.ImageComparisonState.*;
-import static java.util.Arrays.asList;
-import static java.util.Collections.singletonList;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.Test;
 
 /**
  * Unit-level testing for {@link ImageComparison} object.
@@ -140,7 +143,8 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testIssue17() {
         //when
-        ImageComparisonResult imageComparisonResult = new ImageComparison("expected#17.png", "actual#17.png").compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected#17.png", "actual#17.png")
+                .compareImages();
 
         //then
         assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
@@ -156,7 +160,8 @@ public class ImageComparisonUnitTest extends BaseTest {
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
         //when
-        ImageComparisonResult imageComparisonResult = new ImageComparison("expected#21.png", "actual#21.png").compareImages();
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison("expected#21.png", "actual#21.png").compareImages();
 
         //then
         assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
@@ -416,7 +421,8 @@ public class ImageComparisonUnitTest extends BaseTest {
     @Test
     public void testMatchSize() {
         //when
-        ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "expected.png").compareImages();
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "expected.png")
+                .compareImages();
 
         //then
         assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
