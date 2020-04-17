@@ -9,6 +9,7 @@ import static java.util.Collections.singletonList;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
@@ -16,19 +17,16 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-/**
- * Unit-level testing for {@link ImageComparison} object.
- */
-public class ImageComparisonUnitTest extends BaseTest {
+@DisplayName("Unit-level testing for {@link ImageComparison} object.")
+public class ImageComparisonUnitTest {
 
-    /**
-     * The most important test. Shown, that the changes in algorithm,
-     * don't break the main behaviour and result as expected.
-     */
+    @DisplayName("The most important test. Shown, that the changes in algorithm, "
+            + "don't break the main behaviour and result as expected")
     @Test
-    public void testCorrectWorkingExpectedActual() {
+    public void shouldProperlyExecuteComparing() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result.png");
 
@@ -45,6 +43,7 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should Allow less than one percent of image difference")
     @Test
     public void shouldAllowLessThanOnePercentDifference() {
         //given
@@ -64,8 +63,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(MISMATCH, result.getImageComparisonState());
     }
 
+    @DisplayName("Should perform maximal rectangle count")
     @Test
-    public void testMaximalRectangleCount() {
+    public void shouldPerformMaximalRectangleCount() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMaximalRectangleCount(3);
@@ -79,8 +79,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should reproduce Bug #165")
     @Test
-    public void testIssue165() {
+    public void shouldReproduceBug165() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMaximalRectangleCount(5);
@@ -94,8 +95,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should properly compare totally different images")
     @Test
-    public void testImagesWithTotallyDifferentImages() {
+    public void shouldProperlyCompareTotallyDifferentImages() {
         //when
         BufferedImage expectedResult = readImageFromResources("totallyDifferentImageResult.png");
 
@@ -108,8 +110,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResult, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should properly get destination")
     @Test
-    public void testDestinationGetting() {
+    public void shouldProperlyGetDestination() {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actual.png");
@@ -122,8 +125,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertTrue(imageComparison.getDestination().isPresent());
     }
 
+    @DisplayName("Should properly work minimal rectangle size configuration")
     @Test
-    public void testMinimalRectangleSize() {
+    public void shouldWorkMinimalRectangleSize() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
         imageComparison.setMinimalRectangleSize(4 * 4 + 1);
@@ -137,11 +141,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
-    /**
-     * Test issue #17. It was StackOverFlowError.
-     */
+    @DisplayName("should reproduce bug #17")
     @Test
-    public void testIssue17() {
+    public void shouldReproduceBug17() {
         //when
         ImageComparisonResult imageComparisonResult = new ImageComparison("expected#17.png", "actual#17.png")
                 .compareImages();
@@ -151,11 +153,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertNotNull(imageComparisonResult.getResult());
     }
 
-    /**
-     * Test issue #21. It was StackOverFlowError.
-     */
+    @DisplayName("Should reproduce bug 21")
     @Test
-    public void testIssue21() {
+    public void shouldReproduceBug21() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#21.png");
 
@@ -168,11 +168,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
-    /**
-     * Test issue #11.
-     */
+    @DisplayName("Should reproduce bug 11")
     @Test
-    public void testIssue11() {
+    public void shouldReproduce11() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("result#11.png");
 
@@ -187,11 +185,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
-    /**
-     * Verify that it is possible to use a thick line in the rectangle
-     */
+    @DisplayName("Should properly work rectangle size width configuration")
     @Test
-    public void testRectangleWithLineWidth10() {
+    public void shouldProperlyWorkRectangleLineWidth() {
         //given
         BufferedImage expectedResultImage = readImageFromResources("resultThickRectangle.png");
 
@@ -211,8 +207,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(10, imageComparison.getRectangleLineWidth());
     }
 
+    @DisplayName("Should properly populate rectangles")
     @Test
-    public void testShouldReturnARectangleList() {
+    public void shouldProperlyPopulateRectangles() {
         //given
         BufferedImage original = readImageFromResources("expected#17.png");
         BufferedImage masked = readImageFromResources("actualMasked#58.png");
@@ -228,8 +225,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(expectedRectangleList.get(0), actualRectangleList.get(0));
     }
 
+    @DisplayName("Should properly work SIZE_MISMATCH state")
     @Test
-    public void testSizeMissMatch() {
+    public void shouldProperlyWorkSizeMismatch() {
         //given
         BufferedImage expected = new BufferedImage(10, 10, 10);
         BufferedImage actual = new BufferedImage(12, 12, 10);
@@ -241,8 +239,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
     }
 
+    @DisplayName("Should ignore excluded areas")
     @Test
-    public void testShouldIgnoreExcludedArea() {
+    public void shouldIgnoreExcludedAreas() {
         //given
         BufferedImage expected = readImageFromResources("expected#17.png");
         BufferedImage actual = readImageFromResources("actualMaskedComparison#58.png");
@@ -257,11 +256,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(result.getImageComparisonState(), MATCH);
     }
 
-    /**
-     * Test issue #98 and #97 to see the drawn excluded areas.
-     */
+    @DisplayName("Should reproduce bug 98")
     @Test
-    public void testIssue98() {
+    public void shouldReproduceBug98and97() {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -287,8 +284,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should properly compare in bug #171")
     @Test
-    public void shouldProperlyCompare171issue() {
+    public void shouldProperlyCompareBug171() {
         //given
         BufferedImage actual = readImageFromResources("actual#171.png");
         BufferedImage expected = readImageFromResources("expected#171.png");
@@ -308,11 +306,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
     }
 
-    /**
-     * Test issue #113 to draw red and green rectangles.
-     */
+    @DisplayName("Should properly compare bug #113")
     @Test
-    public void testIssue113() {
+    public void shouldProperlyCompareBug113() {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -339,11 +335,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(0.0, imageComparison.getPixelToleranceLevel(), 0.0);
     }
 
-    /**
-     * Test issue #167(a). Fill difference rectangles in transparent red.
-     */
+    @DisplayName("Should properly fill in transparent red")
     @Test
-    public void testIssue167a() {
+    public void shouldProperlyFillInTransparentRed() {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -370,11 +364,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
-    /**
-     * Test issue #167(b). Fill excluded rectangles in transparent green.
-     */
+    @DisplayName("Should properly fill in transparent green")
     @Test
-    public void testIssue167b() {
+    public void shouldProperlyFillInTransparentGreen() {
         //given
         BufferedImage expected = readImageFromResources("expected#98.png");
         BufferedImage actual = readImageFromResources("actual#98.png");
@@ -401,11 +393,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
-    /**
-     * Test issue #134 If image is different in a line in 1 px, ComparisonState is always MATCH.
-     */
+    @DisplayName("Should properly compare in bug #134")
     @Test
-    public void testIssue134() {
+    public void shouldProperlyCompareInBug134() {
         //given
         ImageComparison imageComparison = new ImageComparison("expected#134.png", "actual#134.png");
         BufferedImage expectedImage = readImageFromResources("result#134.png");
@@ -418,8 +408,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should match size")
     @Test
-    public void testMatchSize() {
+    public void shouldMatchSize() {
         //when
         ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "expected.png")
                 .compareImages();
@@ -428,8 +419,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
     }
 
+    @DisplayName("Should properly work getters and setters")
     @Test
-    public void testGettersAndSetters() {
+    public void shouldProperlyWorkGettersAndSetters() {
         //when
         ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png")
                 .setMinimalRectangleSize(100)
@@ -455,8 +447,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertTrue(imageComparison.isFillExcludedRectangles());
     }
 
+    @DisplayName("Should properly compare in JPEG extension")
     @Test
-    public void testResearchJpegImages() {
+    public void shouldProperlyCompareInJpeg() {
         //given
         BufferedImage expected = readImageFromResources("expected.jpg");
         BufferedImage actual = readImageFromResources("actual.jpg");
@@ -473,8 +466,9 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertImagesEqual(expectedResult, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should properly compare mis size")
     @Test
-    public void testCompareMisSizedImages() {
+    public void shouldProperlyCompareMisSizedImages() {
         //given
         BufferedImage expected = readImageFromResources("expected.png");
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
@@ -486,5 +480,22 @@ public class ImageComparisonUnitTest extends BaseTest {
         assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
         boolean differenceLessThan2 = imageComparisonResult.getDifferencePercent() < 2;
         assertTrue(differenceLessThan2);
+    }
+
+    private void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
+        if (expected.getWidth() != actual.getWidth() || expected.getHeight() != actual.getHeight()) {
+            fail("Images have different dimensions");
+        }
+
+        int width = expected.getWidth();
+        int height = expected.getHeight();
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                if (expected.getRGB(x, y) != actual.getRGB(x, y)) {
+                    fail("Images are different, found a different pixel at: x = " + x + ", y = " + y);
+                }
+            }
+        }
     }
 }

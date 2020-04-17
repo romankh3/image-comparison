@@ -1,18 +1,18 @@
 package com.github.romankh3.image.comparison.model;
 
-import org.junit.jupiter.api.Test;
-
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-/**
- * Unit-level testing for {@link ImageComparisonResult} object.
- */
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
+
+@DisplayName("Unit-level testing for {@link ImageComparisonResult} object")
 public class ImageComparisonResultUnitTest {
 
+    @DisplayName("Should properly work object creation")
     @Test
-    public void testObjectCreation() {
+    public void shouldProperlyWorkObjectCreation() {
         //when
         ImageComparisonResult imageComparisonResult = new ImageComparisonResult();
 
@@ -20,10 +20,12 @@ public class ImageComparisonResultUnitTest {
         assertNotNull(imageComparisonResult);
     }
 
+    @DisplayName("Should properly work getters and setters")
     @Test
-    public void testGettersAndSetters() {
+    public void shouldProperlyWorkGettersAndSetters() {
         //when
-        ImageComparisonResult imageComparisonResult = new ImageComparisonResult().setImageComparisonState(ImageComparisonState.MATCH)
+        ImageComparisonResult imageComparisonResult = new ImageComparisonResult()
+                .setImageComparisonState(ImageComparisonState.MATCH)
                 .setExpected(readImageFromResources("expected.png"))
                 .setActual(readImageFromResources("actual.png"))
                 .setResult(readImageFromResources("result.png"));

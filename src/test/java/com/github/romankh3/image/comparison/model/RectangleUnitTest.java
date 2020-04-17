@@ -6,17 +6,16 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.assertNotSame;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.awt.Point;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.awt.Point;
-
-/**
- * Unit-level testing for {@link Rectangle} object.
- */
+@DisplayName("Unit-level testing for {@link Rectangle} object.")
 public class RectangleUnitTest {
 
+    @DisplayName("Should properly create default rectangle")
     @Test
-    public void testDefaultRectangle() {
+    public void shouldProperlyCreateDefaultRectangle() {
         Rectangle rectangle = Rectangle.createDefault();
 
         assertEquals(rectangle.getMinPoint().x, Integer.MAX_VALUE);
@@ -25,8 +24,9 @@ public class RectangleUnitTest {
         assertEquals(rectangle.getMaxPoint().y, Integer.MIN_VALUE);
     }
 
+    @DisplayName("Should properly work getters and setters")
     @Test
-    public void testGetterSetter() {
+    public void shouldProperlyWorkGetterSetter() {
         Rectangle rectangle = Rectangle.createDefault();
 
         rectangle.setMinPoint(new Point(10, 20));
@@ -45,10 +45,11 @@ public class RectangleUnitTest {
      * .    ...........
      * .    . R2  .   .
      * ............   .
-     *      ...........
+     * ...........
      */
+    @DisplayName("Should properly find overlapping")
     @Test
-    public void testIsOverlap() {
+    public void shouldProperlyFindOverlapping() {
         //given
         Rectangle rectangleOne = new Rectangle(2, 2, 8, 6);
 
@@ -60,18 +61,19 @@ public class RectangleUnitTest {
 
     /**
      * Cover non overlapping case, drawing below:
-     *    .............
-     *    . R1        .
-     *    .           .
-     *    .............
+     * .............
+     * . R1        .
+     * .           .
+     * .............
      * ------------------------
-     *      ..............
-     *      . R2         .
-     *      .            .
-     *      ..............
+     * ..............
+     * . R2         .
+     * .            .
+     * ..............
      */
+    @DisplayName("Should properly find non-overlapping")
     @Test
-    public void testNonOverlappingUpDown() {
+    public void shouldProperlyFindNonOverlappingUpDown() {
         //given
         Rectangle rectangleOne = new Rectangle(1, 1, 4, 4);
         Rectangle rectangleTwo = new Rectangle(4, 6, 6, 8);
@@ -86,12 +88,13 @@ public class RectangleUnitTest {
      * . R1      . |  ...........
      * .         . |  . R2      .
      * ........... |  .         .
-     *             |  .         .
-     *             |  ...........
-     *             |
+     * |  .         .
+     * |  ...........
+     * |
      */
+    @DisplayName("Should properly find non-overlapping for left right")
     @Test
-    public void testNonOverlappingLeftRight() {
+    public void shouldFindNonOverlappingLeftRight() {
         //given
         Rectangle rectangleOne = new Rectangle(2, 2, 4, 4);
         Rectangle rectangleTwo = new Rectangle(6, 2, 10, 4);
@@ -100,8 +103,9 @@ public class RectangleUnitTest {
         assertFalse(rectangleOne.isOverlapping(rectangleTwo));
     }
 
+    @DisplayName("Should properly work equal rectangles")
     @Test
-    public void testEqual() {
+    public void shouldProperlyEqual() {
         //given
         Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
         Rectangle rectangleTwo = new Rectangle(1, 1, 2, 2);
@@ -110,8 +114,9 @@ public class RectangleUnitTest {
         assertEquals(rectangleOne, rectangleTwo);
     }
 
+    @DisplayName("Should properly equal tow the same rectangles")
     @Test
-    public void testEqualTheSame() {
+    public void shouldEqualTheSame() {
         //given
         Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
 
@@ -119,8 +124,9 @@ public class RectangleUnitTest {
         assertEquals(rectangleOne, rectangleOne);
     }
 
+    @DisplayName("Should properly equal with null")
     @Test
-    public void testEqualNull() {
+    public void shouldEqualNull() {
         //given
         Rectangle rectangle = new Rectangle(1, 1, 2, 2);
 
@@ -128,8 +134,9 @@ public class RectangleUnitTest {
         assertNotEquals(rectangle, null);
     }
 
+    @DisplayName("Should properly non equal")
     @Test
-    public void testNonEqual() {
+    public void shouldNonEqual() {
         //given
         Rectangle rectangle = new Rectangle(1, 1, 2, 2);
         Rectangle rectangleMinX = new Rectangle(2, 1, 2, 2);
@@ -146,8 +153,9 @@ public class RectangleUnitTest {
     }
 
 
+    @DisplayName("Should work the same work")
     @Test
-    public void testTheSameHashCode() {
+    public void shouldProperlyWorkTheSameHashCode() {
         //given
         Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
         Rectangle rectangleTwo = new Rectangle(1, 1, 2, 2);
@@ -160,8 +168,9 @@ public class RectangleUnitTest {
         assertEquals(hashCodeOne, hashCodeTwo);
     }
 
+    @DisplayName("Should properly find non-equal hash codes")
     @Test
-    public void testNonTheSameHashCode() {
+    public void shouldWorkNonTheSameHashCode() {
         //given
         Rectangle rectangleOne = new Rectangle(1, 1, 2, 2);
         Rectangle rectangleTwo = new Rectangle(1, 3, 2, 2);
@@ -174,8 +183,9 @@ public class RectangleUnitTest {
         assertNotEquals(hashCodeOne, hashCodeTwo);
     }
 
+    @DisplayName("Should properly clone by rectangle")
     @Test
-    public void testCloneRectangleByConstructor() {
+    public void shouldProperlyCloneRectangleByConstructor() {
         //given
         Rectangle rectangle = new Rectangle(1, 1, 4, 4);
 
@@ -188,7 +198,7 @@ public class RectangleUnitTest {
     }
 
     /**
-     * Coven test with merging rectagles one into other.
+     * Coven test with merging rectangles one into other.
      *
      * ................................................
      * . R1                                           .
@@ -200,8 +210,9 @@ public class RectangleUnitTest {
      * .                                              .
      * ................................................
      */
+    @DisplayName("Should properly merge R1 inside R2")
     @Test
-    public void testMergeR1InsideR2() {
+    public void shouldProperlyMergeR1InsideR2() {
         //given
         Rectangle r1 = new Rectangle(3, 3, 9, 5);
         Rectangle r2 = new Rectangle(1, 1, 14, 7);
@@ -225,11 +236,12 @@ public class RectangleUnitTest {
      * .      .           .      .
      * .      .           .      .
      * ....................      .
-     *        .                  .
-     *        ....................
+     * .                  .
+     * ....................
      */
+    @DisplayName("Should properly merge R2 under R1")
     @Test
-    public void testMergeR2UnderR1() {
+    public void shouldProperlyMergeR2UnderR1() {
         //given
         Rectangle r1 = new Rectangle(4, 3, 8, 7);
         Rectangle r2 = new Rectangle(6, 5, 11, 10);
@@ -248,9 +260,9 @@ public class RectangleUnitTest {
     /**
      * Cover test case with merging rectangles when R1 leftward R1.
      *
-     *         ..........................
-     *         . R2                     .
-     *         .                        .
+     * ..........................
+     * . R2                     .
+     * .                        .
      * .........................        .
      * . R1    .               .        .
      * .       .               .        .
@@ -261,11 +273,12 @@ public class RectangleUnitTest {
      * .                       .
      * .........................
      */
+    @DisplayName("Should properly merge R1 leftward R2")
     @Test
-    public void testMergeR1leftwardR2() {
+    public void shouldProperlyMergeR1leftwardR2() {
         //given
         Rectangle r1 = new Rectangle(2, 4, 6, 7);
-        Rectangle r2 = new Rectangle( 4, 2, 10, 6);
+        Rectangle r2 = new Rectangle(4, 2, 10, 6);
 
         Rectangle expectedMergedRectangle = new Rectangle(2, 2, 10, 7);
 
@@ -278,8 +291,9 @@ public class RectangleUnitTest {
         assertEquals(expectedMergedRectangle, mergedRectangle2);
     }
 
+    @DisplayName("Should properly set Zero rectangle")
     @Test
-    public void testSetZeroRectangle() {
+    public void shouldProperlySetZeroRectangle() {
         //given
         Rectangle rectangle = new Rectangle(1, 2, 4, 5);
 
