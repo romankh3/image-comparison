@@ -15,8 +15,6 @@
 
 *   [Usage](#usage)
 
-*   [Building](#building)
-
 *   [Demo](#demo)
 
 *   [License](#license)
@@ -39,6 +37,8 @@ Published on Maven Central and jCenter Java Library that compares 2 images with 
 *   No third party libraries or borrowed code are in usage.
 
 *   Some parts of the image can be excluded from the comparison and drawn in the result image.
+
+Article about growing `image-comparison` on habr: [How did the test task become a production library](https://habr.com/ru/post/475482/)
 
 ## Configurations
 | *Property* | *Description* |
