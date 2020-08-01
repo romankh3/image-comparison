@@ -14,8 +14,12 @@ import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 @DisplayName("Unit-level testing for {@link ImageComparisonUtil} object.")
 public class ImageComparisonUtilUnitTest {
@@ -43,6 +47,23 @@ public class ImageComparisonUtilUnitTest {
         ImageComparisonException ex = assertThrows(ImageComparisonException.class,
                 () -> ImageComparisonUtil.saveImage(path, null));
         assertTrue(ex.getMessage().startsWith("Unable to create directory "));
+    }
+
+    @DisplayName("Should throw an exception when image can't be saved")
+    @Test
+    public void shouldThrowAnExceptionWhenImageCantBeSaved() {
+        //given
+        BufferedImage image = readImageFromResources("result.png");
+        File path = mock(File.class);
+        when(path.getAbsolutePath()).thenReturn("build/resources/test");
+        when(path.delete()).thenAnswer(invocationOnMock -> {
+            throw new IOException();
+        });
+
+        //when-then
+        ImageComparisonException ex = assertThrows(ImageComparisonException.class,
+                () -> ImageComparisonUtil.saveImage(path, image));
+        assertEquals("Cannot save image to path=build/resources/test", ex.getMessage());
     }
 
     @DisplayName("Should properly save image")
@@ -159,5 +180,15 @@ public class ImageComparisonUtilUnitTest {
 
         //then
         assertNotNull(result);
+    }
+
+    @DisplayName("Should throw an exception when trying to read image from directory")
+    @Test
+    public void shouldThrowAnExceptionWhenTryingToReadImageFromDirectory(@TempDir Path tempDir) {
+        //when-then
+        ImageComparisonException ex = assertThrows(ImageComparisonException.class,
+                () -> ImageComparisonUtil.readImageFromResources(tempDir.toAbsolutePath().toString()));
+        assertTrue(ex.getMessage().startsWith("Cannot read image from the file, path="),
+                   "Expected exception message to start with \"Cannot read image from the file, path=\", but is \"" + ex.getMessage() + "\"");
     }
 }
