@@ -432,7 +432,8 @@ public class ImageComparisonUnitTest {
                 .setPixelToleranceLevel(0.6)
                 .setThreshold(400)
                 .setDifferenceRectangleFilling(true, 35.1)
-                .setExcludedRectangleFilling(true, 45.1);
+                .setExcludedRectangleFilling(true, 45.1)
+                .setAllowingPercentOfDifferentPixels(48.15);
 
         //then
         assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
@@ -445,6 +446,7 @@ public class ImageComparisonUnitTest {
         assertEquals(45.1, imageComparison.getPercentOpacityExcludedRectangles(), 0.0);
         assertTrue(imageComparison.isFillDifferenceRectangles());
         assertTrue(imageComparison.isFillExcludedRectangles());
+        assertEquals(48.15, imageComparison.getAllowingPercentOfDifferentPixels(), 0.0);
     }
 
     @DisplayName("Should properly compare in JPEG extension")
