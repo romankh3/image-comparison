@@ -200,7 +200,10 @@ public class ImageComparison {
 
         BufferedImage resultImage = drawRectangles(rectangles);
         saveImageForDestination(resultImage);
-        return ImageComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
+        return ImageComparisonResult.defaultMisMatchResult(expected, actual)
+                .setResult(resultImage)
+                .setRectangles(rectangles)
+        ;
     }
 
     /**
