@@ -3,6 +3,7 @@ package com.github.romankh3.image.comparison.model;
 import com.github.romankh3.image.comparison.ImageComparisonUtil;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.List;
 
 /**
  * Data transfer objects which contains all the needed data for result of the comparison.
@@ -28,10 +29,16 @@ public class ImageComparisonResult {
      * State of the comparison.
      */
     private ImageComparisonState imageComparisonState;
+
     /**
      * The difference percentage between two images.
      */
     private float differencePercent;
+
+    /**
+     * Rectangles of the differences
+     */
+    private List<Rectangle> rectangles;
 
     /**
      * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#SIZE_MISMATCH}.
@@ -137,5 +144,12 @@ public class ImageComparisonResult {
         return this;
     }
 
+    public List<Rectangle> getRectangles() {
+        return rectangles;
+    }
 
+    public ImageComparisonResult setRectangles(List<Rectangle> rectangles) {
+        this.rectangles = rectangles;
+        return this;
+    }
 }
