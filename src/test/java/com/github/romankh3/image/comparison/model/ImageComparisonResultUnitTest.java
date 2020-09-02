@@ -2,6 +2,7 @@ package com.github.romankh3.image.comparison.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
@@ -28,19 +29,21 @@ public class ImageComparisonResultUnitTest {
     @Test
     public void shouldProperlyWorkGettersAndSetters() {
         //when
+        List<Rectangle> rectangles = new ArrayList<>();
+        rectangles.add(Rectangle.createDefault());
         ImageComparisonResult imageComparisonResult = new ImageComparisonResult()
                 .setImageComparisonState(ImageComparisonState.MATCH)
                 .setExpected(readImageFromResources("expected.png"))
                 .setActual(readImageFromResources("actual.png"))
                 .setResult(readImageFromResources("result.png"))
-                .setRectangles(List.of(Rectangle.createDefault()));
+                .setRectangles(rectangles);
 
         //then
         assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
         assertNotNull(imageComparisonResult.getExpected());
         assertNotNull(imageComparisonResult.getActual());
         assertNotNull(imageComparisonResult.getResult());
-        assertNotNull(imageComparisonResult.getRectangles());
+        assertEquals(imageComparisonResult.getRectangles(), rectangles);
     }
 
 }
