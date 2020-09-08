@@ -1,6 +1,7 @@
 package com.github.romankh3.image.comparison.model;
 
 import com.github.romankh3.image.comparison.ImageComparisonUtil;
+
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
@@ -43,13 +44,13 @@ public class ImageComparisonResult {
     /**
      * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#SIZE_MISMATCH}.
      *
-     * @param expected expected {@link BufferedImage} object.
-     * @param actual actual {@link BufferedImage} object.
+     * @param expected          expected {@link BufferedImage} object.
+     * @param actual            actual {@link BufferedImage} object.
      * @param differencePercent the percent of the differences between images.
      * @return instance of the {@link ImageComparisonResult} object.
      */
     public static ImageComparisonResult defaultSizeMisMatchResult(BufferedImage expected, BufferedImage actual,
-            float differencePercent) {
+                                                                  float differencePercent) {
         return new ImageComparisonResult()
                 .setImageComparisonState(ImageComparisonState.SIZE_MISMATCH)
                 .setDifferencePercent(differencePercent)
@@ -62,12 +63,14 @@ public class ImageComparisonResult {
      * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#MISMATCH}.
      *
      * @param expected expected {@link BufferedImage} object.
-     * @param actual actual {@link BufferedImage} object.
+     * @param actual   actual {@link BufferedImage} object.
+     * @param differencePercent the persent of the differences between images.
      * @return instance of the {@link ImageComparisonResult} object.
      */
-    public static ImageComparisonResult defaultMisMatchResult(BufferedImage expected, BufferedImage actual) {
+    public static ImageComparisonResult defaultMisMatchResult(BufferedImage expected, BufferedImage actual, float differencePercent) {
         return new ImageComparisonResult()
                 .setImageComparisonState(ImageComparisonState.MISMATCH)
+                .setDifferencePercent(differencePercent)
                 .setExpected(expected)
                 .setActual(actual)
                 .setResult(actual);
@@ -77,7 +80,7 @@ public class ImageComparisonResult {
      * Create default instance of the {@link ImageComparisonResult} with {@link ImageComparisonState#MATCH}.
      *
      * @param expected expected {@link BufferedImage} object.
-     * @param actual actual {@link BufferedImage} object.
+     * @param actual   actual {@link BufferedImage} object.
      * @return instance of the {@link ImageComparisonResult} object.
      */
     public static ImageComparisonResult defaultMatchResult(BufferedImage expected, BufferedImage actual) {
