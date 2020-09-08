@@ -15,8 +15,6 @@
 
 *   [Usage](#usage)
 
-*   [Building](#building)
-
 *   [Demo](#demo)
 
 *   [License](#license)
@@ -32,13 +30,15 @@ Published on Maven Central and jCenter Java Library that compares 2 images with 
 
 *   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
 
-*   Pixels (with the same coordinates in two images) can be visually similar, but have different values of RGB. 2 pixels are considered to be "different" if they differ more than 10% from each other.
+*   Pixels (with the same coordinates in two images) can be visually similar, but have different values of RGB. 2 pixels are considered to be "different" if they differ more than `pixelToleranceLevel`(this configuration described below) from each other.
 
 *   The output of the comparison is a copy of `actual` images. The differences are outlined with red rectangles as shown below.
 
 *   No third party libraries or borrowed code are in usage.
 
 *   Some parts of the image can be excluded from the comparison and drawn in the result image.
+
+Article about growing `image-comparison` on habr: [How did the test task become a production library](https://habr.com/ru/post/475482/)
 
 ## Configurations
 | *Property* | *Description* |
