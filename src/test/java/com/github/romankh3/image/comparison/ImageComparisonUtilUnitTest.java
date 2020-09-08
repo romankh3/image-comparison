@@ -14,23 +14,28 @@ import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Path;
+
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-/**
- * Unit-level testing for {@link ImageComparisonUtil} object.
- */
-public class ImageComparisonUtilUnitTest extends BaseTest {
+@DisplayName("Unit-level testing for {@link ImageComparisonUtil} object.")
+public class ImageComparisonUtilUnitTest {
 
+    @DisplayName("Should properly perform wrong path")
     @Test
-    public void testWrongPath() {
+    public void shouldReturnWrongPath() {
         //when-then
         ImageNotFoundException ex = assertThrows(ImageNotFoundException.class,
                 () -> readImageFromResources("wrong-file-name.png"));
         assertTrue(ex.getMessage().startsWith("Image with path = wrong-file-name.png not found"));
     }
 
+    @DisplayName("Should return null parent")
     @Test
-    public void testNullParent() {
+    public void shouldReturnNullParent() {
         //given
         File path = mock(File.class);
         File parent = mock(File.class);
@@ -44,16 +49,35 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         assertTrue(ex.getMessage().startsWith("Unable to create directory "));
     }
 
+    @DisplayName("Should throw an exception when image can't be saved")
     @Test
-    public void testSaveImage() {
+    public void shouldThrowAnExceptionWhenImageCantBeSaved() {
+        //given
+        BufferedImage image = readImageFromResources("result.png");
+        File path = mock(File.class);
+        when(path.getAbsolutePath()).thenReturn("build/resources/test");
+        when(path.delete()).thenAnswer(invocationOnMock -> {
+            throw new IOException();
+        });
+
+        //when-then
+        ImageComparisonException ex = assertThrows(ImageComparisonException.class,
+                () -> ImageComparisonUtil.saveImage(path, image));
+        assertEquals("Cannot save image to path=build/resources/test", ex.getMessage());
+    }
+
+    @DisplayName("Should properly save image")
+    @Test
+    public void shouldProperlySaveImage() {
         BufferedImage image = readImageFromResources("result.png");
         String path = "build/test/correct/save/image.png";
         ImageComparisonUtil.saveImage(new File(path), image);
         assertTrue(new File(path).exists());
     }
 
+    @DisplayName("Should create ImageComparisonUtil")
     @Test
-    public void testCreation() {
+    public void shouldCreate() {
         //when
         ImageComparisonUtil imageComparisonUtil = new ImageComparisonUtil();
 
@@ -61,8 +85,9 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         assertNotNull(imageComparisonUtil);
     }
 
+    @DisplayName("Should properly resize image")
     @Test
-    public void testResize() {
+    public void shouldProperlyResize() {
         //given
         BufferedImage actual = readImageFromResources("actualDifferentSize.png");
 
@@ -75,8 +100,10 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
 
     }
 
+
+    @DisplayName("Should properly map Image to BufferedImage")
     @Test
-    public void testToBufferedImage() {
+    public void shouldProperlyWorkToBufferedImage() {
         //given
         Image imageInstance = readImageFromResources("actualDifferentSize.png");
         BufferedImage bufferedImageInstance = readImageFromResources("actualDifferentSize.png");
@@ -90,8 +117,9 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         assertNotNull(bufferedImage1);
     }
 
+    @DisplayName("Should properly get percent difference")
     @Test
-    public void testGetDifferencePercent() {
+    public void shouldProperlyGetDifferencePercent() {
         //given
         BufferedImage bufferedImage = readImageFromResources("actualDifferentSize.png");
 
@@ -103,8 +131,9 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
 
     }
 
+    @DisplayName("Should properly get pixel diff")
     @Test
-    public void testPixelDiff() {
+    public void shouldProperlyWorkPixelDiff() {
         //given
         int pixel1 = 2;
         int pixel2 = 2;
@@ -116,11 +145,9 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         assertEquals(0, pixelDiff);
     }
 
-    /**
-     * Test issue #136 IllegalArgumentException on deepCopy.
-     */
+    @DisplayName("Should properly work in bug #136")
     @Test
-    public void testIssue136() {
+    public void shouldProperlyWorkInBug136() {
         //given
         BufferedImage image = readImageFromResources("actual#136.png");
         BufferedImage subimage = image.getSubimage(1, 1, image.getWidth() - 2, image.getHeight() - 2);
@@ -129,10 +156,7 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         assertDoesNotThrow(() -> ImageComparisonUtil.deepCopy(subimage));
     }
 
-    /**
-     * Test issue #180. It was a problem with {@link ImageComparisonUtil#readImageFromResources(String)}
-     * from non test/resources.
-     */
+    @DisplayName("Should properly handle bug #180 when path from root folder")
     @Test
     public void shouldProperlyHandleBug180FromRoot() {
         //given
@@ -145,10 +169,7 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
         assertNotNull(result);
     }
 
-    /**
-     * Test issue #180. It was a problem with {@link ImageComparisonUtil#readImageFromResources(String)}
-     * from non test/resources.
-     */
+    @DisplayName("Should properly handle bug #180 from test resources")
     @Test
     public void shouldProperlyHandleBug180FromTestResources() {
         //given
@@ -159,5 +180,15 @@ public class ImageComparisonUtilUnitTest extends BaseTest {
 
         //then
         assertNotNull(result);
+    }
+
+    @DisplayName("Should throw an exception when trying to read image from directory")
+    @Test
+    public void shouldThrowAnExceptionWhenTryingToReadImageFromDirectory(@TempDir Path tempDir) {
+        //when-then
+        ImageComparisonException ex = assertThrows(ImageComparisonException.class,
+                () -> ImageComparisonUtil.readImageFromResources(tempDir.toAbsolutePath().toString()));
+        assertTrue(ex.getMessage().startsWith("Cannot read image from the file, path="),
+                   "Expected exception message to start with \"Cannot read image from the file, path=\", but is \"" + ex.getMessage() + "\"");
     }
 }

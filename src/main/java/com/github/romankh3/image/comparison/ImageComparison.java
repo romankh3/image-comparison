@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
 
+import static com.github.romankh3.image.comparison.ImageComparisonUtil.getDifferencePercent;
 import static java.util.Collections.emptyList;
 
 /**
@@ -183,8 +184,7 @@ public class ImageComparison {
         // check that the images have the same size
         if (isImageSizesNotEqual(expected, actual)) {
             BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
-            differencePercent = ImageComparisonUtil.getDifferencePercent(actualResized, expected);
-            return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, differencePercent);
+            return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, getDifferencePercent(actualResized, expected));
         }
 
         List<Rectangle> rectangles = populateRectangles();
@@ -200,7 +200,9 @@ public class ImageComparison {
 
         BufferedImage resultImage = drawRectangles(rectangles);
         saveImageForDestination(resultImage);
-        return ImageComparisonResult.defaultMisMatchResult(expected, actual).setResult(resultImage);
+        return ImageComparisonResult.defaultMisMatchResult(expected, actual, getDifferencePercent(actual, expected))
+                .setResult(resultImage)
+                .setRectangles(rectangles);
     }
 
     /**
@@ -664,7 +666,7 @@ public class ImageComparison {
     }
 
     public ImageComparison setAllowingPercentOfDifferentPixels(double allowingPercentOfDifferentPixels) {
-        if(0.0 <= allowingPercentOfDifferentPixels && allowingPercentOfDifferentPixels <= 100) {
+        if (0.0 <= allowingPercentOfDifferentPixels && allowingPercentOfDifferentPixels <= 100) {
             this.allowingPercentOfDifferentPixels = allowingPercentOfDifferentPixels;
         } else {
             //todo add warning here
