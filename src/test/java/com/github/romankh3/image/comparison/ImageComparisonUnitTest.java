@@ -408,6 +408,22 @@ public class ImageComparisonUnitTest {
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should properly get pixel differences")
+    @Test
+    public void shouldProperlyHandleIssue196() {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected#196.png", "actual#196.png");
+        BufferedImage expectedImage = readImageFromResources("result#196.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertEquals(0.4274517595767975, imageComparisonResult.getDifferencePercent());
+        assertImagesEqual(expectedImage, imageComparisonResult.getResult());
+    }
+
     @DisplayName("Should match size")
     @Test
     public void shouldMatchSize() {
