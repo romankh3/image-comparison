@@ -1,5 +1,10 @@
 # Release Notes
 
+## 4.3.0
+*   Include rectangles in ImageComparisonResult.
+*   The resolved bug with 0.0 in differencePercent
+*   improved and added missing tests.   
+
 ## 4.2.1 
 *   Fixed bug #180 - problem with ImageComparisonUtil.readFromResources method.
 
