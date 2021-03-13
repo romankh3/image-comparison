@@ -288,7 +288,7 @@ public class ImageComparison {
             counter++;
         }
 
-        return mergeRectangles(rectangles);
+        return mergeRectangles(mergeRectangles(rectangles));
     }
 
     /**
@@ -346,10 +346,13 @@ public class ImageComparison {
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
         int position = 0;
         while (position < rectangles.size()) {
+            if (rectangles.get(position).equals(Rectangle.createZero())) {
+                position++;
+            }
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r1.equals(Rectangle.createZero())) {
+                if (r2.equals(Rectangle.createZero())) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
