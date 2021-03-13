@@ -1,5 +1,8 @@
 # Release Notes
 
+## 4.3.1
+*   Fixed bug #201 - problem with comparing totally different pictures.
+
 ## 4.3.0
 *   Include rectangles in ImageComparisonResult.
 *   The resolved bug with 0.0 in differencePercent

@@ -153,6 +153,21 @@ public class ImageComparisonUnitTest {
         assertNotNull(imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should reproduce bug 201")
+    @Test
+    public void shouldReproduceBug201() {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result#201.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison("expected#201.png", "actual#201.png").compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
+    }
+
     @DisplayName("Should reproduce bug 21")
     @Test
     public void shouldReproduceBug21() {
