@@ -139,12 +139,12 @@ public class ImageComparison {
     private double allowingPercentOfDifferentPixels = 0.0;
 
     /**
-     * Sets rectangle color of image difference. Default value is red.
+     * Sets rectangle color of image difference. By default, it's red.
      */
     private Color differenceRectangleColor = Color.RED;
 
     /**
-     * Sets rectangle color of excluded part. Default value is red.
+     * Sets rectangle color of excluded part. By default, it's green.
      */
     private Color excludedRectangleColor = Color.GREEN;
 
