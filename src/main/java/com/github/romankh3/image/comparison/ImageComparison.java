@@ -139,6 +139,16 @@ public class ImageComparison {
     private double allowingPercentOfDifferentPixels = 0.0;
 
     /**
+     * Sets rectangle color of image difference. Default value is red.
+     */
+    private Color differenceRectangleColor = Color.RED;
+
+    /**
+     * Sets rectangle color of excluded part. Default value is red.
+     */
+    private Color excludedRectangleColor = Color.GREEN;
+
+    /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
      * @param expected expected image to be compared
@@ -392,7 +402,7 @@ public class ImageComparison {
      */
     private void drawExcludedRectangles(Graphics2D graphics) {
         if (drawExcludedRectangles) {
-            graphics.setColor(Color.GREEN);
+            graphics.setColor(this.excludedRectangleColor);
             draw(graphics, excludedAreas.getExcluded());
 
             if (fillExcludedRectangles) {
@@ -409,7 +419,7 @@ public class ImageComparison {
      */
     private void drawRectanglesOfDifferences(List<Rectangle> rectangles, Graphics2D graphics) {
         List<Rectangle> rectanglesForDraw;
-        graphics.setColor(Color.RED);
+        graphics.setColor(this.differenceRectangleColor);
 
         if (maximalRectangleCount > 0 && maximalRectangleCount < rectangles.size()) {
             rectanglesForDraw = rectangles.stream()
@@ -675,6 +685,24 @@ public class ImageComparison {
             //todo add warning here
         }
 
+        return this;
+    }
+
+    public Color getDifferenceRectangleColor() {
+        return this.differenceRectangleColor;
+    }
+
+    public ImageComparison setDifferenceRectangleColor(Color differenceRectangleColor) {
+        this.differenceRectangleColor = differenceRectangleColor;
+        return this;
+    }
+
+    public Color getExcludedRectangleColor() {
+        return this.excludedRectangleColor;
+    }
+
+    public ImageComparison setExcludedRectangleColor(Color excludedRectangleColor) {
+        this.excludedRectangleColor = excludedRectangleColor;
         return this;
     }
 }

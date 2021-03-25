@@ -13,6 +13,7 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.Rectangle;
+import java.awt.Color;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
@@ -464,7 +465,9 @@ public class ImageComparisonUnitTest {
                 .setThreshold(400)
                 .setDifferenceRectangleFilling(true, 35.1)
                 .setExcludedRectangleFilling(true, 45.1)
-                .setAllowingPercentOfDifferentPixels(48.15);
+                .setAllowingPercentOfDifferentPixels(48.15)
+                .setDifferenceRectangleColor(Color.RED)
+                .setExcludedRectangleColor(Color.GREEN);
 
         //then
         assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
@@ -478,6 +481,9 @@ public class ImageComparisonUnitTest {
         assertTrue(imageComparison.isFillDifferenceRectangles());
         assertTrue(imageComparison.isFillExcludedRectangles());
         assertEquals(48.15, imageComparison.getAllowingPercentOfDifferentPixels(), 0.0);
+        assertEquals(Color.RED, imageComparison.getDifferenceRectangleColor());
+        assertEquals(Color.GREEN, imageComparison.getExcludedRectangleColor());
+
     }
 
     @DisplayName("Should properly compare in JPEG extension")
