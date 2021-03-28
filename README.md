@@ -57,6 +57,9 @@ All these configurations can be updated based on your needs.
 | `fillDifferenceRectangles` | Flag which says fill difference rectangles or not. |
 | `percentOpacityDifferenceRectangles` | The desired opacity of the difference rectangle fill. |
 | `allowingPercentOfDifferentPixels` | The percent of the allowing pixels to be different to stay MATCH for comparison. E.g. percent of the pixels, which would ignore in comparison. Value can be from 0.0 to 100.00 |
+| `differenceRectangleColor` | Rectangle color of image difference. By default, it's red. |
+| `excludedRectangleColor` | Rectangle color of excluded part. By default, it's green. |
+
 
 ## Release Notes
 
@@ -69,12 +72,12 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>4.3.1</version>
+    <version>4.4.0</version>
 </dependency>
 ```
 #### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:4.3.1'
+compile 'com.github.romankh3:image-comparison:4.4.0'
 ```
 
 #### To compare two images programmatically

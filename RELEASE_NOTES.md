@@ -1,5 +1,8 @@
 # Release Notes
 
+## 4.4.0
+*   added #205 ability to change rectangle color.
+
 ## 4.3.1
 *   Fixed bug #201 - problem with comparing totally different pictures.
 
