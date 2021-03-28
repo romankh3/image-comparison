@@ -72,12 +72,12 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 <dependency>
     <groupId>com.github.romankh3</groupId>
     <artifactId>image-comparison</artifactId>
-    <version>4.3.1</version>
+    <version>4.4.0</version>
 </dependency>
 ```
 #### Gradle
 ```groovy
-compile 'com.github.romankh3:image-comparison:4.3.1'
+compile 'com.github.romankh3:image-comparison:4.4.0'
 ```
 
 #### To compare two images programmatically

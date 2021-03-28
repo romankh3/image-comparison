@@ -466,8 +466,8 @@ public class ImageComparisonUnitTest {
                 .setDifferenceRectangleFilling(true, 35.1)
                 .setExcludedRectangleFilling(true, 45.1)
                 .setAllowingPercentOfDifferentPixels(48.15)
-                .setDifferenceRectangleColor(Color.RED)
-                .setExcludedRectangleColor(Color.GREEN);
+                .setDifferenceRectangleColor(Color.BLACK)
+                .setExcludedRectangleColor(Color.BLUE);
 
         //then
         assertEquals(String.valueOf(100), String.valueOf(imageComparison.getMinimalRectangleSize()));
@@ -481,8 +481,8 @@ public class ImageComparisonUnitTest {
         assertTrue(imageComparison.isFillDifferenceRectangles());
         assertTrue(imageComparison.isFillExcludedRectangles());
         assertEquals(48.15, imageComparison.getAllowingPercentOfDifferentPixels(), 0.0);
-        assertEquals(Color.RED, imageComparison.getDifferenceRectangleColor());
-        assertEquals(Color.GREEN, imageComparison.getExcludedRectangleColor());
+        assertEquals(Color.BLACK, imageComparison.getDifferenceRectangleColor());
+        assertEquals(Color.BLUE, imageComparison.getExcludedRectangleColor());
 
     }
 
