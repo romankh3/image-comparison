@@ -4,6 +4,7 @@ import com.github.romankh3.image.comparison.ImageComparisonUtil;
 
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -56,7 +57,8 @@ public class ImageComparisonResult {
                 .setDifferencePercent(differencePercent)
                 .setExpected(expected)
                 .setActual(actual)
-                .setResult(actual);
+                .setResult(actual)
+                .setRectangles(Collections.emptyList());
     }
 
     /**
@@ -88,7 +90,8 @@ public class ImageComparisonResult {
                 .setImageComparisonState(ImageComparisonState.MATCH)
                 .setExpected(expected)
                 .setActual(actual)
-                .setResult(actual);
+                .setResult(actual)
+                .setRectangles(Collections.emptyList());
     }
 
     /**

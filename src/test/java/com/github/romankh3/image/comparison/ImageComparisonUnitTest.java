@@ -449,6 +449,7 @@ public class ImageComparisonUnitTest {
 
         //then
         assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
+        assertEquals(0, imageComparisonResult.getRectangles().size());
     }
 
     @DisplayName("Should properly work getters and setters")
@@ -517,6 +518,7 @@ public class ImageComparisonUnitTest {
 
         //then
         assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertEquals(0, imageComparisonResult.getRectangles().size());
         boolean differenceLessThan2 = imageComparisonResult.getDifferencePercent() < 2;
         assertTrue(differenceLessThan2);
     }
