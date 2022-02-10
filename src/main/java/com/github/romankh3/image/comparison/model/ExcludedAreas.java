@@ -42,6 +42,11 @@ public class ExcludedAreas {
         return excluded.stream().anyMatch(rectangle -> rectangle.containsPoint(point));
     }
 
+    /**
+     * Getter for excluded rectangles.
+     *
+     * @return the collection of the {@link Rectangle} objects.
+     */
     public List<Rectangle> getExcluded() {
         return excluded;
     }
