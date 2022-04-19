@@ -523,6 +523,44 @@ public class ImageComparisonUnitTest {
         assertTrue(differenceLessThan2);
     }
 
+    @DisplayName("Should properly compare in bug 211")
+    @Test
+    public void shouldProperlyCompareInBug211() {
+        //given
+        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected#211.png");
+        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("actual#211.png");
+        BufferedImage resultImage = readImageFromResources("result#211.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expectedImage, actualImage)
+                        .setPixelToleranceLevel(0.0)
+                        .compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(resultImage, imageComparisonResult.getResult());
+    }
+
+    @DisplayName("Should properly compare pure color in issue 211")
+    @Test
+    public void shouldProperlyComparePureColorIn211() {
+        //given
+        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expectedColor#211.png");
+        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("actualColor#211.png");
+        BufferedImage resultImage = readImageFromResources("resultColor#211.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expectedImage, actualImage)
+                        .setPixelToleranceLevel(0.079)
+                        .compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(resultImage, imageComparisonResult.getResult());
+    }
+
     private void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
         if (expected.getWidth() != actual.getWidth() || expected.getHeight() != actual.getHeight()) {
             fail("Images have different dimensions");
