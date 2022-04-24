@@ -5,9 +5,14 @@ import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.github.romankh3.image.comparison.model.Rectangle;
 
+import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.awt.image.MemoryImageSource;
+import java.awt.image.PixelGrabber;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -185,6 +190,39 @@ public class ImageComparison {
     }
 
     /**
+     * [work for issue #153]
+     * Draw rectangles which cover the regions of the difference pixels.
+     *
+     * @return the result of the drawing.
+     */
+    public ImageComparisonResult compareImages_BMP() {
+
+        // check that the images have the same size
+        if (isImageSizesNotEqual(expected, actual)) {
+            BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, getDifferencePercent(actualResized, expected));
+        }
+
+        List<Rectangle> rectangles = populateRectangles_BMP();
+
+        if (rectangles.isEmpty()) {
+            ImageComparisonResult matchResult = ImageComparisonResult.defaultMatchResult(expected, actual);
+            if (drawExcludedRectangles) {
+                matchResult.setResult(drawRectangles(rectangles));
+                saveImageForDestination(matchResult.getResult());
+            }
+            return matchResult;
+        }
+
+        BufferedImage resultImage = drawRectangles(rectangles);
+        saveImageForDestination(resultImage);
+        return ImageComparisonResult.defaultMisMatchResult(expected, actual, getDifferencePercent(actual, expected))
+                .setResult(resultImage)
+                .setRectangles(rectangles);
+    }
+
+    /**
+     * [work for issue #153]
      * Draw rectangles which cover the regions of the difference pixels.
      *
      * @return the result of the drawing.
@@ -224,6 +262,175 @@ public class ImageComparison {
      */
     private boolean isImageSizesNotEqual(BufferedImage expected, BufferedImage actual) {
         return expected.getHeight() != actual.getHeight() || expected.getWidth() != actual.getWidth();
+    }
+
+    /**
+     * [work for issue #153]
+     * Turn an image(maybe jpg or png) to BMP format.
+     *
+     * @param sourceImg {@link BufferedImage} object of the source image.
+     * @return a BufferedImage object, the source image in BMP format.
+     */
+    private static BufferedImage imageToBMP(BufferedImage sourceImg){
+        int h = sourceImg.getHeight();
+        int w = sourceImg.getWidth();
+        int[] pixel = new int[w * h];
+        PixelGrabber pixelGrabber = new PixelGrabber(sourceImg, 0, 0, w, h, pixel, 0, w);
+        try {
+            pixelGrabber.grabPixels();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        MemoryImageSource m = new MemoryImageSource(w, h, pixel, 0, w);
+        Image image = Toolkit.getDefaultToolkit().createImage(m);
+        BufferedImage buff = new BufferedImage(w, h, BufferedImage.TYPE_3BYTE_BGR);
+        buff.createGraphics().drawImage(image, 0, 0 ,null);
+        return buff;
+    }
+
+    /**
+     * [work for issue #153]
+     * Turn BufferedImage(BMP) to byte[].
+     *
+     * @param image {@link BufferedImage} object of the source image.
+     * @return byte[] that stores the information of RGB value of pixels.(and BMP head information)
+     */
+    private static byte[] bufferedImageToBytes(BufferedImage image) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        try {
+            ImageIO.write(image, "bmp", outputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return outputStream.toByteArray();
+    }
+
+    /**
+     * [work for issue #153]
+     *  a class to store 3 bytes RGB values in a pixel
+     */
+    private class RGB_tuple{
+        public int red;
+        public int green;
+        public int blue;
+        public RGB_tuple(byte r, byte g, byte b){
+            this.red = r;
+            this.green = g;
+            this.blue = b;
+        }
+    }
+
+    /**
+     * [work for issue #153]
+     * Turn BMP byte[] to pixel RGB matrix
+     *
+     * @param w width of the matrix
+     * @param h height of the matrix
+     * @param bytes byte array which stores the RGB values, 3 bytes in a group
+     * @return a pixel RGB value tuple matrix
+     */
+    private RGB_tuple[][] byte2RGBMatrix(int h, int w, byte[] bytes){
+        RGB_tuple[][] matrix = new RGB_tuple[h][w];
+        int cursor = 54;
+        for ( int y = h-1; y >= 0; y-- ){
+            for ( int x = 0; x < w; x++){
+                matrix[y][x] = new RGB_tuple(bytes[cursor+2], bytes[cursor+1], bytes[cursor]);
+                cursor += 3;
+            }
+        }
+        return matrix;
+    }
+
+    /**
+     * [work for issue #153]
+     * Populate binary matrix with "0" and "1". If the pixels are different set it as "1", otherwise "0".
+     * In this case, images are turned into BMP format, and the comparison is based on bytes.
+     *
+     * @return the count of different pixels
+     */
+    private long populateTheMatrixOfTheDifferences_BMP() {
+        // Turn images to BMP format
+        BufferedImage expectedBMP = imageToBMP(expected);
+        BufferedImage actualBMP = imageToBMP(actual);
+        // Turn BMP images to byte[], 2 bytes for 1 pixel
+        // TYPE_3BYTE_BGR: 1 byte for red, green and blue respectively.
+        byte[] expectedBytes = bufferedImageToBytes(expectedBMP);
+        byte[] actualBytes = bufferedImageToBytes(actualBMP);
+        // Form the RGB byte values as a matrix
+        int h = expected.getHeight(), w = expected.getWidth();
+        RGB_tuple[][] expected_matrix = byte2RGBMatrix(h,w,expectedBytes);
+        RGB_tuple[][] actual_matrix = byte2RGBMatrix(h,w,actualBytes);
+
+        // count different bytes
+        long countOfDifferentPixels = 0;
+        matrix = new int[h][w];
+        for (int y = 0; y < h; y++) {
+            for (int x = 0; x < w; x++) {
+                if (!excludedAreas.contains(new Point(x, y))) {
+                    if (isDifferentPixels_BMP(expected_matrix[y][x], actual_matrix[y][x])) {
+                        matrix[y][x] = 1;
+                        countOfDifferentPixels++;
+                    }
+                }
+            }
+        }
+        return countOfDifferentPixels;
+    }
+
+    /**
+     * [work for issue #153]
+     * Say if the two pixels equal or not. The rule is the difference between two pixels
+     * need to be more than {@link #pixelToleranceLevel}.
+     *
+     * @param expectedRgb the RGB value(tuple) of the Pixel of the Expected image.
+     * @param actualRgb   the RGB value(tuple) of the Pixel of the Actual image.
+     * @return {@code true} if they' are difference, {@code false} otherwise.
+     */
+    private boolean isDifferentPixels_BMP(RGB_tuple expectedRgb, RGB_tuple actualRgb) {
+        if (expectedRgb == actualRgb) {
+            return false;
+        } else if (pixelToleranceLevel == 0.0) {
+            return true;
+        }
+
+        int red1 = expectedRgb.red;
+        int green1 = expectedRgb.green;
+        int blue1 = expectedRgb.blue;
+        int red2 = actualRgb.red;
+        int green2 = actualRgb.green;
+        int blue2 = actualRgb.blue;
+
+        return (Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
+                > differenceConstant;
+    }
+
+    /**
+     * [work for issue #153]
+     * Populate rectangles of the differences
+     *
+     * @return the collection of the populated {@link Rectangle} objects.
+     */
+    private List<Rectangle> populateRectangles_BMP() {
+        long countOfDifferentPixels = populateTheMatrixOfTheDifferences_BMP();
+
+        if (countOfDifferentPixels == 0) {
+            return emptyList();
+        }
+
+        if (isAllowedPercentOfDifferentPixels(countOfDifferentPixels)) {
+            return emptyList();
+        }
+        groupRegions();
+        List<Rectangle> rectangles = new ArrayList<>();
+        while (counter <= regionCount) {
+            Rectangle rectangle = createRectangle();
+            if (!rectangle.equals(Rectangle.createDefault()) && rectangle.size() >= minimalRectangleSize) {
+                rectangles.add(rectangle);
+            }
+            counter++;
+        }
+
+        return mergeRectangles(mergeRectangles(rectangles));
     }
 
     /**
