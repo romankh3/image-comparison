@@ -523,6 +523,63 @@ public class ImageComparisonUnitTest {
         assertTrue(differenceLessThan2);
     }
 
+    @DisplayName("Should properly compare while ignore white background for #217")
+    @Test
+    public void shouldProperlyHandelIssue217() {
+        //given
+        BufferedImage expected = readImageFromResources("expected#217a.png");
+        BufferedImage actual = readImageFromResources("actual#217a.png");
+        BufferedImage expectedResult = readImageFromResources("result#217a.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expected, actual)
+                        .setPixelToleranceLevel(0.0)
+                        .compareImagesIgnoreBackground(null);
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResult, imageComparisonResult.getResult());
+    }
+
+
+    @DisplayName("Should properly compare while ignore white background for #217")
+    @Test
+    public void shouldProperlyCompareIgnoreBackground() {
+        //given
+        BufferedImage expected = readImageFromResources("expected#217b.png");
+        BufferedImage actual = readImageFromResources("actual#217b.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expected, actual)
+                        .setPixelToleranceLevel(0.0)
+                        .compareImagesIgnoreBackground(null);
+
+        //then
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
+    }
+
+    @DisplayName("Should properly compare difference while ignore background")
+    @Test
+    public void shouldProperlyCompareDifferenceAndIgnoreBackground() {
+        //given
+        BufferedImage expected = readImageFromResources("expected#217c.png");
+        BufferedImage actual = readImageFromResources("actual#217c.png");
+        BufferedImage expectedResult = readImageFromResources("result#217c.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult =
+                new ImageComparison(expected, actual)
+                        .setPixelToleranceLevel(0.0)
+                        .compareImagesIgnoreBackground(null);
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResult, imageComparisonResult.getResult());
+    }
+
+
     private void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
         if (expected.getWidth() != actual.getWidth() || expected.getHeight() != actual.getHeight()) {
             fail("Images have different dimensions");

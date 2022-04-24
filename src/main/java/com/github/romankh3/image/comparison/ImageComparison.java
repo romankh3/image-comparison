@@ -705,4 +705,64 @@ public class ImageComparison {
         this.excludedRectangleColor = excludedRectangleColor;
         return this;
     }
+
+
+    /**
+     * compare images while ignore their position in background
+     * @param dest is the result destination
+     * @return the result of the drawing.
+     */
+    public ImageComparisonResult compareImagesIgnoreBackground(File dest) {
+        int exceptedBgd = getBackgroundRGB(expected);
+        int actualBgd = getBackgroundRGB(actual);
+        BufferedImage expectedInterest  = getInterestArea(expected, exceptedBgd);
+        BufferedImage actualInterest = getInterestArea(actual, actualBgd);
+        ImageComparison imageComparison = new ImageComparison(expectedInterest, actualInterest, dest);
+        return imageComparison.compareImages();
+    }
+
+    private int getBackgroundRGB(BufferedImage image) {
+        // count RGB
+        Map<Integer, Integer> countMap = new HashMap<>();
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                if (!excludedAreas.contains(new Point(x, y))) {
+                    int key = image.getRGB(x, y);
+                    if (countMap.containsKey(key)) {
+                        countMap.put(key, countMap.get(key) + 1);
+                    } else {
+                        countMap.put(key, 1);
+                    }
+                }
+            }
+        }
+        // get background
+        int backGround = Integer.MIN_VALUE;
+        int maxCount = Integer.MIN_VALUE;
+        for (Map.Entry<Integer, Integer> entry : countMap.entrySet()) {
+            if (entry.getValue() > maxCount) {
+                maxCount = entry.getValue();
+                backGround = entry.getKey();
+            }
+        }
+        return backGround;
+    }
+
+    private BufferedImage getInterestArea(BufferedImage image, int background) {
+        Point leftTop = new Point(image.getWidth(), image.getHeight());
+        Point rightBottom = new Point(0, 0);
+        for (int y = 0; y < image.getHeight(); y++) {
+            for (int x = 0; x < image.getWidth(); x++) {
+                if (!excludedAreas.contains(new Point(x, y))) {
+                    if (image.getRGB(x, y) != background){
+                        leftTop = new Point(Math.min(x, leftTop.x), Math.min(y, leftTop.y));
+                        rightBottom = new Point(Math.max(x, rightBottom.x), Math.max(y, rightBottom.y));
+                    }
+                }
+            }
+        }
+        return image.getSubimage(leftTop.x, leftTop.y,
+                rightBottom.x - leftTop.x, rightBottom.y - leftTop.y);
+    }
+
 }
