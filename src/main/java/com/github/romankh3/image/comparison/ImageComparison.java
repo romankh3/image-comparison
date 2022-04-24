@@ -289,7 +289,7 @@ public class ImageComparison {
      */
     private List<Rectangle> populateRectangles() {
         long countOfDifferentPixels = populateTheMatrixOfTheDifferences();
-        logger.info(String.format("There are %d different pixels",countOfDifferentPixels));
+        logger.info(String.format("There are %d different pixels", countOfDifferentPixels));
         if (countOfDifferentPixels == 0) {
             return emptyList();
         }
@@ -715,16 +715,5 @@ public class ImageComparison {
         this.excludedRectangleColor = excludedRectangleColor;
         return this;
     }
-    public static void main(String[] args) {
-        //load images to be compared:
-        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
-        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("actual.png");
 
-        logger.info("test");
-
-        File resultDestination = new File("result.png");
-        ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
-        System.out.println(imageComparisonResult.getImageComparisonState());
-
-    }
 }
