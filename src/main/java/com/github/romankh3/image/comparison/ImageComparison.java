@@ -10,6 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
 import java.util.*;
+import java.util.logging.Logger;
 import java.util.stream.Collectors;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.getDifferencePercent;
@@ -19,6 +20,12 @@ import static java.util.Collections.emptyList;
  * Main class for comparison images.
  */
 public class ImageComparison {
+
+    /**
+     * @Description: [add a logger]
+     */
+    public static final Logger logger = Logger.getGlobal();
+
 
     /**
      * The threshold which means the max distance between non-equal pixels.
@@ -191,9 +198,11 @@ public class ImageComparison {
      */
     public ImageComparisonResult compareImages() {
 
+        logger.info("Start comparing images...");
         // check that the images have the same size
         if (isImageSizesNotEqual(expected, actual)) {
             BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            logger.warning("Size misMatches between actual and expected.");
             return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, getDifferencePercent(actualResized, expected));
         }
 
@@ -280,7 +289,7 @@ public class ImageComparison {
      */
     private List<Rectangle> populateRectangles() {
         long countOfDifferentPixels = populateTheMatrixOfTheDifferences();
-
+        logger.info(String.format("There are %d different pixels",countOfDifferentPixels));
         if (countOfDifferentPixels == 0) {
             return emptyList();
         }
@@ -389,6 +398,7 @@ public class ImageComparison {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
         Graphics2D graphics = preparedGraphics2D(resultImage);
 
+        logger.info("Start drawing rectangles");
         drawExcludedRectangles(graphics);
         drawRectanglesOfDifferences(rectangles, graphics);
 
@@ -704,5 +714,17 @@ public class ImageComparison {
     public ImageComparison setExcludedRectangleColor(Color excludedRectangleColor) {
         this.excludedRectangleColor = excludedRectangleColor;
         return this;
+    }
+    public static void main(String[] args) {
+        //load images to be compared:
+        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
+        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("actual.png");
+
+        logger.info("test");
+
+        File resultDestination = new File("result.png");
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
+        System.out.println(imageComparisonResult.getImageComparisonState());
+
     }
 }

@@ -16,6 +16,8 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+import static com.github.romankh3.image.comparison.ImageComparison.logger;
+
 /**
  * Tools for the {@link ImageComparison} object.
  */
@@ -47,6 +49,7 @@ public final class ImageComparisonUtil {
             try {
                 return ImageIO.read(imageFile);
             } catch (IOException e) {
+                logger.severe(String.format("Cannot read image from the file, path=%s", path));
                 throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
             }
         } else {
@@ -55,9 +58,11 @@ public final class ImageComparisonUtil {
                 try {
                     return ImageIO.read(inputStream);
                 } catch (IOException e) {
+                    logger.severe(String.format("Cannot read image from the file, path=%s", path));
                     throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
                 }
             } else {
+                logger.info(String.format("Image with path = %s not found",path));
                 throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
             }
         }
@@ -75,11 +80,13 @@ public final class ImageComparisonUtil {
         // make dir if it's not using from Gradle.
         boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
         if (!dirExists) {
+            logger.severe("Unable to create directory " + dir);
             throw new ImageComparisonException("Unable to create directory " + dir);
         }
         try {
             ImageIO.write(image, "png", pathFile);
         } catch (IOException e) {
+            logger.severe(String.format("Cannot save image to path=%s", pathFile.getAbsolutePath()));
             throw new ImageComparisonException(
                     String.format("Cannot save image to path=%s", pathFile.getAbsolutePath()), e);
         }
