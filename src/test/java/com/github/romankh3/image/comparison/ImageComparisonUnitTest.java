@@ -523,6 +523,48 @@ public class ImageComparisonUnitTest {
         assertTrue(differenceLessThan2);
     }
 
+    @DisplayName("Should properly work rectangle with different color")
+    @Test
+    public void shouldProperlyWorkRectangleDifferentColor() {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result#226_1.png");
+
+        BufferedImage expected = readImageFromResources("expected#11.png");
+        BufferedImage actual = readImageFromResources("actual#226.png");
+
+        ImageComparison imageComparison = new ImageComparison(expected, actual);
+        imageComparison.setRectangleLineWidth(5);
+        imageComparison.setDrawDifferentColorFlag(true);
+
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
+    }
+
+    @DisplayName("Should properly work rectangle with different color function closing")
+    @Test
+    public void shouldProperlyWorkRectangleDifferentColorClose() {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result#226_2.png");
+
+        BufferedImage expected = readImageFromResources("expected#11.png");
+        BufferedImage actual = readImageFromResources("actual#226.png");
+
+        ImageComparison imageComparison = new ImageComparison(expected, actual);
+        imageComparison.setRectangleLineWidth(5);
+        imageComparison.setDrawDifferentColorFlag(false);
+
+        //when
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages();
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
+    }
+
     private void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
         if (expected.getWidth() != actual.getWidth() || expected.getHeight() != actual.getHeight()) {
             fail("Images have different dimensions");

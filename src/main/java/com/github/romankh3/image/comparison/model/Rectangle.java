@@ -3,7 +3,7 @@ package com.github.romankh3.image.comparison.model;
 import static java.lang.Integer.max;
 import static java.lang.Integer.min;
 
-import java.awt.Point;
+import java.awt.*;
 import java.util.Objects;
 
 /**
@@ -20,6 +20,16 @@ public class Rectangle {
      * Right bottom {@link Point} on the {@link Rectangle}.
      */
     private Point maxPoint;
+
+    /**
+     *  Number of different pixel in current {@link Rectangle}.
+     */
+    private int diffCount = 0;
+
+    /**
+     *  Color for current {@link Rectangle}.
+     */
+    private Color color = Color.BLUE;
 
     /**
      * Create empty instance of the {@link Rectangle}.
@@ -83,10 +93,12 @@ public class Rectangle {
      * @return new merged {@link Rectangle}.
      */
     public Rectangle merge(Rectangle that) {
-        return new Rectangle(min(this.getMinPoint().x, that.getMinPoint().x),
+        Rectangle rectangle = new Rectangle(min(this.getMinPoint().x, that.getMinPoint().x),
                 min(this.getMinPoint().y, that.getMinPoint().y),
                 max(this.getMaxPoint().x, that.getMaxPoint().x),
                 max(this.getMaxPoint().y, that.getMaxPoint().y));
+        rectangle.setDiffCount(this.getDiffCount()+that.getDiffCount());
+        return rectangle;
     }
 
     /**
@@ -118,6 +130,7 @@ public class Rectangle {
     public void makeZeroRectangle() {
         this.minPoint = new Point();
         this.maxPoint = new Point();
+        this.setDiffCount(0);
     }
 
     /**
@@ -173,6 +186,22 @@ public class Rectangle {
 
     public void setMaxPoint(Point maxPoint) {
         this.maxPoint = maxPoint;
+    }
+
+    public int getDiffCount() {
+        return diffCount;
+    }
+
+    public void setDiffCount(int diffCount) {
+        this.diffCount = diffCount;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public void setColor(Color color) {
+        this.color = color;
     }
 
     @Override

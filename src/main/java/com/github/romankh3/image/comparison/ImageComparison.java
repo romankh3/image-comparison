@@ -149,6 +149,21 @@ public class ImageComparison {
     private Color excludedRectangleColor = Color.GREEN;
 
     /**
+     * Count different pixels in a {@link Rectangle}.
+     */
+    private int pixelCount = 0;
+
+    /**
+     * Map regin id to correct pixelCount.
+     */
+    private Map<Integer,Integer> pixelCountMap = new HashMap<>();
+
+    /**
+     * True for open draw with different color
+     */
+    private boolean drawDifferentColorFlag = false;
+
+    /**
      * Create a new instance of {@link ImageComparison} that can compare the given images.
      *
      * @param expected expected image to be compared
@@ -297,8 +312,17 @@ public class ImageComparison {
             }
             counter++;
         }
+        List<Rectangle> rectangles1 = mergeRectangles(mergeRectangles(rectangles));
+        setRectangleColor(rectangles1);
+        return rectangles1;
+    }
 
-        return mergeRectangles(mergeRectangles(rectangles));
+    private void setRectangleColor(List<Rectangle> rectangles){
+        for (int i = 0; i < rectangles.size(); i++) {
+            Rectangle rectangle = rectangles.get(i);
+            int gb = 255-(int) Math.round((rectangle.getDiffCount() / (double)(rectangle.getHeight() * rectangle.getWidth()) ) * 255);
+            rectangles.get(i).setColor(new Color(255, gb, gb));
+        }
     }
 
     /**
@@ -325,6 +349,7 @@ public class ImageComparison {
             for (int x = 0; x < matrix[0].length; x++) {
                 if (matrix[y][x] == counter) {
                     updateRectangleCreation(rectangle, x, y);
+                    rectangle.setDiffCount(pixelCountMap.get(counter));
                 }
             }
         }
@@ -469,12 +494,23 @@ public class ImageComparison {
      * @param rectangles the collection of the {@link Rectangle}.
      */
     private void draw(Graphics2D graphics, List<Rectangle> rectangles) {
-        rectangles.forEach(rectangle -> graphics.drawRect(
-                rectangle.getMinPoint().x,
-                rectangle.getMinPoint().y,
-                rectangle.getWidth() - 1,
-                rectangle.getHeight() - 1)
-        );
+        if(isDrawDifferentColorFlag()){
+            for (Rectangle rectangle: rectangles ) {
+                graphics.setColor(rectangle.getColor());
+                graphics.drawRect(
+                        rectangle.getMinPoint().x,
+                        rectangle.getMinPoint().y,
+                        rectangle.getWidth() - 1,
+                        rectangle.getHeight() - 1);
+            }
+        }else {
+            rectangles.forEach(rectangle -> graphics.drawRect(
+                    rectangle.getMinPoint().x,
+                    rectangle.getMinPoint().y,
+                    rectangle.getWidth() - 1,
+                    rectangle.getHeight() - 1)
+            );
+        }
     }
 
     /**
@@ -509,7 +545,9 @@ public class ImageComparison {
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[y].length; x++) {
                 if (matrix[y][x] == 1) {
+                    pixelCount = 0;
                     joinToRegion(x, y);
+                    pixelCountMap.put(regionCount,pixelCount);
                     regionCount++;
                 }
             }
@@ -530,6 +568,7 @@ public class ImageComparison {
         }
 
         matrix[y][x] = regionCount;
+        pixelCount++;
 
         for (int i = 0; i < threshold; i++) {
             joinToRegion(x + 1 + i, y);
@@ -704,5 +743,13 @@ public class ImageComparison {
     public ImageComparison setExcludedRectangleColor(Color excludedRectangleColor) {
         this.excludedRectangleColor = excludedRectangleColor;
         return this;
+    }
+
+    public boolean isDrawDifferentColorFlag() {
+        return drawDifferentColorFlag;
+    }
+
+    public void setDrawDifferentColorFlag(boolean drawDifferentColorFlag) {
+        this.drawDifferentColorFlag = drawDifferentColorFlag;
     }
 }
