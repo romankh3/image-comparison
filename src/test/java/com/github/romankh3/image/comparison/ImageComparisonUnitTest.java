@@ -24,6 +24,42 @@ import org.junit.jupiter.api.Test;
 @DisplayName("Unit-level testing for {@link ImageComparison} object.")
 public class ImageComparisonUnitTest {
 
+    @DisplayName("For issue#190, test the Percentage of Different Pixels of different images")
+    @Test
+    public void testDifferencePercent1() {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result.png");
+        File file = new File("build/test-images/result.png");
+        float actualPercent = (float) (100.0 * 695 / (985 * 701));
+        //when
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages().writeResultTo(file);
+
+        //then
+        assertNotNull(imageComparison.getActual());
+        assertNotNull(imageComparison.getExpected());
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertEquals(actualPercent, imageComparisonResult.getDifferencePercent());
+    }
+
+    @DisplayName("For issue#190, test the Percentage of Different Pixels of the same images")
+    @Test
+    public void testDifferencePercent2() {
+        //given
+        BufferedImage expectedResultImage = readImageFromResources("result.png");
+        File file = new File("build/test-images/result.png");
+        float actualPercent = 0.0f;
+        //when
+        ImageComparison imageComparison = new ImageComparison("actual.png", "actual.png");
+        ImageComparisonResult imageComparisonResult = imageComparison.compareImages().writeResultTo(file);
+
+        //then
+        assertNotNull(imageComparison.getActual());
+        assertNotNull(imageComparison.getExpected());
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
+        assertEquals(actualPercent, imageComparisonResult.getDifferencePercent());
+    }
+
     @DisplayName("The most important test. Shown, that the changes in algorithm, "
             + "don't break the main behaviour and result as expected")
     @Test
