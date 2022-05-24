@@ -24,6 +24,37 @@ import org.junit.jupiter.api.Test;
 @DisplayName("Unit-level testing for {@link ImageComparison} object.")
 public class ImageComparisonUnitTest {
 
+    @DisplayName("For issue#199, test the '-e' and '-a' arguments")
+    @Test
+    public void testCLI1() throws Exception {
+        //given
+        String expected = "expected.png";
+        String actual = "actual.png";
+
+        //when
+        ImageComparisonResult imageComparisonResult = client.defaultImageComparison(expected, actual);
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+    }
+
+    @DisplayName("For issue#199, test the '-o' argument")
+    @Test
+    public void tesCLI2() {
+        //given
+        String expected = "expected.png";
+        String actual = "actual.png";
+        String result = "build/test-images/result.png";
+        BufferedImage expectedResultImage = readImageFromResources("result.png");
+
+        //when
+        ImageComparisonResult imageComparisonResult = client.wholeImageComparison(expected, actual, result);
+
+        //then
+        assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
+        assertImagesEqual(expectedResultImage, imageComparisonResult.getResult());
+    }
+
     @DisplayName("The most important test. Shown, that the changes in algorithm, "
             + "don't break the main behaviour and result as expected")
     @Test

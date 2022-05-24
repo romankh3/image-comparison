@@ -32,9 +32,9 @@ public class client {
                     String actual = cli.getOptionValue("a");
                     if(cli.hasOption('o')){
                         String result = cli.getOptionValue("o");
-                        ImageComparison(expected, actual, result);
+                        ImageComparisonResult imageComparisonResult = wholeImageComparison(expected, actual, result);
                     }else {
-                        simpleImageComparison(expected, actual);
+                        ImageComparisonResult imageComparisonResult = defaultImageComparison(expected, actual);
                     }
                 }else {
                     System.out.println("Invalid or Wrong Arguments, Please try -h to get help");
@@ -46,7 +46,14 @@ public class client {
         }
     }
 
-    public static void simpleImageComparison(String expected, String actual){
+    /**
+     * Compare images without output
+     *
+     * @param expected Path of the expected image
+     * @param actual Path of the actual image
+     * @return the result of image comparison
+     */
+    public static ImageComparisonResult defaultImageComparison(String expected, String actual){
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(expected);
         BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(actual);
@@ -56,9 +63,19 @@ public class client {
 
         //Check the result
         System.out.println(imageComparisonResult.getImageComparisonState().toString());
+
+        return imageComparisonResult;
     }
 
-    public static void ImageComparison(String expected, String actual, String result){
+    /**
+     * Compare images without output
+     *
+     * @param expected Path of the expected image
+     * @param actual Path of the actual image
+     * @param result Path of the result of image comparison
+     * @return the result of image comparison
+     */
+    public static ImageComparisonResult wholeImageComparison(String expected, String actual, String result){
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources(expected);
         BufferedImage actualImage = ImageComparisonUtil.readImageFromResources(actual);
@@ -68,5 +85,7 @@ public class client {
 
         //Create ImageComparison object with result destination and compare the images.
         ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
+
+        return imageComparisonResult;
     }
 }
