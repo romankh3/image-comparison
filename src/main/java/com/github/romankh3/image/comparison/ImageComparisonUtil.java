@@ -16,10 +16,17 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+
+
+
 /**
  * Tools for the {@link ImageComparison} object.
  */
 public final class ImageComparisonUtil {
+
+    public static int OFFSET = 0xff;
+    public static int EIGHT = 8;
+    public static int TENSIX = 8;
 
     /**
      * Make a copy of the {@link BufferedImage} object.
@@ -168,24 +175,20 @@ public final class ImageComparisonUtil {
         return Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
     }
 
-
     /**
-     * Compare two pixels
+     * Compare two pixels.
      *
      * @param rgb1 the first rgb
-     * @param rgb2 the second rgn
+     * @param rgb2 the second rgb
      * @return true If they are the same RGB pixel.
      */
-    public static boolean isDiffPixel(int rgb1, int rgb2) {
-        int r1 = (rgb1 >> 16) & 0xff;
-        int g1 = (rgb1 >> 8) & 0xff;
-        int b1 = rgb1 & 0xff;
-        int r2 = (rgb2 >> 16) & 0xff;
-        int g2 = (rgb2 >> 8) & 0xff;
-        int b2 = rgb2 & 0xff;
-        if(Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2) == 0) {
-            return false;
-        }
-        return true;
+    public static boolean isDiffPixel(final int rgb1, final int rgb2) {
+        int r1 = (rgb1 >> TENSIX) & OFFSET;
+        int g1 = (rgb1 >> EIGHT) & OFFSET;
+        int b1 = rgb1 & OFFSET;
+        int r2 = (rgb2 >> TENSIX) & OFFSET;
+        int g2 = (rgb2 >> EIGHT) & OFFSET;
+        int b2 = rgb2 & OFFSET;
+        return Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2) != 0;
     }
 }
