@@ -154,6 +154,7 @@ public final class ImageComparisonUtil {
                 }
             }
         }
+        //CS304 Issue link: https://github.com/romankh3/image-comparison/issues/190
         long maxDiff = (long) width * height;
         return (float) (100.0 * diff / maxDiff);
     }
@@ -182,6 +183,7 @@ public final class ImageComparisonUtil {
      * @param rgb2 the second rgb
      * @return true If they are the same RGB pixel.
      */
+    //CS304 Issue link: https://github.com/romankh3/image-comparison/issues/190
     public static boolean isDiffPixel(final int rgb1, final int rgb2) {
         int r1 = (rgb1 >> TENSIX) & OFFSET;
         int g1 = (rgb1 >> EIGHT) & OFFSET;

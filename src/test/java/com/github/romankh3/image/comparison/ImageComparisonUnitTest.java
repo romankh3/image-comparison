@@ -24,6 +24,7 @@ import org.junit.jupiter.api.Test;
 @DisplayName("Unit-level testing for {@link ImageComparison} object.")
 public class ImageComparisonUnitTest {
 
+    //CS304 (manually written) Issue link: https://github.com/romankh3/image-comparison/issues/190
     @DisplayName("For issue#190, test the Percentage of Different Pixels of different images")
     @Test
     public void testDifferencePercent1() {
@@ -42,6 +43,7 @@ public class ImageComparisonUnitTest {
         assertEquals(actualPercent, imageComparisonResult.getDifferencePercent());
     }
 
+    //CS304 (manually written) Issue link: https://github.com/romankh3/image-comparison/issues/190
     @DisplayName("For issue#190, test the Percentage of Different Pixels of the same images")
     @Test
     public void testDifferencePercent2() {
