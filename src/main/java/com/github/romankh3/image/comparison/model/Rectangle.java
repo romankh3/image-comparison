@@ -90,7 +90,7 @@ public class Rectangle {
     }
 
     /**
-     * Check is that rectangle overlapp this.
+     * Check is that rectangle overlap this.
      *
      * @param that {@link Rectangle} which checks with this.
      * @return true if this over lapp that, false otherwise.
@@ -113,7 +113,7 @@ public class Rectangle {
     }
 
     /**
-     * Make zero rectagle.
+     * Make zero rectangle.
      */
     public void makeZeroRectangle() {
         this.minPoint = new Point();
@@ -150,7 +150,7 @@ public class Rectangle {
     }
 
     /**
-     * Check in the provided {@link Point} contains in the {@link Rectangle}.
+     * Check if the provided {@link Point} contains in the {@link Rectangle}.
      *
      * @param point provided {@link Point}.
      * @return {@code true} if provided {@link Point} contains, {@code false} - otherwise.
