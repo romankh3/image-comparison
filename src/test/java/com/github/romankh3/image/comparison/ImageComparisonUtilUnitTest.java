@@ -160,7 +160,7 @@ public class ImageComparisonUtilUnitTest {
     @Test
     public void shouldProperlyHandleBug180FromRoot() {
         //given
-        String imagePath = "build/resources/test/result.png";
+        String imagePath = "build/test-images/result.png";
 
         //when
         BufferedImage result = ImageComparisonUtil.readImageFromResources(imagePath);
