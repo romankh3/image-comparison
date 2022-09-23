@@ -309,7 +309,7 @@ public class ImageComparison {
      * false - otherwise.
      */
     private boolean isAllowedPercentOfDifferentPixels(long countOfDifferentPixels) {
-        long totalPixelCount = matrix.length * matrix[0].length;
+        long totalPixelCount = ((long) matrix.length) * ((long) matrix[0].length);
         double actualPercentOfDifferentPixels = ((double) countOfDifferentPixels / (double) totalPixelCount) * 100;
         return actualPercentOfDifferentPixels <= allowingPercentOfDifferentPixels;
     }
@@ -681,10 +681,7 @@ public class ImageComparison {
     public ImageComparison setAllowingPercentOfDifferentPixels(double allowingPercentOfDifferentPixels) {
         if (0.0 <= allowingPercentOfDifferentPixels && allowingPercentOfDifferentPixels <= 100) {
             this.allowingPercentOfDifferentPixels = allowingPercentOfDifferentPixels;
-        } else {
-            //todo add warning here
         }
-
         return this;
     }
 

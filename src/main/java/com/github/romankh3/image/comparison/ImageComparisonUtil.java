@@ -32,7 +32,7 @@ public final class ImageComparisonUtil {
      * @param image the provided image.
      * @return copy of the provided image.
      */
-    static BufferedImage deepCopy(BufferedImage image) {
+    public static BufferedImage deepCopy(BufferedImage image) {
         ColorModel cm = image.getColorModel();
         boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
         WritableRaster raster = image.copyData(image.getRaster().createCompatibleWritableRaster());
