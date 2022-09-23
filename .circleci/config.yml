@@ -30,4 +30,4 @@ jobs:
         with:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
       # run tests!
-      - run: ./gradlew test jacocoTestReport coveralls
+      - run: ./gradlew clean test jacocoTestReport
