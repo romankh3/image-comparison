@@ -115,7 +115,7 @@ To save result image, can be used two ways:
         ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
 
         //Image can be saved after comparison, using ImageComparisonUtil.
-        ImageComparisonUtil.saveImage(resultDestination, resultImage); 
+        ImageComparisonUtil.saveImage(resultDestination, imageComparisonResult.getResult()); 
 ```
 
 ## Demo
