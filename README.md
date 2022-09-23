@@ -1,9 +1,8 @@
 ![logo-trans](https://user-images.githubusercontent.com/16310793/42029324-df117c42-7ad7-11e8-8d3e-9c6cd8822d6c.png)
+![Maven_Workflow](https://github.com/romankh3/image-comparison/actions/workflows/maven.yml/badge.svg)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.romankh3/image-comparison.svg?label=Maven%20Central)](https://search.maven.org/search?q=g:%22com.github.romankh3%22%20AND%20a:%22image-comparison%22)
-[![Gitter](https://badges.gitter.im/image-comparison/community.svg)](https://gitter.im/image-comparison/community?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
 [![Javadocs](http://www.javadoc.io/badge/com.github.romankh3/image-comparison.svg?color=green)](http://www.javadoc.io/doc/com.github.romankh3/image-comparison)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/e4fd1c61d0f147358f8c5df212256491)](https://app.codacy.com/app/romankh3/image-comparison?utm_source=github.com&utm_medium=referral&utm_content=romankh3/image-comparison&utm_campaign=Badge_Grade_Dashboard)
-[![Build Status](https://travis-ci.org/romankh3/image-comparison.svg?branch=master)](https://travis-ci.org/romankh3/image-comparison) [![Coverage Status](https://coveralls.io/repos/github/romankh3/image-comparison/badge.svg?branch=master)](https://coveralls.io/github/romankh3/image-comparison?branch=master) [![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/) 
+[![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
 
 *   [About](#about)
@@ -115,23 +114,19 @@ To save result image, can be used two ways:
         ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage).compareImages();
 
         //Image can be saved after comparison, using ImageComparisonUtil.
-        ImageComparisonUtil.saveImage(resultDestination, resultImage); 
+        ImageComparisonUtil.saveImage(resultDestination, imageComparisonResult.getResult()); 
 ```
 
 ## Demo
-
 Demo shows how `image-comparison` works.
 
 ### Expected Image
-
 ![expected](https://user-images.githubusercontent.com/16310793/28955567-52edeabe-78f0-11e7-8bb2-d435c8df23ff.png)
 
 ### Actual Image
-
 ![actual](https://user-images.githubusercontent.com/16310793/28955566-52ead892-78f0-11e7-993c-847350da0bf8.png)
 
 ### Result
-
 ![result](https://user-images.githubusercontent.com/16310793/28955568-52f23e02-78f0-11e7-92c5-07602b6a0887.png)
 
 ## Contributing
