@@ -216,6 +216,25 @@ public class ImageComparison {
     }
 
     /**
+     * Compare two images and exclude drawing rectangles with the differences.
+     *
+     * @return the result comparisonState
+     */
+    public ImageComparisonResult simpleComparison(){
+        // check that the images have the same size
+        if (isImageSizesNotEqual(expected, actual)) {
+            BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
+            return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, getDifferencePercent(actualResized, expected));
+        }
+
+        if (isFirstDifferences()){
+            return ImageComparisonResult.defaultMisMatchResult(expected, actual, 0);
+        }else {
+            return ImageComparisonResult.defaultMatchResult(expected, actual);
+        }
+    }
+
+    /**
      * Check images for equals their widths and heights.
      *
      * @param expected {@link BufferedImage} object of the expected image.
@@ -299,6 +318,24 @@ public class ImageComparison {
         }
 
         return mergeRectangles(mergeRectangles(rectangles));
+    }
+
+    /**
+     * say if there exists two pixels equal or not.
+     *
+     * @return true, if first find two different pixels.
+     */
+    private boolean isFirstDifferences() {
+        for (int y = 0; y < expected.getHeight(); y++) {
+            for (int x = 0; x < expected.getWidth(); x++) {
+                if (!excludedAreas.contains(new Point(x, y))) {
+                    if (isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y))) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
