@@ -436,7 +436,7 @@ public class ImageComparisonUnitTest {
 
         //then
         assertEquals(MISMATCH, imageComparisonResult.getImageComparisonState());
-        assertEquals(0.4274517595767975, imageComparisonResult.getDifferencePercent());
+        assertEquals(0.6673570275306702, imageComparisonResult.getDifferencePercent());
         assertImagesEqual(expectedImage, imageComparisonResult.getResult());
     }
 
@@ -519,8 +519,22 @@ public class ImageComparisonUnitTest {
         //then
         assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
         assertEquals(0, imageComparisonResult.getRectangles().size());
-        boolean differenceLessThan2 = imageComparisonResult.getDifferencePercent() < 2;
-        assertTrue(differenceLessThan2);
+        assertTrue(imageComparisonResult.getDifferencePercent() <= 99.39796);
+    }
+
+    @DisplayName("Should properly get and set percentage of differences #233")
+    @Test
+    public void shouldProperlySetPercentageOfDifferences() {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected#196.png", "actual#196.png");
+
+        //when
+        float difPercent = imageComparison.compareImages().getDifferencePercent();
+        ImageComparisonResult imageComparisonResult = imageComparison.setAllowingPercentOfDifferentPixels(difPercent)
+                .compareImages();
+
+        //then
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
     }
 
     private void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
