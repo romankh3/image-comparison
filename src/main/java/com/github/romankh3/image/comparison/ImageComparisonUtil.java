@@ -142,7 +142,7 @@ public final class ImageComparisonUtil {
         long diff = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                if(pixelDiff(img1.getRGB(x, y), img2.getRGB(x, y)) > 0)
+                if(img1.getRGB(x, y) != img2.getRGB(x, y))
                     diff++;
             }
         }
