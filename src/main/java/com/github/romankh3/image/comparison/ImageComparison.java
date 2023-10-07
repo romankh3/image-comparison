@@ -290,7 +290,6 @@ public class ImageComparison {
         }
         groupRegions();
         Map<Integer, Rectangle> regions = new LinkedHashMap<>();
-        System.out.println("RegionCount: " + regionCount);
         for (int i = counter; i < regionCount; i++) {
             regions.put(i, Rectangle.createDefault());
         }
