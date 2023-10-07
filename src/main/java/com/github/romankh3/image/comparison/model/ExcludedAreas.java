@@ -39,7 +39,11 @@ public class ExcludedAreas {
      * @return {@code true} if this {@link Point} contains in areas from {@link ExcludedAreas#excluded}.
      */
     public boolean contains(Point point) {
-        return excluded.stream().anyMatch(rectangle -> rectangle.containsPoint(point));
+        for (Rectangle rectangle : excluded) {
+            if (rectangle.containsPoint(point))
+                return true;
+        }
+        return false;
     }
 
     /**
