@@ -142,10 +142,11 @@ public final class ImageComparisonUtil {
         long diff = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                diff += pixelDiff(img1.getRGB(x, y), img2.getRGB(x, y));
+                if(img1.getRGB(x, y) != img2.getRGB(x, y))
+                    diff++;
             }
         }
-        long maxDiff = 3L * 255 * width * height;
+        long maxDiff = (long) width * height;
 
         return (float) (100.0 * diff / maxDiff);
     }
