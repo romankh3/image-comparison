@@ -308,15 +308,16 @@ public class ImageComparison {
             return emptyList();
         }
         groupRegions();
-        List<Rectangle> rectangles = new ArrayList<>();
-        while (counter <= regionCount) {
-            Rectangle rectangle = createRectangle();
-            if (!rectangle.equals(Rectangle.createDefault()) && rectangle.size() >= minimalRectangleSize) {
-                rectangles.add(rectangle);
-            }
-            counter++;
+        Map<Integer, Rectangle> regions = new LinkedHashMap<>();
+        for (int i = counter; i < regionCount; i++) {
+            regions.put(i, Rectangle.createDefault());
         }
+        createRectangles(counter, regions);
 
+        List<Rectangle> rectangles = regions.values().stream()
+                .filter(rectangle -> !rectangle.equals(Rectangle.createDefault())
+                        && rectangle.size() >= minimalRectangleSize)
+                .collect(Collectors.toList());
         return mergeRectangles(mergeRectangles(rectangles));
     }
 
@@ -353,19 +354,15 @@ public class ImageComparison {
 
     /**
      * Create a {@link Rectangle} object.
-     *
-     * @return the {@link Rectangle} object.
      */
-    private Rectangle createRectangle() {
-        Rectangle rectangle = Rectangle.createDefault();
+    private void createRectangles(int counter, Map<Integer, Rectangle> rectangles) {
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[0].length; x++) {
-                if (matrix[y][x] == counter) {
-                    updateRectangleCreation(rectangle, x, y);
+                if (matrix[y][x] >= counter) {
+                    updateRectangleCreation(rectangles.get(matrix[y][x]), x, y);
                 }
             }
         }
-        return rectangle;
     }
 
     /**
