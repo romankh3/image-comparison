@@ -16,10 +16,17 @@ import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
+
+
+
 /**
  * Tools for the {@link ImageComparison} object.
  */
 public final class ImageComparisonUtil {
+
+    public static int OFFSET = 0xff;
+    public static int EIGHT = 8;
+    public static int TENSIX = 8;
 
     /**
      * Make a copy of the {@link BufferedImage} object.
@@ -142,11 +149,13 @@ public final class ImageComparisonUtil {
         long diff = 0;
         for (int y = 0; y < height; y++) {
             for (int x = 0; x < width; x++) {
-                diff += pixelDiff(img1.getRGB(x, y), img2.getRGB(x, y));
+                if(isDiffPixel(img1.getRGB(x, y), img2.getRGB(x, y))) {
+                    diff += 1;
+                }
             }
         }
-        long maxDiff = 3L * 255 * width * height;
-
+        //CS304 Issue link: https://github.com/romankh3/image-comparison/issues/190
+        long maxDiff = (long) width * height;
         return (float) (100.0 * diff / maxDiff);
     }
 
@@ -165,5 +174,23 @@ public final class ImageComparisonUtil {
         int g2 = (rgb2 >> 8) & 0xff;
         int b2 = rgb2 & 0xff;
         return Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2);
+    }
+
+    /**
+     * Compare two pixels.
+     *
+     * @param rgb1 the first rgb
+     * @param rgb2 the second rgb
+     * @return true If they are the same RGB pixel.
+     */
+    //CS304 Issue link: https://github.com/romankh3/image-comparison/issues/190
+    public static boolean isDiffPixel(final int rgb1, final int rgb2) {
+        int r1 = (rgb1 >> TENSIX) & OFFSET;
+        int g1 = (rgb1 >> EIGHT) & OFFSET;
+        int b1 = rgb1 & OFFSET;
+        int r2 = (rgb2 >> TENSIX) & OFFSET;
+        int g2 = (rgb2 >> EIGHT) & OFFSET;
+        int b2 = rgb2 & OFFSET;
+        return Math.abs(r1 - r2) + Math.abs(g1 - g2) + Math.abs(b1 - b2) != 0;
     }
 }
