@@ -4,6 +4,7 @@
 [![Javadocs](http://www.javadoc.io/badge/com.github.romankh3/image-comparison.svg?color=green)](http://www.javadoc.io/doc/com.github.romankh3/image-comparison)
 [![BCH compliance](https://bettercodehub.com/edge/badge/romankh3/image-comparison?branch=master)](https://bettercodehub.com/)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
+[![libs.tech recommends](https://libs.tech/project/99270745/badge.svg)](https://libs.tech/project/99270745/image-comparison)
 
 *   [About](#about)
 
