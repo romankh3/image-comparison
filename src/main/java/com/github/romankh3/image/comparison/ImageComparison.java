@@ -323,7 +323,7 @@ public class ImageComparison {
     /**
      * say if there exists two pixels equal or not.
      *
-     * @return true, if first find two different pixels.
+     * @return true, if it is first find two different pixels.
      */
     private boolean isFirstDifferences() {
         for (int y = 0; y < expected.getHeight(); y++) {
