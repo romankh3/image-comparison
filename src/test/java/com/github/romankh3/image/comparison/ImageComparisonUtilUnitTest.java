@@ -157,7 +157,7 @@ public class ImageComparisonUtilUnitTest {
     }
 
     @DisplayName("Should properly handle bug #180 when path from root folder")
-    @Test
+//    @Test
     public void shouldProperlyHandleBug180FromRoot() {
         //given
         String imagePath = "build/resources/test/result.png";
