@@ -156,19 +156,6 @@ public class ImageComparisonUtilUnitTest {
         assertDoesNotThrow(() -> ImageComparisonUtil.deepCopy(subimage));
     }
 
-    @DisplayName("Should properly handle bug #180 when path from root folder")
-//    @Test
-    public void shouldProperlyHandleBug180FromRoot() {
-        //given
-        String imagePath = "build/resources/test/result.png";
-
-        //when
-        BufferedImage result = ImageComparisonUtil.readImageFromResources(imagePath);
-
-        //then
-        assertNotNull(result);
-    }
-
     @DisplayName("Should properly handle bug #180 from test resources")
     @Test
     public void shouldProperlyHandleBug180FromTestResources() {
