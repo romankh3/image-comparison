@@ -2,6 +2,7 @@ package com.github.romankh3.image.comparison;
 
 import com.github.romankh3.image.comparison.exception.ImageComparisonException;
 import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
+import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
@@ -148,6 +149,19 @@ public final class ImageComparisonUtil {
         long maxDiff = 3L * 255 * width * height;
 
         return (float) (100.0 * diff / maxDiff);
+    }
+
+    /**
+     * Compare images after resizing {@code actual} to the {@code expected} image size.
+     * This helper is useful when consumers want to ignore size mismatch and still compare content.
+     *
+     * @param expected the expected image.
+     * @param actual the actual image.
+     * @return comparison result for resized images.
+     */
+    public static ImageComparisonResult compareImagesIgnoringSizeMismatch(BufferedImage expected, BufferedImage actual) {
+        BufferedImage resizedActual = resize(actual, expected.getWidth(), expected.getHeight());
+        return new ImageComparison(expected, resizedActual).compareImages();
     }
 
     /**
