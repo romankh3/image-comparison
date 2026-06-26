@@ -156,7 +156,18 @@ public class Rectangle {
      * @return {@code true} if provided {@link Point} contains, {@code false} - otherwise.
      */
     boolean containsPoint(Point point) {
-        return  point.x >= minPoint.x && point.x<= maxPoint.x && point.y >= minPoint.y && point.y <= maxPoint.y;
+        return containsPoint(point.x, point.y);
+    }
+
+    /**
+     * Check if the provided coordinates are inside this {@link Rectangle}.
+     *
+     * @param x provided X-coordinate.
+     * @param y provided Y-coordinate.
+     * @return {@code true} if provided coordinates are inside, {@code false} - otherwise.
+     */
+    boolean containsPoint(int x, int y) {
+        return x >= minPoint.x && x <= maxPoint.x && y >= minPoint.y && y <= maxPoint.y;
     }
 
     public Point getMinPoint() {

@@ -2,6 +2,8 @@ package com.github.romankh3.image.comparison.model;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,6 +34,17 @@ public class ExcludedAreasUnitTest {
 
         //then
         assertEquals(rectangles, excludedAreas.getExcluded());
+    }
+
+    @DisplayName("Should check coordinates without creating Point objects")
+    @Test
+    public void shouldCheckCoordinates() {
+        //given
+        ExcludedAreas excludedAreas = new ExcludedAreas(Arrays.asList(new Rectangle(1, 1, 3, 3)));
+
+        //then
+        assertTrue(excludedAreas.contains(2, 2));
+        assertFalse(excludedAreas.contains(4, 4));
     }
 
 }
