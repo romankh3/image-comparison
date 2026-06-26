@@ -5,11 +5,19 @@ import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import com.github.romankh3.image.comparison.model.ImageComparisonState;
 import com.github.romankh3.image.comparison.model.Rectangle;
 
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.*;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.getDifferencePercent;
@@ -19,6 +27,10 @@ import static java.util.Collections.emptyList;
  * Main class for comparison images.
  */
 public class ImageComparison {
+
+    private static final int DIFFERENCE_PIXEL = 1;
+    private static final int FIRST_REGION_MARKER = 2;
+    private static final int UNLIMITED_RECTANGLE_COUNT = -1;
 
     /**
      * The threshold which means the max distance between non-equal pixels.
@@ -47,16 +59,6 @@ public class ImageComparison {
     private /* @Nullable */ File destination;
 
     /**
-     * The number which marks how many rectangles. Beginning from 2.
-     */
-    private int counter = 2;
-
-    /**
-     * The number of the marking specific rectangle.
-     */
-    private int regionCount = counter;
-
-    /**
      * The number of the minimal rectangle size. Count as (width x height).
      */
     private Integer minimalRectangleSize = 1;
@@ -66,7 +68,7 @@ public class ImageComparison {
      * It means that would get the first x biggest rectangles.
      * Default value is -1, that means that all the rectangles would be drawn.
      */
-    private Integer maximalRectangleCount = -1;
+    private Integer maximalRectangleCount = UNLIMITED_RECTANGLE_COUNT;
 
     /**
      * Level of the pixel tolerance. By default, it's 0.1 -> 10% difference.
@@ -80,24 +82,6 @@ public class ImageComparison {
     private double differenceConstant;
 
     /**
-     * Matrix YxX => int[y][x].
-     * E.g.:
-     * | X - width ----
-     * | .....................................
-     * Y . (0, 0)                            .
-     * | .                                   .
-     * | .                                   .
-     * h .                                   .
-     * e .                                   .
-     * i .                                   .
-     * g .                                   .
-     * h .                                   .
-     * t .                             (X, Y).
-     * | .....................................
-     */
-    private int[][] matrix;
-
-    /**
      * ExcludedAreas contains a List of {@link Rectangle}s to be ignored when comparing images
      */
     private ExcludedAreas excludedAreas = new ExcludedAreas();
@@ -106,11 +90,6 @@ public class ImageComparison {
      * Flag which says draw excluded rectangles or not.
      */
     private boolean drawExcludedRectangles = false;
-
-    /**
-     * The difference in percent between two images.
-     */
-    private float differencePercent;
 
     /**
      * Flag for filling comparison difference rectangles.
@@ -220,16 +199,16 @@ public class ImageComparison {
      *
      * @return the result comparisonState
      */
-    public ImageComparisonResult simpleComparison(){
+    public ImageComparisonResult simpleComparison() {
         // check that the images have the same size
         if (isImageSizesNotEqual(expected, actual)) {
             BufferedImage actualResized = ImageComparisonUtil.resize(actual, expected.getWidth(), expected.getHeight());
             return ImageComparisonResult.defaultSizeMisMatchResult(expected, actual, getDifferencePercent(actualResized, expected));
         }
 
-        if (isFirstDifferences()){
+        if (isFirstDifferences()) {
             return ImageComparisonResult.defaultMisMatchResult(expected, actual, 0);
-        }else {
+        } else {
             return ImageComparisonResult.defaultMatchResult(expected, actual);
         }
     }
@@ -250,20 +229,19 @@ public class ImageComparison {
      *
      * @return the count of different pixels
      */
-    private long populateTheMatrixOfTheDifferences() {
+    private DifferenceMatrix populateTheMatrixOfTheDifferences() {
         long countOfDifferentPixels = 0;
-        matrix = new int[expected.getHeight()][expected.getWidth()];
+        int[][] matrix = new int[expected.getHeight()][expected.getWidth()];
         for (int y = 0; y < expected.getHeight(); y++) {
             for (int x = 0; x < expected.getWidth(); x++) {
-                if (!excludedAreas.contains(new Point(x, y))) {
-                    if (isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y))) {
-                        matrix[y][x] = 1;
-                        countOfDifferentPixels++;
-                    }
+                if (!excludedAreas.contains(x, y)
+                        && isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y))) {
+                    matrix[y][x] = DIFFERENCE_PIXEL;
+                    countOfDifferentPixels++;
                 }
             }
         }
-        return countOfDifferentPixels;
+        return new DifferenceMatrix(matrix, countOfDifferentPixels);
     }
 
     /**
@@ -283,10 +261,10 @@ public class ImageComparison {
 
         int red1 = (expectedRgb >> 16) & 0xff;
         int green1 = (expectedRgb >> 8) & 0xff;
-        int blue1 = (expectedRgb) & 0xff;
+        int blue1 = expectedRgb & 0xff;
         int red2 = (actualRgb >> 16) & 0xff;
         int green2 = (actualRgb >> 8) & 0xff;
-        int blue2 = (actualRgb) & 0xff;
+        int blue2 = actualRgb & 0xff;
 
         return (Math.pow(red2 - red1, 2) + Math.pow(green2 - green1, 2) + Math.pow(blue2 - blue1, 2))
                 > differenceConstant;
@@ -298,27 +276,28 @@ public class ImageComparison {
      * @return the collection of the populated {@link Rectangle} objects.
      */
     private List<Rectangle> populateRectangles() {
-        long countOfDifferentPixels = populateTheMatrixOfTheDifferences();
+        DifferenceMatrix differenceMatrix = populateTheMatrixOfTheDifferences();
 
-        if (countOfDifferentPixels == 0) {
+        if (differenceMatrix.countOfDifferentPixels == 0) {
             return emptyList();
         }
 
-        if (isAllowedPercentOfDifferentPixels(countOfDifferentPixels)) {
+        if (isAllowedPercentOfDifferentPixels(differenceMatrix)) {
             return emptyList();
         }
-        groupRegions();
+        int lastRegionMarker = groupRegions(differenceMatrix.matrix);
         Map<Integer, Rectangle> regions = new LinkedHashMap<>();
-        for (int i = counter; i < regionCount; i++) {
+        for (int i = FIRST_REGION_MARKER; i < lastRegionMarker; i++) {
             regions.put(i, Rectangle.createDefault());
         }
-        createRectangles(counter, regions);
+        createRectangles(FIRST_REGION_MARKER, regions, differenceMatrix.matrix);
 
+        Rectangle defaultRectangle = Rectangle.createDefault();
         List<Rectangle> rectangles = regions.values().stream()
-                .filter(rectangle -> !rectangle.equals(Rectangle.createDefault())
+                .filter(rectangle -> !rectangle.equals(defaultRectangle)
                         && rectangle.size() >= minimalRectangleSize)
                 .collect(Collectors.toList());
-        return mergeRectangles(mergeRectangles(rectangles));
+        return mergeOverlappingRectangles(rectangles);
     }
 
     /**
@@ -329,10 +308,9 @@ public class ImageComparison {
     private boolean isFirstDifferences() {
         for (int y = 0; y < expected.getHeight(); y++) {
             for (int x = 0; x < expected.getWidth(); x++) {
-                if (!excludedAreas.contains(new Point(x, y))) {
-                    if (isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y))) {
-                        return true;
-                    }
+                if (!excludedAreas.contains(x, y)
+                        && isDifferentPixels(expected.getRGB(x, y), actual.getRGB(x, y))) {
+                    return true;
                 }
             }
         }
@@ -346,16 +324,17 @@ public class ImageComparison {
      * @return true, if percent of different pixels lower or equal {@link ImageComparison#allowingPercentOfDifferentPixels},
      * false - otherwise.
      */
-    private boolean isAllowedPercentOfDifferentPixels(long countOfDifferentPixels) {
-        long totalPixelCount = ((long) matrix.length) * ((long) matrix[0].length);
-        double actualPercentOfDifferentPixels = ((double) countOfDifferentPixels / (double) totalPixelCount) * 100;
+    private boolean isAllowedPercentOfDifferentPixels(DifferenceMatrix differenceMatrix) {
+        long totalPixelCount = ((long) differenceMatrix.matrix.length) * ((long) differenceMatrix.matrix[0].length);
+        double actualPercentOfDifferentPixels =
+                (double) differenceMatrix.countOfDifferentPixels / (double) totalPixelCount * 100;
         return actualPercentOfDifferentPixels <= allowingPercentOfDifferentPixels;
     }
 
     /**
      * Create a {@link Rectangle} object.
      */
-    private void createRectangles(int counter, Map<Integer, Rectangle> rectangles) {
+    private void createRectangles(int counter, Map<Integer, Rectangle> rectangles, int[][] matrix) {
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[0].length; x++) {
                 if (matrix[y][x] >= counter) {
@@ -387,16 +366,30 @@ public class ImageComparison {
     /**
      * Find overlapping rectangles and merge them.
      */
+    private List<Rectangle> mergeOverlappingRectangles(List<Rectangle> rectangles) {
+        List<Rectangle> mergedRectangles = rectangles;
+        int previousSize;
+        do {
+            previousSize = mergedRectangles.size();
+            mergedRectangles = mergeRectangles(mergedRectangles);
+        } while (mergedRectangles.size() < previousSize);
+        return mergedRectangles;
+    }
+
+    /**
+     * Find one pass of overlapping rectangles and merge them.
+     */
     private List<Rectangle> mergeRectangles(List<Rectangle> rectangles) {
+        Rectangle zeroRectangle = Rectangle.createZero();
         int position = 0;
         while (position < rectangles.size()) {
-            if (rectangles.get(position).equals(Rectangle.createZero())) {
+            if (rectangles.get(position).equals(zeroRectangle)) {
                 position++;
             }
             for (int i = 1 + position; i < rectangles.size(); i++) {
                 Rectangle r1 = rectangles.get(position);
                 Rectangle r2 = rectangles.get(i);
-                if (r2.equals(Rectangle.createZero())) {
+                if (r2.equals(zeroRectangle)) {
                     continue;
                 }
                 if (r1.isOverlapping(r2)) {
@@ -410,7 +403,7 @@ public class ImageComparison {
             position++;
         }
 
-        return rectangles.stream().filter(it -> !it.equals(Rectangle.createZero())).collect(Collectors.toList());
+        return rectangles.stream().filter(it -> !it.equals(zeroRectangle)).collect(Collectors.toList());
     }
 
     /**
@@ -423,8 +416,12 @@ public class ImageComparison {
         BufferedImage resultImage = ImageComparisonUtil.deepCopy(actual);
         Graphics2D graphics = preparedGraphics2D(resultImage);
 
-        drawExcludedRectangles(graphics);
-        drawRectanglesOfDifferences(rectangles, graphics);
+        try {
+            drawExcludedRectangles(graphics);
+            drawRectanglesOfDifferences(rectangles, graphics);
+        } finally {
+            graphics.dispose();
+        }
 
         return resultImage;
     }
@@ -521,10 +518,11 @@ public class ImageComparison {
      * @param percentOpacity the opacity of the fill.
      */
     private void fillRectangles(Graphics2D graphics, List<Rectangle> rectangles, double percentOpacity) {
+        Color originalColor = graphics.getColor();
 
-        graphics.setColor(new Color(graphics.getColor().getRed(),
-                graphics.getColor().getGreen(),
-                graphics.getColor().getBlue(),
+        graphics.setColor(new Color(originalColor.getRed(),
+                originalColor.getGreen(),
+                originalColor.getBlue(),
                 (int) (percentOpacity / 100 * 255)
         ));
         rectangles.forEach(rectangle -> graphics.fillRect(
@@ -533,46 +531,67 @@ public class ImageComparison {
                 rectangle.getWidth() - 2,
                 rectangle.getHeight() - 2)
         );
+        graphics.setColor(originalColor);
     }
 
 
     /**
      * Group rectangle regions in matrix.
      */
-    private void groupRegions() {
+    private int groupRegions(int[][] matrix) {
+        int regionMarker = FIRST_REGION_MARKER;
         for (int y = 0; y < matrix.length; y++) {
             for (int x = 0; x < matrix[y].length; x++) {
-                if (matrix[y][x] == 1) {
-                    joinToRegion(x, y);
-                    regionCount++;
+                if (matrix[y][x] == DIFFERENCE_PIXEL) {
+                    joinToRegion(matrix, regionMarker, x, y);
+                    regionMarker++;
                 }
+            }
+        }
+        return regionMarker;
+    }
+
+    /**
+     * The iterative method which goes to all directions and finds difference
+     * in binary matrix using {@code threshold} for setting max distance between values which equal "1".
+     * and sets the {@code regionMarker} to matrix.
+     *
+     * @param matrix matrix of difference pixels.
+     * @param regionMarker marker for the current region.
+     * @param x the value of the X-coordinate.
+     * @param y the value of the Y-coordinate.
+     */
+    private void joinToRegion(int[][] matrix, int regionMarker, int x, int y) {
+        if (isJumpRejected(matrix, x, y)) {
+            return;
+        }
+
+        ArrayDeque<Integer> positions = new ArrayDeque<>();
+        addToRegion(matrix, regionMarker, positions, x, y);
+
+        while (!positions.isEmpty()) {
+            int position = positions.removeLast();
+            int currentX = position % matrix[0].length;
+            int currentY = position / matrix[0].length;
+
+            for (int i = 0; i < threshold; i++) {
+                addToRegion(matrix, regionMarker, positions, currentX + 1 + i, currentY);
+                addToRegion(matrix, regionMarker, positions, currentX, currentY + 1 + i);
+
+                addToRegion(matrix, regionMarker, positions, currentX + 1 + i, currentY - 1 - i);
+                addToRegion(matrix, regionMarker, positions, currentX - 1 - i, currentY + 1 + i);
+                addToRegion(matrix, regionMarker, positions, currentX + 1 + i, currentY + 1 + i);
             }
         }
     }
 
-    /**
-     * The recursive method which go to all directions and finds difference
-     * in binary matrix using {@code threshold} for setting max distance between values which equal "1".
-     * and set the {@code groupCount} to matrix.
-     *
-     * @param x the value of the X-coordinate.
-     * @param y the value of the Y-coordinate.
-     */
-    private void joinToRegion(int x, int y) {
-        if (isJumpRejected(x, y)) {
+    private void addToRegion(int[][] matrix, int regionMarker, ArrayDeque<Integer> positions, int x, int y) {
+        if (isJumpRejected(matrix, x, y)) {
             return;
         }
 
-        matrix[y][x] = regionCount;
-
-        for (int i = 0; i < threshold; i++) {
-            joinToRegion(x + 1 + i, y);
-            joinToRegion(x, y + 1 + i);
-
-            joinToRegion(x + 1 + i, y - 1 - i);
-            joinToRegion(x - 1 - i, y + 1 + i);
-            joinToRegion(x + 1 + i, y + 1 + i);
-        }
+        matrix[y][x] = regionMarker;
+        positions.add(y * matrix[0].length + x);
     }
 
     /**
@@ -593,8 +612,9 @@ public class ImageComparison {
      * @param y Y-coordinate of the image
      * @return true if jump rejected, otherwise false.
      */
-    private boolean isJumpRejected(int x, int y) {
-        return y < 0 || y >= matrix.length || x < 0 || x >= matrix[y].length || matrix[y][x] != 1;
+    private boolean isJumpRejected(int[][] matrix, int x, int y) {
+        return y < 0 || y >= matrix.length || x < 0 || x >= matrix[y].length
+                || matrix[y][x] != DIFFERENCE_PIXEL;
     }
 
     public double getPixelToleranceLevel() {
@@ -735,5 +755,17 @@ public class ImageComparison {
     public ImageComparison setExcludedRectangleColor(Color excludedRectangleColor) {
         this.excludedRectangleColor = excludedRectangleColor;
         return this;
+    }
+
+    private static class DifferenceMatrix {
+
+        private final int[][] matrix;
+
+        private final long countOfDifferentPixels;
+
+        DifferenceMatrix(int[][] matrix, long countOfDifferentPixels) {
+            this.matrix = matrix;
+            this.countOfDifferentPixels = countOfDifferentPixels;
+        }
     }
 }
