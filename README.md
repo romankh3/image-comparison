@@ -4,57 +4,53 @@
 [![Javadocs](http://www.javadoc.io/badge/com.github.romankh3/image-comparison.svg?color=green)](http://www.javadoc.io/doc/com.github.romankh3/image-comparison)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](https://github.com/romankh3/image-comparison/pulls)
 
+A lightweight Java library that compares two images of the same size, pixel by pixel, and highlights the differences by drawing rectangles around them. Commonly used for visual regression / automation QA tests. Published on Maven Central.
+
 *   [About](#about)
-
-*   [Configurations](#configurations)
-
+*   [Requirements](#requirements)
+*   [Configuration](#configuration)
 *   [Release Notes](#release-notes)
-
 *   [Usage](#usage)
-
 *   [Demo](#demo)
-
 *   [License](#license)
-
 *   [Contributing](#contributing)
-
 *   [Code of Conduct](#code-of-conduct)
-
 *   [Other Projects](#also-if-youre-interesting---see-my-other-repositories)
 
 ## About
-Published on Maven Central and jCenter Java Library that compares 2 images with the same sizes and shows the differences visually by drawing rectangles. Some parts of the image can be excluded from the comparison. Can be used for automation qa tests. The Usages of the `image-comparison` can be found here [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison)
+`image-comparison` compares an `expected` and an `actual` image and returns an `ImageComparisonState` of `MATCH`, `MISMATCH`, or `SIZE_MISMATCH`. On a mismatch, it produces a `result` image — a copy of `actual` with the differing regions outlined in rectangles.
 
-*   Implementation is using only standard core language and platform features, no 3rd party libraries and plagiarized code is permitted.
+Key points:
 
-*   Pixels (with the same coordinates in two images) can be visually similar, but have different values of RGB. 2 pixels are considered to be "different" if they differ more than `pixelToleranceLevel`(this configuration described below) from each other.
+*   **No third-party runtime dependencies** — implementation uses only standard JDK/AWT features.
+*   **Tolerant pixel comparison** — two pixels at the same coordinates are only considered "different" if their RGB distance exceeds `pixelToleranceLevel` (configurable, see below).
+*   **Excludable regions** — parts of the image can be excluded from comparison (and optionally still drawn on the result image), useful for ignoring dynamic content like timestamps.
+*   Real-world usage examples can be found in [Usage Image Comparison](https://github.com/romankh3/usage-image-comparison).
 
-*   The output of the comparison is a copy of `actual` images. The differences are outlined with red rectangles as shown below.
+Background on the project: [How did the test task become a production library](https://habr.com/ru/post/475482/) (habr.com).
 
-*   Some parts of the image can be excluded from the comparison and drawn in the result image.
-
-Article about growing `image-comparison` on habr: [How did the test task become a production library](https://habr.com/ru/post/475482/)
+## Requirements
+*   Java 8 or higher.
 
 ## Configuration
-All these configurations can be updated based on your needs.
-| *Property* | *Description* |
-| --- | --- |
-| `threshold` | The threshold which means the max distance between non-equal pixels. Could be changed according size and requirements to the image. |
-| `rectangleLineWidth` | Width of the line that is drawn the rectangle. |
-| `destination` | File of the result destination. |
-| `minimalRectangleSize` | The number of the minimal rectangle size. Count as (width x height). By default it's 1. |
-| `maximalRectangleCount` | Maximal count of the Rectangles, which would be drawn. It means that would get first x biggest rectangles. Default value is -1, that means that all the rectangles would be drawn. |
-| `pixelToleranceLevel` | Level of the pixel tolerance. By default it's 0.1 -> 10% difference. The value can be set from 0.0 to 0.99. |
-| `excludedAreas` | ExcludedAreas contains a List of Rectangles to be ignored when comparing images. |
-| `drawExcludedRectangles` | Flag which says draw excluded rectangles or not. |
-| `fillExcludedRectangles` | Flag which says fill excluded rectangles or not. |
-| `percentOpacityExcludedRectangles` | The desired opacity of the excluded rectangle fill. |
-| `fillDifferenceRectangles` | Flag which says fill difference rectangles or not. |
-| `percentOpacityDifferenceRectangles` | The desired opacity of the difference rectangle fill. |
-| `allowingPercentOfDifferentPixels` | The percent of the allowing pixels to be different to stay MATCH for comparison. E.g. percent of the pixels, which would ignore in comparison. Value can be from 0.0 to 100.00 |
-| `differenceRectangleColor` | Rectangle color of image difference. By default, it's red. |
-| `excludedRectangleColor` | Rectangle color of excluded part. By default, it's green. |
-
+All configuration is set via fluent setters on `ImageComparison` (e.g. `.setThreshold(10)`), each returning `this` so calls can be chained.
+| *Property* | *Description* | *Default* |
+| --- | --- | --- |
+| `threshold` | Max pixel distance for two differing pixels to be grouped into the same rectangle. Increase for images with sparse/scattered differences, decrease for tightly-packed diffs. | `5` |
+| `rectangleLineWidth` | Width, in pixels, of the drawn rectangle outline. | `1` |
+| `destination` | `File` to write the result image to. If `null`, the result is only available via `ImageComparisonResult.getResult()`. | `null` |
+| `minimalRectangleSize` | Minimum rectangle size (`width x height`) to be included in the result; smaller diffs are discarded. | `1` |
+| `maximalRectangleCount` | Max number of rectangles drawn, keeping the largest first. `-1` draws all rectangles. | `-1` |
+| `pixelToleranceLevel` | RGB distance tolerance for two pixels to be considered equal. Range `0.0`-`0.99`. | `0.1` (10%) |
+| `excludedAreas` | `List<Rectangle>` of regions to skip during comparison. | empty list |
+| `drawExcludedRectangles` | Whether to draw the `excludedAreas` outlines on the result image. | `false` |
+| `fillExcludedRectangles` | Whether to fill the `excludedAreas` rectangles on the result image. | `false` |
+| `percentOpacityExcludedRectangles` | Fill opacity for excluded rectangles, `0.0` (transparent) to `100.0` (opaque). | `20.0` |
+| `fillDifferenceRectangles` | Whether to fill the difference rectangles on the result image. | `false` |
+| `percentOpacityDifferenceRectangles` | Fill opacity for difference rectangles, `0.0` (transparent) to `100.0` (opaque). | `20.0` |
+| `allowingPercentOfDifferentPixels` | Percent of differing pixels (`0.0`-`100.0`) still allowed while staying `MATCH`. | `0.0` |
+| `differenceRectangleColor` | Outline/fill color for difference rectangles. | `Color.RED` |
+| `excludedRectangleColor` | Outline/fill color for excluded rectangles. | `Color.GREEN` |
 
 ## Release Notes
 
@@ -62,7 +58,9 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
 
 ## Usage
 
-#### Maven
+### Installation
+
+**Maven**
 ```xml
 <dependency>
     <groupId>com.github.romankh3</groupId>
@@ -70,13 +68,15 @@ Can be found in [RELEASE_NOTES](RELEASE_NOTES.md).
     <version>4.4.0</version>
 </dependency>
 ```
-#### Gradle
+
+**Gradle**
 ```groovy
-compile 'com.github.romankh3:image-comparison:4.4.0'
+implementation 'com.github.romankh3:image-comparison:4.4.0'
 ```
 
-#### To compare two images programmatically
-##### Default way to compare two images looks like:
+### Compare two images programmatically
+
+Basic usage — compare two images and check the resulting state:
 ```java
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
@@ -89,9 +89,11 @@ compile 'com.github.romankh3:image-comparison:4.4.0'
         assertEquals(ImageComparisonState.MATCH, imageComparisonResult.getImageComparisonState());
 ```
 
-##### Save result image
-To save result image, can be used two ways:
-1. add a file to save to constructor. ImageComparison will save the result image in this case.
+### Save the result image
+
+There are two ways to save the result image:
+
+**1. Pass a destination file to the constructor** — `ImageComparison` saves the result image itself.
 ```java
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
@@ -103,7 +105,7 @@ To save result image, can be used two ways:
         //Create ImageComparison object with result destination and compare the images.
         ImageComparisonResult imageComparisonResult = new ImageComparison(expectedImage, actualImage, resultDestination).compareImages();
 ```
-2. execute ImageComparisonUtil.saveImage static method
+**2. Save it explicitly with `ImageComparisonUtil.saveImage`.**
 ```java
         //load images to be compared:
         BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
