@@ -103,6 +103,28 @@ public class RectangleUnitTest {
         assertFalse(rectangleOne.isOverlapping(rectangleTwo));
     }
 
+    /**
+     * Cover non overlapping case where R1 is entirely below R2, drawing below:
+     * ..............
+     * . R2         .
+     * .            .
+     * ..............
+     * .............
+     * . R1        .
+     * .           .
+     * .............
+     */
+    @DisplayName("Should properly find non-overlapping when this rectangle is below that rectangle")
+    @Test
+    public void shouldProperlyFindNonOverlappingWhenBelow() {
+        //given
+        Rectangle rectangleOne = new Rectangle(2, 10, 8, 20);
+        Rectangle rectangleTwo = new Rectangle(2, 1, 8, 5);
+
+        //when-then
+        assertFalse(rectangleOne.isOverlapping(rectangleTwo));
+    }
+
     @DisplayName("Should properly work equal rectangles")
     @Test
     public void shouldProperlyEqual() {
@@ -132,6 +154,16 @@ public class RectangleUnitTest {
 
         //when-then
         assertNotEquals(rectangle, null);
+    }
+
+    @DisplayName("Should properly non equal to an object of a different type")
+    @Test
+    public void shouldNotEqualDifferentType() {
+        //given
+        Rectangle rectangle = new Rectangle(1, 1, 2, 2);
+
+        //when-then
+        assertNotEquals(rectangle, "not a rectangle");
     }
 
     @DisplayName("Should properly non equal")

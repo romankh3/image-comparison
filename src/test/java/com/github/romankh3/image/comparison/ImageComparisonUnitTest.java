@@ -255,6 +255,105 @@ public class ImageComparisonUnitTest {
         assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
     }
 
+    @DisplayName("Should properly work SIZE_MISMATCH state when only width differs")
+    @Test
+    public void shouldProperlyWorkSizeMismatchDifferentWidthOnly() {
+        //given
+        BufferedImage expected = new BufferedImage(10, 10, 10);
+        BufferedImage actual = new BufferedImage(15, 10, 10);
+
+        //when
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expected, actual).compareImages();
+
+        //then
+        assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
+    }
+
+    @DisplayName("Should properly work SIZE_MISMATCH state for simpleComparison")
+    @Test
+    public void shouldReturnSizeMismatchForSimpleComparison() {
+        //given
+        BufferedImage expected = new BufferedImage(10, 10, 10);
+        BufferedImage actual = new BufferedImage(12, 12, 10);
+
+        //when
+        ImageComparisonResult imageComparisonResult = new ImageComparison(expected, actual).simpleComparison();
+
+        //then
+        assertEquals(SIZE_MISMATCH, imageComparisonResult.getImageComparisonState());
+    }
+
+    @DisplayName("Should return MATCH for simpleComparison with identical images")
+    @Test
+    public void shouldReturnMatchForSimpleComparisonWithIdenticalImages() {
+        //when
+        ImageComparisonResult imageComparisonResult = new ImageComparison("expected.png", "expected.png")
+                .simpleComparison();
+
+        //then
+        assertEquals(MATCH, imageComparisonResult.getImageComparisonState());
+    }
+
+    @DisplayName("Should return MATCH for simpleComparison when differences are within excluded areas")
+    @Test
+    public void shouldReturnMatchForSimpleComparisonWithExcludedAreas() {
+        //given
+        BufferedImage expected = readImageFromResources("expected#98.png");
+        BufferedImage actual = readImageFromResources("actual#98.png");
+
+        List<Rectangle> excludedAreas = asList(
+                new Rectangle(80, 388, 900, 514),
+                new Rectangle(410, 514, 900, 565),
+                new Rectangle(410, 636, 900, 754)
+        );
+
+        //when
+        ImageComparisonResult result = new ImageComparison(expected, actual)
+                .setExcludedAreas(excludedAreas)
+                .simpleComparison();
+
+        //then
+        assertEquals(MATCH, result.getImageComparisonState());
+    }
+
+    @DisplayName("Should reject an out-of-range pixel tolerance level")
+    @Test
+    public void shouldRejectInvalidPixelToleranceLevel() {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
+
+        //when
+        imageComparison.setPixelToleranceLevel(-0.1);
+
+        //then
+        assertEquals(0.1, imageComparison.getPixelToleranceLevel(), 0.0);
+
+        //when
+        imageComparison.setPixelToleranceLevel(1.0);
+
+        //then
+        assertEquals(0.1, imageComparison.getPixelToleranceLevel(), 0.0);
+    }
+
+    @DisplayName("Should reject an out-of-range allowing percent of different pixels")
+    @Test
+    public void shouldRejectInvalidAllowingPercentOfDifferentPixels() {
+        //given
+        ImageComparison imageComparison = new ImageComparison("expected.png", "actual.png");
+
+        //when
+        imageComparison.setAllowingPercentOfDifferentPixels(-5);
+
+        //then
+        assertEquals(0.0, imageComparison.getAllowingPercentOfDifferentPixels(), 0.0);
+
+        //when
+        imageComparison.setAllowingPercentOfDifferentPixels(150);
+
+        //then
+        assertEquals(0.0, imageComparison.getAllowingPercentOfDifferentPixels(), 0.0);
+    }
+
     @DisplayName("Should ignore excluded areas")
     @Test
     public void shouldIgnoreExcludedAreas() {
