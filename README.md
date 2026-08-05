@@ -118,6 +118,16 @@ There are two ways to save the result image:
         ImageComparisonUtil.saveImage(resultDestination, imageComparisonResult.getResult()); 
 ```
 
+##### Compare images with different sizes (ignore SIZE_MISMATCH)
+If your images have different dimensions and you still want to compare content, resize `actual` to `expected` size first:
+```java
+        BufferedImage expectedImage = ImageComparisonUtil.readImageFromResources("expected.png");
+        BufferedImage actualImage = ImageComparisonUtil.readImageFromResources("actualDifferentSize.png");
+
+        ImageComparisonResult imageComparisonResult =
+                ImageComparisonUtil.compareImagesIgnoringSizeMismatch(expectedImage, actualImage);
+```
+
 ## Demo
 Demo shows how `image-comparison` works.
 

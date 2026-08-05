@@ -1,6 +1,7 @@
 package com.github.romankh3.image.comparison;
 
 import static com.github.romankh3.image.comparison.ImageComparisonUtil.readImageFromResources;
+import static com.github.romankh3.image.comparison.model.ImageComparisonState.SIZE_MISMATCH;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -11,6 +12,7 @@ import static org.mockito.Mockito.when;
 
 import com.github.romankh3.image.comparison.exception.ImageComparisonException;
 import com.github.romankh3.image.comparison.exception.ImageNotFoundException;
+import com.github.romankh3.image.comparison.model.ImageComparisonResult;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -129,6 +131,25 @@ public class ImageComparisonUtilUnitTest {
         //then
         assertEquals(0, (int) differentPercent);
 
+    }
+
+    @DisplayName("Should compare images while ignoring size mismatch")
+    @Test
+    public void shouldCompareImagesIgnoringSizeMismatch() {
+        //given
+        BufferedImage expected = readImageFromResources("expected.png");
+        BufferedImage actual = readImageFromResources("actualDifferentSize.png");
+
+        //when
+        ImageComparisonResult defaultResult = new ImageComparison(expected, actual).compareImages();
+        ImageComparisonResult resizedComparisonResult =
+                ImageComparisonUtil.compareImagesIgnoringSizeMismatch(expected, actual);
+
+        //then
+        assertEquals(SIZE_MISMATCH, defaultResult.getImageComparisonState());
+        assertTrue(resizedComparisonResult.getImageComparisonState() != SIZE_MISMATCH);
+        assertEquals(expected.getWidth(), resizedComparisonResult.getResult().getWidth());
+        assertEquals(expected.getHeight(), resizedComparisonResult.getResult().getHeight());
     }
 
     @DisplayName("Should properly get pixel diff")
