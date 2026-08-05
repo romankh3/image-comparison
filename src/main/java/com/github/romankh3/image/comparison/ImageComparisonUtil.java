@@ -15,11 +15,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import java.util.logging.*;
 
 /**
  * Tools for the {@link ImageComparison} object.
  */
 public final class ImageComparisonUtil {
+    /**
+     * The Logger object.
+     */
+    static Logger logger = Logger.getLogger("com.github.romankh3.image.comparison.ImageComparisonUtil");
 
     /**
      * Make a copy of the {@link BufferedImage} object.
@@ -45,19 +50,24 @@ public final class ImageComparisonUtil {
         File imageFile = new File(path);
         if (imageFile.exists()) {
             try {
+                logger.info("Read image form User Successfully.");
                 return ImageIO.read(imageFile);
             } catch (IOException e) {
+                logger.severe("Cannot read image from the file, path = "+ path);
                 throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
             }
         } else {
             InputStream inputStream = ImageComparisonUtil.class.getClassLoader().getResourceAsStream(path);
             if (inputStream != null) {
                 try {
+                    logger.info("Reading image file from path.");
                     return ImageIO.read(inputStream);
                 } catch (IOException e) {
+                    logger.severe("Cannot read image from the file, path="+path);
                     throw new ImageComparisonException(String.format("Cannot read image from the file, path=%s", path), e);
                 }
             } else {
+                logger.severe("Image with path = "+ path + " not found");
                 throw new ImageNotFoundException(String.format("Image with path = %s not found", path));
             }
         }
@@ -75,11 +85,14 @@ public final class ImageComparisonUtil {
         // make dir if it's not using from Gradle.
         boolean dirExists = dir == null || dir.isDirectory() || dir.mkdirs();
         if (!dirExists) {
+            logger.severe("Unable to create directory " + dir);
             throw new ImageComparisonException("Unable to create directory " + dir);
         }
         try {
+            logger.info("Write the result image to the file directory");
             ImageIO.write(image, "png", pathFile);
         } catch (IOException e) {
+            logger.severe("Cannot save image to path=" + pathFile.getAbsolutePath());
             throw new ImageComparisonException(
                     String.format("Cannot save image to path=%s", pathFile.getAbsolutePath()), e);
         }
