@@ -660,6 +660,25 @@ public class ImageComparisonUnitTest {
         assertImagesEqual(resultImage, imageComparisonResult.getResult());
     }
 
+    @DisplayName("Should group a large difference region without recursive stack usage")
+    @Test
+    public void shouldGroupLargeDifferenceRegionWithoutRecursion() {
+        //given
+        int imageHeight = 20_000;
+        BufferedImage expected = new BufferedImage(1, imageHeight, BufferedImage.TYPE_INT_RGB);
+        BufferedImage actual = new BufferedImage(1, imageHeight, BufferedImage.TYPE_INT_RGB);
+        for (int y = 0; y < imageHeight; y++) {
+            actual.setRGB(0, y, Color.WHITE.getRGB());
+        }
+
+        //when
+        List<Rectangle> rectangles = new ImageComparison(expected, actual).createMask();
+
+        //then
+        assertEquals(1, rectangles.size());
+        assertEquals(new Rectangle(0, 0, 0, imageHeight - 1), rectangles.get(0));
+    }
+
     private void assertImagesEqual(BufferedImage expected, BufferedImage actual) {
         if (expected.getWidth() != actual.getWidth() || expected.getHeight() != actual.getHeight()) {
             fail("Images have different dimensions");

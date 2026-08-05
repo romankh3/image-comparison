@@ -39,9 +39,22 @@ public class ExcludedAreas {
      * @return {@code true} if this {@link Point} contains in areas from {@link ExcludedAreas#excluded}.
      */
     public boolean contains(Point point) {
+        return contains(point.x, point.y);
+    }
+
+    /**
+     * Check if provided coordinates are contained in any excluded rectangle.
+     *
+     * @param x X-coordinate to be checked.
+     * @param y Y-coordinate to be checked.
+     *
+     * @return {@code true} if coordinates are in an excluded area.
+     */
+    public boolean contains(int x, int y) {
         for (Rectangle rectangle : excluded) {
-            if (rectangle.containsPoint(point))
+            if (rectangle.containsPoint(x, y)) {
                 return true;
+            }
         }
         return false;
     }
